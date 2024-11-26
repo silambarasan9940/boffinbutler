@@ -1,0 +1,173 @@
+- .dockerignore
+- .eslintrc.json
+- .gitignore
+- app
+  - about-us
+    - page.tsx
+  - bf-return-policy
+    - page.tsx
+  - blog
+    - page.tsx
+  - blogs
+    - month
+      - page.tsx
+    - page.tsx
+    - post
+      - page.tsx
+      - [url_key]
+        - page.tsx
+  - brands
+    - page.tsx
+  - cart
+    - page.tsx
+    - shipping
+      - checkout
+        - page.tsx
+      - page.tsx
+  - contact-us
+    - page.tsx
+  - custom.css
+  - customer
+    - account
+      - create
+        - page.tsx
+      - forgot-password
+        - page.tsx
+      - login
+        - page.tsx
+  - faq
+    - page.tsx
+  - favicon.ico
+  - fonts
+    - GeistMonoVF.woff
+    - GeistVF.woff
+  - freebies
+    - page.tsx
+  - globals.css
+  - home
+    - page.tsx
+  - inquire-now
+    - page.tsx
+  - layout.tsx
+  - not-found.tsx
+  - order-confirmation
+    - page.tsx
+  - page.tsx
+  - privacy-policy-page
+    - page.tsx
+  - products
+    - page.tsx
+    - [id]
+      - page.tsx
+  - terms-and-conditions
+    - page.tsx
+  - terms-of-sale
+    - page.tsx
+- components
+  - banner
+    - Banner.tsx
+  - bestseller
+    - BestSeller.tsx
+  - blog
+    - Blog.tsx
+    - BlogCard.tsx
+    - BlogPost.tsx
+    - BlogPostData.tsx
+  - brandcard
+    - BrandCard.tsx
+    - BrandList.tsx
+  - breadcrumbs
+    - Breadcrumbs.tsx
+  - cart
+    - CartItem.tsx
+    - CartSummary.tsx
+    - shipping
+      - CartSummaryShipping.tsx
+      - chaeckout
+        - CartSummaryCheckout.tsx
+  - checkoutcard
+    - CheckoutSteps.tsx
+  - company-brand-logo
+    - Brandtestimonial.tsx
+  - create-signup
+    - createnewemployeraccount.tsx
+    - facluty.tsx
+    - purchasedepartment.tsx
+    - student.tsx
+  - footer
+    - Footer.tsx
+  - freebies-card
+    - FreebiesCard.tsx
+  - header
+    - Appbar
+      - Navbar.tsx
+      - ProductIcon.tsx
+      - ProductSearchBar.tsx
+    - top-header
+      - Topheader.tsx
+  - laboratory-requirements
+    - LaboratoryRequirements.tsx
+    - LaboratoryRequirementsCard.tsx
+  - newly-added-products
+    - AddedProducts.tsx
+    - ProductList.tsx
+  - product-category
+    - CategoryPage.tsx
+  - product-details
+    - ProductDetails.tsx
+    - ProductDetailsTable.tsx
+    - ProductDetailsTabs.tsx
+  - product-filter-card
+    - FilterModal.tsx
+    - ProductFilter.tsx
+  - productcard
+    - ProductCard.tsx
+    - ProductData.tsx
+  - redux-provider
+    - ReduxProvider.tsx
+  - tab
+    - Tabs.tsx
+  - testimonial
+    - Testimonial.tsx
+- components.json
+- Dockerfile
+- lib
+  - utils.ts
+- next-env.d.ts
+- next.config.mjs
+- package-lock.json
+- package.json
+- postcss.config.mjs
+- README.md
+- redux
+  - store
+    - slices
+      - authSlice.ts
+      - cartSlice.tsx
+      - productSlice.tsx
+    - store.ts
+- services
+  - api
+    - index.ts
+  - common
+    - index.ts
+  - types
+    - address-types
+      - index.ts
+    - index.ts
+- src
+  - assests
+    - css
+      - custom.css
+      - list.css
+    - images
+      - chat.svg
+      - ellipse1.png
+      - ellipse2.png
+      - icon1.png
+      - icon2.png
+      - leftimg.png
+      - lettersend.png
+      - rightimg.png
+- tailwind.config.ts
+- tsconfig.json

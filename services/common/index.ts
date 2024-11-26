@@ -1,0 +1,1 @@
+ export const imageUrl = 'https://beta.boffinbutler.com/media/';

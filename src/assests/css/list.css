@@ -1,0 +1,12 @@
+.unordered-list {
+    list-style-type: lower-roman; 
+  }
+  .ordered-list {
+    list-style-type: disc;
+  }
+  .unordered-list, .ordered-list, .unordered-list-num {
+    padding-left: 40px;
+  }
+  .unordered-list li, .ordered-list li, .unordered-list-num {
+  line-height: 26px;
+  }
