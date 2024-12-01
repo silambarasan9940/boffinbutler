@@ -16,7 +16,6 @@ interface PurchaseData {
   group: number;
   name: string;
 }
-
 interface CreatepurchaseDataProps {
   purchaseData: PurchaseData;
   showtitle: boolean;

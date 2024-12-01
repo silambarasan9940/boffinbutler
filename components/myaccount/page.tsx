@@ -28,7 +28,6 @@ export default function SidebarNavigation() {
     try {
       const response = await api.get("/menu/config", { headers });
       setNavItems(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Failed to load data");
     }

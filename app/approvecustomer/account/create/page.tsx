@@ -1,7 +1,7 @@
   "use client";
   import React from 'react';
   import SidebarNavigation from '@/components/myaccount/page';
-  import CreateStudentForm from '@/components/approvecustomer/createstudent/page';
+import CreateFacultyForm from '@/components/approvecustomer/createfaculty';
 
   const CreateStudentPage = () => {
     return (
@@ -11,7 +11,7 @@
         <SidebarNavigation />
         </div>
         <div className='w-full md:w-9/12'>
-          <CreateStudentForm />
+          <CreateFacultyForm />
         </div>
         </div>
       </div>
