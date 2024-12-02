@@ -30,6 +30,7 @@ export interface Product {
     seller_id: number;
     seller_data: SellerData[];
     assigned_seller_data: any[];
+    custom_stock_item: any;
   }
   
   interface CategoryLink {

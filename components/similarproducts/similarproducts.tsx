@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
 import ProductData from '@/components/productcard/ProductData';
+import RequestQuote from '../product-details/RequestQuote';
 interface Product {
 //   product_id: string;
 //   attribute_set_id: string;
@@ -30,7 +31,7 @@ const SimilarProducts: React.FC<{ sku: string; productcode: string }> = ({
         product_code: productcode,
       });
       setProducts(response.data[0].results); 
-      console.log(response.data[0].results , "response checked");
+      
     } catch (error) {
       console.error('Failed to load products', error);
     }
@@ -39,6 +40,7 @@ const SimilarProducts: React.FC<{ sku: string; productcode: string }> = ({
   useEffect(() => {
     fetchSimilarProducts();
   }, [sku, productcode]);
+ 
 
   return (
     <div>

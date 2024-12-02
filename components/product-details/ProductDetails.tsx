@@ -15,7 +15,6 @@ interface ProductDetailsProps {
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const defaultImageUrl = "https://beta.boffinbutler.com/media/catalog/product";
@@ -33,6 +32,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [inCart, setInCart] = useState(false);
   const [cartId, setCartId] = useState("");
+  const [isQtyAvailable, setIsQtyAvailable] = useState(true);
   const router = useRouter();
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -53,7 +53,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     Authorization: `Bearer ${tokenApi}`,
     "Content-Type": "application/json",
   };
-  
+
   const fetchCartID = async () => {
     try {
       const response = await api.post("/carts/mine/", {}, { headers });
@@ -89,9 +89,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   // Increase the product quantity and update the cart
   const handleIncrease = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    // dispatch(increment()); 
+    if(quantity === product.extension_attributes.custom_stock_item.qty){
+      setIsQtyAvailable(false);
+    }else {
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
+    }
+    
+    // dispatch(increment());
   };
 
   // Decrease the product quantity and update the cart
@@ -99,7 +104,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      // dispatch(decrement()); 
+      setIsQtyAvailable(true);
+      // dispatch(decrement());
     }
   };
 
@@ -188,46 +194,61 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             <span>(Incl. of all taxes)</span>
           </p>
 
-          <div className="w-full flex items-center border-t border-b border-gray-300 py-4">
-            <div className="w-[100px] md:w-[150px] flex items-center justify-between space-x-4 bg-gray-300 rounded-full px-3 py-2 me-4">
+          {product.extension_attributes.custom_stock_item.is_in_stock ? (
+            <div className="w-full flex items-center border-t border-b border-gray-300 py-4">
+              <div className="w-[100px] md:w-[150px] flex items-center justify-between space-x-4 bg-gray-300 rounded-full px-3 py-2 me-4">
+                <button
+                  onClick={handleDecrease}
+                  className="text-gray-600 hover:text-gray-800"
+                >
+                  -
+                </button>
+                <span className="text-sm font-semibold">{quantity}</span>
+                <button
+                  onClick={handleIncrease}
+                  className={`${!isQtyAvailable ? 'cursor-not-allowed' : 'text-gray-600 hover:text-gray-800'}`}
+                  disabled={!isQtyAvailable}
+                >
+                  +
+                </button>
+              </div>
               <button
-                onClick={handleDecrease}
-                className="text-gray-600 hover:text-gray-800"
+                onClick={inCart ? handleGoToCart : handleAddToCart}
+                className={`w-full ${
+                  inCart
+                    ? "bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-600"
+                    : "bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600"
+                }`}
               >
-                -
-              </button>
-              <span className="text-sm font-semibold">{quantity}</span>
-              <button
-                onClick={handleIncrease}
-                className="text-gray-600 hover:text-gray-800"
-              >
-                +
+                {inCart ? "Go to Cart" : "Add to Cart"}
               </button>
             </div>
-            <button
-              onClick={inCart ? handleGoToCart : handleAddToCart}
-              className={`w-full ${
-                inCart
-                  ? "bg-yellow-500 text-black px-4 py-2 rounded-full hover:bg-yellow-600"
-                  : "bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600"
-              }`}
-            >
-              {inCart ? "Go to Cart" : "Add to Cart"}
-            </button>
-          </div>
+          ) : (
+            <div className="text-center mx-auto">
+             <p className="bg-red-600 text-white py-2 px-4 rounded-md">
+              Out of Stock
+            </p>
+            </div>
+          )}
         </div>
       </div>
 
       <div>
-        <ProductDetailsTabs attributes={product.custom_attributes} product={product}/>
+        <ProductDetailsTabs
+          attributes={product.custom_attributes}
+          product={product}
+        />
       </div>
 
       <div>
-        <SimilarProducts sku={product.sku} productcode={
-          product.custom_attributes.find(
-            (attr) => attr.attribute_code === "productcode"
-          )?.value
-        }/>
+        <SimilarProducts
+          sku={product.sku}
+          productcode={
+            product.custom_attributes.find(
+              (attr) => attr.attribute_code === "productcode"
+            )?.value
+          }
+        />
       </div>
       <ToastContainer />
     </div>

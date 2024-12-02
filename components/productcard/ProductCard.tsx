@@ -38,7 +38,7 @@ const fetchProductDataList = async () => {
   try {
     const response = await api.post("/search/products", { searchParams });
     setProducts(response.data[0].results);
-    console.log("product list", response.data[0].results);
+    
   } catch (error) {
     console.log("loading failed fetch product list", error);
   }
