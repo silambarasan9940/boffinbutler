@@ -41,7 +41,7 @@ const SetNewPassword = () => {
                 router.push('/customer/account/login');
             },
             async () => {
-                toast.error('Password reset Failed');
+                console.log('Password reset Failed');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 router.push('/customer/account/login');
             }

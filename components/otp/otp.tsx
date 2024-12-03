@@ -10,7 +10,7 @@ type OtpModalProps = {
   onClose: () => void;
   telephone: string;
   sendOtp: () => Promise<void>;
-  handleSubmitForm: () => Promise<void>; // Removed the event parameter
+  handleSubmitForm: () => Promise<void>; 
 };
 
 const OtpModal: React.FC<OtpModalProps> = ({
@@ -76,7 +76,7 @@ const OtpModal: React.FC<OtpModalProps> = ({
       setIsResendActive(false);
       setOtp(["", "", "", ""]);
     } catch (error) {
-      toast.error("Failed to resend OTP");
+      console.log("Failed to resend OTP", error);
     }
   };
 
@@ -99,19 +99,19 @@ const OtpModal: React.FC<OtpModalProps> = ({
           
         } else {
           console.log("Invalid OTP or error occurred");
-          toast.error("Invalid OTP or error occurred");
+          // toast.error("Invalid OTP or error occurred");
         }
       } catch (error) {
         console.log("Failed to verify OTP");
-        toast.error("Failed to verify OTP");
+        // toast.error("Failed to verify OTP");
         console.error(error);
       } finally {
-        setLoading(false); // End loading state
+        setLoading(false); 
       }
     } else {
       toast.error("Please enter OTP");
     }
-    console.log("Submitted OTP:", otpValue);
+   
   };
 
   if (!isOpen) return null;

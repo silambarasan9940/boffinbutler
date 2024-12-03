@@ -8,6 +8,7 @@ import CartSummary from '@/components/cart/CartSummary';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { setCount } from "@/redux/store/slices/cartItemCountSlice";
+import { imageUrl } from '@/services/common';
 
 interface CartItemType {
   id: string;
@@ -61,7 +62,7 @@ const Cart = () => {
           allTax: '(Incl. of all taxes)',
           offerPrice: item.discount_percent ? `${item.discount_percent}% off` : '',
           quantity: item.qty,
-          imageUrl: item.image_url || 'https://via.placeholder.com/64',
+          imageUrl: item.image_url || `${imageUrl}catalog/product/L/i/Liquid-Handling_Research-Plus-100-1000ul_product.jpg`,
           quoteId: item.quote_id ,
           
         }));
@@ -94,7 +95,6 @@ const Cart = () => {
         },
       }, { headers });
 
-      console.log('Updated cart item quantity:', response.data);
     } catch (error) {
       console.error('Error updating cart item quantity:', error);
     }

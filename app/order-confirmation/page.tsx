@@ -47,10 +47,10 @@ const OrderConfirmationPage = () => {
         <CirclesWithBar
           height="100"
           width="100"
-          color="#4fa94d"
-          outerCircleColor="#4fa94d"
-          innerCircleColor="#4fa94d"
-          barColor="#4fa94d"
+          color="#625df5"
+          outerCircleColor="#625df5"
+          innerCircleColor="#625df5"
+          barColor="#625df5"
           ariaLabel="circles-with-bar-loading"
           wrapperStyle={{}}
           wrapperClass=""
@@ -121,7 +121,7 @@ const OrderConfirmationPage = () => {
                   </div>
 
                   <div className="text-right">
-                    ${item.price * item.qty_ordered}
+                  ₹{item.price * item.qty_ordered}
                   </div>
                 </li>
               ))}
@@ -132,7 +132,7 @@ const OrderConfirmationPage = () => {
           <div className="border-t pt-4 text-right">
             <h3 className="text-lg font-medium mb-2">Total Amount:</h3>
             <p className="text-2xl font-bold">
-              ${orderDetails?.base_grand_total}
+            ₹{orderDetails?.base_grand_total}
             </p>
           </div>
 

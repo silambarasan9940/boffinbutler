@@ -82,7 +82,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       );
       toast.success("Added to cart successfully");
     } catch (error) {
-      toast.error("Failed to update cart quantity");
+      console.log("Failed to update cart quantity");
     }
     setInCart(true);
   };

@@ -15,7 +15,7 @@ const Footer = () => {
         <div className="max-w-screen-lg px-4 mx-auto text-block-400 xl:max-w-screen-xl sm:px-6 md:px-8 dark:text-gray-300">
           <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 pb-8 text-lg font-light justify-center list-none ps-0">
             {/* First Column */}
-            <li className="text-center md:text-left">
+            <li className="text-left md:text-left">
               <div className="flex items-center justify-center">
                 <Link
                   href="https://boffinbutler.com/"
@@ -33,11 +33,11 @@ const Footer = () => {
 
             {/* Second Column - Quick Links */}
             <li>
-              <div className="text-center md:text-left">
+              <div className="text-left md:text-left">
                 <h2 className="text-gray-800 dark:text-gray-200 text-md font-medium uppercase mb-4">
                   Quick Links
                 </h2>
-                <ul className="text-center list-none ps-0">
+                <ul className="text-left list-none ps-0">
                   <li className="mb-4 transition-colors duration-200 text-sm hover:text-customBlue dark:hover:text-white">
                     <Link href="/about-us" aria-label="About Us">
                       About Us
@@ -69,11 +69,11 @@ const Footer = () => {
 
             {/* Third Column - Policy */}
             <li>
-              <div className="text-center md:text-left">
+              <div className="text-left md:text-left">
                 <h2 className="text-gray-800 dark:text-gray-200 text-md font-medium uppercase mb-4">
                   Policy
                 </h2>
-                <ul className="text-center list-none ps-0">
+                <ul className="text-left list-none ps-0">
                   <li className="mb-4 transition-colors duration-200 text-sm hover:text-customBlue dark:hover:text-white">
                     <Link href="/terms-and-conditions" aria-label="Terms of Use">
                       Terms of Use
@@ -100,11 +100,11 @@ const Footer = () => {
 
              {/* fourth Column - My Account */}
              <li>
-              <div className="text-center md:text-left">
+              <div className="text-left md:text-left">
                 <h2 className="text-gray-800 dark:text-gray-200 text-md font-medium uppercase mb-4">
                 My Account
                 </h2>
-                <ul className="text-center list-none ps-0">
+                <ul className="text-left list-none ps-0">
                   <li className="mb-4 transition-colors duration-200 text-sm hover:text-customBlue dark:hover:text-white">
                     <Link href="/customer/account" aria-label="My Account">
                     My Account
@@ -127,11 +127,11 @@ const Footer = () => {
 
             {/* 5th Column - Quick Contact */}
             <li>
-              <div className="text-center md:text-left">
+              <div className="text-left md:text-left">
                 <h2 className="text-gray-800 dark:text-gray-200 text-md font-medium uppercase mb-4">
                   Quick Contact
                 </h2>
-                <ul className="text-center list-none ps-0">
+                <ul className="text-left list-none ps-0">
                   <li className="mb-4 transition-colors duration-200 text-sm hover:text-customBlue dark:hover:text-white">
                     <div className="flex items-center justify-start md:justify-start">
                       <IoMdCall />

@@ -167,7 +167,7 @@ const InquireNow: React.FC = () => {
         // Clear validation errors
         setErrors({});
       } catch (error) {
-        toast.error("Error submitting the form.");
+        console.log("Error submitting the form.");
         
       }
     }

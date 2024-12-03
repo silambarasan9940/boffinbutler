@@ -71,11 +71,11 @@ const CartItem: React.FC<CartItemProps> = ({
 
           <h2 className="hidden sm:block sm:text-sm sm:font-semibold sm:pb-2">{name}</h2>
           <p className="flex flex-row items-center text-sm text-gray-500 py-2">
-            Price: ${price.toFixed(2)} 
+            Price: ₹{price.toFixed(2)} 
             <div className='text-green-800 bg-green-300 text-xs font-bold rounded-3xl px-2 ms-4'>{offerPrice}</div>
           </p>
           <p className="flex flex-row items-center font-semibold">
-            Total: ${(price * quantity).toFixed(2)} 
+            Total: ₹{(price * quantity).toFixed(2)} 
             <div className='text-xs text-gray-400 ps-2'>{allTax}</div> 
           </p>
         </div>

@@ -81,7 +81,7 @@ const CreateNewEmployerAccount = ({
       //   toast.error("Failed to send OTP");
       // }
     } catch (error) {
-      toast.error("Error sending OTP");
+      
       console.error("Error sending OTP:", error);
     }
   };
@@ -244,7 +244,7 @@ const CreateNewEmployerAccount = ({
         router.push('/customer/account/login');
       }
     } catch (error) {
-      toast.error("Error creating account");
+      // toast.error("Error creating account");
       console.error("Error creating account:", error);
     }
   };

@@ -75,13 +75,12 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
 
     try {
       const response = await api.post('/create/faculty', payload, { headers });
-      console.log('create faculty', formData)
       setFormData({ firstName: '', lastName: '', email: '', mobile: '' });
       toast.success('Form updated successfully');
       onClose();
       
     } catch (error) {
-      // toast.error('Error updated submitting');
+      
       console.error('Error submitting form:', error);
     }
   };

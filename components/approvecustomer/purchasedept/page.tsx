@@ -79,7 +79,6 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
       onClose();
       
     } catch (error) {
-      // toast.error('Error updated submitting');
       console.error('Error submitting form:', error);
     }
   };

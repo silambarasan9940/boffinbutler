@@ -57,7 +57,7 @@ const MyOrder:React.FC<MyOrderProps> = ({ hideOrdersHeading = true, hideOrderIte
       const response = await api.get<OrdersResponse>(`/mtwo/me/orders?searchCriteria[pageSize]=${itemsPerPage}&searchCriteria[currentPage]=${currentPage}`, { headers });
       setOrders(response.data.items);
       setTotalCount(response.data.total_count);
-      console.log(response.data, 'order history');
+      
     } catch (error) {
       console.log("Failed to fetch data", error);
     }

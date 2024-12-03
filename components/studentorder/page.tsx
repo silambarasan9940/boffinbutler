@@ -47,7 +47,7 @@ const StudentOrder = () => {
     try {
       const response = await api.get("/student/orders", { headers });
       setOrders(response.data[0]);
-      console.log(response.data[0], "order deatils checking");
+      
     } catch (error) {
       console.log("Failed load data response", error);
     }

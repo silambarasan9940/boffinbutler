@@ -184,10 +184,10 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
       }
     } catch (error) {
       console.error("Failed to place order:", error);
-      toast.error("There was an issue placing your order.", {
-        icon: <FaExclamationCircle className="text-red-500" />,
-        progressStyle: { backgroundColor: "red" },
-      });
+      // toast.error("There was an issue placing your order.", {
+      //   icon: <FaExclamationCircle className="text-red-500" />,
+      //   progressStyle: { backgroundColor: "red" },
+      // });
     }
   };
 

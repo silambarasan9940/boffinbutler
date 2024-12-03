@@ -57,7 +57,7 @@ const EditAccountInformation = () => {
       console.log(firstName,lastName, 'updated')
     } catch (error) {
       console.log("Failed to update data", error);
-      alert("Failed to update account information.");
+      
     } finally {
       setLoading(false);
     }

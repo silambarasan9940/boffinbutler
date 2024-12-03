@@ -51,7 +51,7 @@ const RequestQuote = ({id,name,price,qty_val,brand,toggleModal}: RequestQuotePro
      
     } catch (error) {
       setQuoteMessage("An error occurred while fetching the quote.");
-      console.log('Failed to load fetchQuote response', error);
+      
     }
   }
 

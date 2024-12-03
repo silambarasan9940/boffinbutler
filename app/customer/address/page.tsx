@@ -24,7 +24,7 @@ const AccountPage = () => {
         headers,
       });
       setCustomerData(response.data);
-      console.log(response.data);
+     
     } catch (error) {
       console.log("Failed to Fetch data", error);
     }

@@ -106,7 +106,7 @@ const EmployeeList = () => {
       fetchOrderData(); 
       closeModal(); 
     } catch (error) {
-      toast.error('Error submitting form'); 
+      // toast.error('Error submitting form'); 
       console.error('Error submitting form:', error);
     }
   };

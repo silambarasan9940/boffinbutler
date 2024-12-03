@@ -56,8 +56,6 @@ const Modal: React.FC<{
     } catch (error) {
       console.error('Error redeeming product:', error);
 
-      // Show error message using toast
-      toast.error('Failed to redeem product. Please try again later.');
     }
   };
 
@@ -153,12 +151,12 @@ const FreebiesCard: React.FC<FreebiesCardProps> = ({
       } else {
         // If user does not have enough coins, show error message
         setLoading(false);
-        toast.error('You don’t have enough coins to redeem this item!');
+        // toast.error('You don’t have enough coins to redeem this item!');
       }
     } catch (error) {
       console.error('Error checking coins:', error);
       setLoading(false);
-      toast.error('Failed to check your coins. Please try again later.');
+      // toast.error('Failed to check your coins. Please try again later.');
     }
   };
 

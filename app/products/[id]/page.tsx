@@ -29,7 +29,7 @@ const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
       
     } catch (err) {
       setError("Failed to fetch product details");
-      console.error(err);
+      console.log('Failed to fetch product details',err);
     } finally {
       setLoading(false);
     }

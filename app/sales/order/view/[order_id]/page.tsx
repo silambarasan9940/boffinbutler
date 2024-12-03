@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import ShippingPlacementDetails from "@/components/shippingorder/page";
 import Link from "next/link";
 import { AiOutlineDown } from "react-icons/ai";
+import BackButton from "@/components/backbutton";
 
 interface MediaGalleryEntry {
   id: number;
@@ -85,15 +86,13 @@ const OrderDetails: React.FC = () => {
           invoice_status: response.data.extension_attributes.invoice_status,
           shipment_status: response.data.extension_attributes.shipment_status,
           delivery_status: response.data.extension_attributes.delivery_status,
-          // approval_status: true,
-          // invoice_status: true,
-          // shipment_status: true,
-          // delivery_status: true,
+          
         };
         setOrderProgress(progress);
         setInvoiceList(response.data.extension_attributes.invoice_data);
       } catch (error) {
         setError("Failed to load order details. Please try again.");
+        console.log('Failed to load order details. Please try again.', error);
       } finally {
         setLoading(false);
       }
@@ -106,6 +105,7 @@ const OrderDetails: React.FC = () => {
 
   return (
     <div className="w-11/12 mx-auto p-6 pt-20">
+      <BackButton />
       <div className="text-center">
         <ShippingPlacementDetails status={orderProgress} />
         <h2 className="text-2xl font-bold">

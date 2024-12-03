@@ -144,7 +144,7 @@ const CreateEmployeeForm = () => {
       setApprovers([]);
       toast.success("Form updated successfully");
     } catch (error) {
-      toast.error("Error submitting form");
+      
       console.error("Error submitting form:", error);
     }
   };

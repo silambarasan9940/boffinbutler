@@ -22,7 +22,7 @@ const AccountPage = () => {
     try {
       const response = await api.get<CustomerResponse>('/customers/me', { headers });
       setCustomerData(response.data);
-      console.log(response.data);
+      
     } catch (error) {
       console.log('Failed to Fetch data', error);
     }

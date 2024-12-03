@@ -11,6 +11,8 @@ import { Address, CustomAttribute, ExtensionAttributes, CustomerResponse } from 
 import { UseDispatch } from "react-redux";
 import {setPaymentMethod} from '@/redux/store/slices/paymentSlice';
 
+
+
 const PaymentMethod: React.FC = () => {
   const tokenApi = useSelector((state:RootState) => state.auth.token);
 
@@ -114,7 +116,7 @@ const PaymentMethod: React.FC = () => {
       };
 
       const response = await api.post("/carts/mine/set-payment-information", payload, { headers });
-      console.log('Payment method set:', response.data);
+     
     } catch (error) {
       console.error("Error setting payment method:", error);
     }
@@ -146,6 +148,7 @@ const PaymentMethod: React.FC = () => {
   
   return (
     <div className="mt-4">
+      
       {paymentOptions.map((method) => (
         <>
         <div key={method.code} className="flex flex-col mb-2 border-b border-gray-300 pb-4">
