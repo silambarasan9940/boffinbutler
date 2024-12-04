@@ -10,12 +10,13 @@ interface ErrorResponse {
 
 // Create Axios instance with common configurations
 const api = axios.create({
-  baseURL: 'https://beta.boffinbutler.com/rest/default/V1',
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/rest/default/V1`,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
+
 
 // Toast ID to prevent duplicate toasts
 let activeToastId: string | null = null;

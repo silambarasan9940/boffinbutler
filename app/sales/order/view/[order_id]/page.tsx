@@ -19,6 +19,14 @@ interface MediaGalleryEntry {
   file: string;
 }
 
+interface AppliedTax {
+  amount: number;
+}
+
+interface ExtensionAttributes {
+  applied_taxes: AppliedTax[];
+}
+
 interface ItemExtensionAttributes {
   image: MediaGalleryEntry[];
 }
@@ -40,6 +48,7 @@ interface Item {
   sku: string;
   weight: number;
   extension_attributes: ItemExtensionAttributes;
+  percent:number;
 }
 
 interface Order {
@@ -48,6 +57,16 @@ interface Order {
   status: string;
   shipping_description: string;
   items: Item[];
+  subtotal?: number;
+  shipping_amount?: number;
+  grand_total?: number;
+  gst_percentage?: number;
+  gst_amount?: number;
+  tax_amount?: number;
+  grand_total_incl_tax?: number;
+  tax_percent?:number;
+  subtotal_incl_tax?:number;
+  extension_attributes?: ExtensionAttributes;
 }
 
 const OrderDetails: React.FC = () => {
@@ -86,13 +105,12 @@ const OrderDetails: React.FC = () => {
           invoice_status: response.data.extension_attributes.invoice_status,
           shipment_status: response.data.extension_attributes.shipment_status,
           delivery_status: response.data.extension_attributes.delivery_status,
-          
         };
         setOrderProgress(progress);
         setInvoiceList(response.data.extension_attributes.invoice_data);
       } catch (error) {
         setError("Failed to load order details. Please try again.");
-        console.log('Failed to load order details. Please try again.', error);
+        console.log("Failed to load order details. Please try again.", error);
       } finally {
         setLoading(false);
       }
@@ -101,13 +119,57 @@ const OrderDetails: React.FC = () => {
     fetchOrderDetails();
   }, [id, tokenApi]);
 
+  const printOrder = () => {
+    const printWindow = window.open("", "_blank");
+    const printContent = document.getElementById("printable-section")?.innerHTML;
+    if (printWindow && printContent) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+              th, td {
+                padding: 8px;
+                text-align: left;
+                border: 1px solid #ddd;
+              }
+                h2,p {
+                text-align: center;
+                }
+                button {
+                display:none;
+                }
+            </style>
+          </head>
+          <body>
+            <h2>Order Details</h2>
+            ${printContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className="w-11/12 mx-auto p-6 pt-20">
       <BackButton />
       <div className="text-center">
-        <ShippingPlacementDetails status={orderProgress} />
+      <ShippingPlacementDetails status={orderProgress} />
+      </div>
+      <div id="printable-section">
+      <div className="text-center mt-3">
         <h2 className="text-2xl font-bold">
           Order #{orderDetails?.increment_id}
         </h2>
@@ -117,7 +179,7 @@ const OrderDetails: React.FC = () => {
       </div>
       <div className="flex justify-items-end items-center">
         <div className="mt-4 space-x-4">
-          <button className="px-4 py-2 bg-gray-500 text-white rounded-lg">
+          <button className="px-4 py-2 bg-gray-500 text-white rounded-lg" onClick={printOrder}>
             Print Order
           </button>
         </div>
@@ -148,7 +210,7 @@ const OrderDetails: React.FC = () => {
       <div className="mt-6 w-full">
         {/* Items Ordered */}
         <div>
-          <h3 className="text-xl font-semibold">Items Ordered</h3>
+          <h3 className="text-xl font-semibold pb-3">Items Ordered</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full border-collapse border border-gray-300">
               <thead>
@@ -177,9 +239,80 @@ const OrderDetails: React.FC = () => {
                   </tr>
                 ))}
               </tbody>
+              <tfoot className="w-full bg-gray-200 mt-3">
+                <tr className="subtotal">
+                  <th
+                    colSpan={4}
+                    className="p-2 text-right font-semibold"
+                    scope="row"
+                  >
+                    Subtotal
+                  </th>
+                  <td className="p-2 text-right font-medium">
+                    ₹{orderDetails?.subtotal?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+                <tr className="shipping">
+                  <th
+                    colSpan={4}
+                    className="p-2 text-right font-semibold"
+                    scope="row"
+                  >
+                    Shipping &amp; Handling
+                  </th>
+                  <td className="p-2 text-right font-medium">
+                    ₹{orderDetails?.shipping_amount?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+                <tr className="grand_total">
+                  <th
+                    colSpan={4}
+                    className="border p-2 text-right font-bold"
+                    scope="row"
+                  >
+                    Grand Total (Excl.Tax)
+                  </th>
+                  <td className="p-2 text-right font-bold">
+                    ₹{orderDetails?.grand_total?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+                <tr className="totals">
+                  <td colSpan={4} className="p-2 text-right font-semibold">
+                    GST {orderDetails?.tax_percent || "18"}%
+                  </td>
+                  <td className="p-2 text-right font-medium">
+                  ₹{orderDetails?.extension_attributes?.applied_taxes?.[0]?.amount?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+                <tr className="totals-tax-summary">
+                  <th
+                    colSpan={4}
+                    className="border p-2 text-right font-semibold"
+                    scope="row"
+                  >
+                    Tax
+                  </th>
+                  <td className="p-2 text-right font-medium">
+                    ₹{orderDetails?.tax_amount?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+                <tr className="grand_total_incl">
+                  <th
+                    colSpan={4}
+                    className="border p-2 text-right font-bold"
+                    scope="row"
+                  >
+                    Grand Total (Incl.Tax)
+                  </th>
+                  <td className="p-2 text-right font-bold">
+                    ₹{orderDetails?.subtotal_incl_tax?.toFixed(2) || "0.00"}
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
