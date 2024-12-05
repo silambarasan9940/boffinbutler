@@ -38,14 +38,14 @@ const Cart = () => {
   
   const dispatch = useDispatch();
   
-
+  const headers = {
+    Authorization: `Bearer ${tokenApi}`,
+  };
   useEffect(() => {
     const fetchCartItems = async () => {
+      
       try {
-        const headers = {
-          Authorization: `Bearer ${tokenApi}`,
-        };
-
+       
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
         

@@ -89,12 +89,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
         onClick={toggleSearch}
         onKeyDown={onKeyDown}
         className={`transition-all duration-300 ease-in-out bg-gray-100 px-6 py-3 focus:outline-none w-full 
-        ${isSearchVisible ? "rounded-r-full pl-6 border-l-2 border-gray-500" : "hidden md:block rounded-r-full border-l-2 border-gray-500"}`}
+        ${isSearchVisible ? "rounded-full pl-6 md:border-l-2 md:border-gray-500" : "hidden md:block rounded-r-full md:border-l-2 md:border-gray-500"}`}
       />
       <button
         onClick={toggleSearch}
         className={`absolute right-0 transition-all duration-300 ease-in-out bg-gray-100 p-3 rounded-full focus:outline-none 
-        ${isSearchVisible ? "absolute right-6" : "md:block me-2"}`}
+        ${isSearchVisible ? "absolute right-0" : "md:block me-2"}`}
       >
         <BsSearch />
       </button>

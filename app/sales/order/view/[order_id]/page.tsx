@@ -8,6 +8,7 @@ import ShippingPlacementDetails from "@/components/shippingorder/page";
 import Link from "next/link";
 import { AiOutlineDown } from "react-icons/ai";
 import BackButton from "@/components/backbutton";
+import Loader from "@/components/loader";
 
 interface MediaGalleryEntry {
   id: number;
@@ -90,11 +91,12 @@ const OrderDetails: React.FC = () => {
   // Fetch API call
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
-    "Content-Type": "application/json",
   };
 
   useEffect(() => {
+   
     const fetchOrderDetails = async () => {
+
       try {
         const response = await api.get(`/mtwo/me/orders/${id}`, { headers });
         setOrderDetails(response.data);
@@ -160,7 +162,7 @@ const OrderDetails: React.FC = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><Loader/></div>;
 
   return (
     <div className="w-11/12 mx-auto p-6 pt-20">

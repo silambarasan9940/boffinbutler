@@ -43,7 +43,7 @@ export default function SidebarNavigation() {
   };
 
   return (
-    <div className="w-64 p-4 bg-gray-50 rounded-md">
+    <div className="w-full md:w-64 p-4 md:bg-gray-50 rounded-md">
       {/* For larger screens */}
       <div className="hidden md:block">
         {navItems.map((item, index) => (
