@@ -82,7 +82,7 @@ const ProductData: React.FC<ProductDataProps> = ({
       </p>
       <button
             onClick={toggleModal}
-            className="w-full bg-indigo-500 text-white font-normal py-2 px-4 rounded-full hover:bg-indigo-600 transition"
+            className="w-full bg-indigo-500 text-white font-normal mb-3 py-2 px-4 rounded-full hover:bg-indigo-600 transition"
           >
             Request a Quote
       </button>

@@ -98,7 +98,7 @@ useEffect(()=>{
         {products.map((item,index) => 
           <WithStyles key={index}
           title={item.name}
-          imageurl={`${imageUrl}/catalog/product${item.image}`}
+          imageurl={`${imageUrl}catalog/product${item.image}`}
         />
         )
           

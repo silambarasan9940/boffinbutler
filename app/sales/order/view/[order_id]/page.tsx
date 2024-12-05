@@ -100,7 +100,7 @@ const OrderDetails: React.FC = () => {
       try {
         const response = await api.get(`/mtwo/me/orders/${id}`, { headers });
         setOrderDetails(response.data);
-
+        setInvoiceList(response.data.extension_attributes.invoice_data);
         // Dynamically set order progress based on order details
         const progress = {
           approval_status: response.data.extension_attributes.approval_status,

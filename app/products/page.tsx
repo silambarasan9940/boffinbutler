@@ -199,7 +199,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                     <div key={product._id}>
                       <ProductData
                         {...product}
-                        showButton={false}
+                        showButton={true}
                         id={product._id}
                       />
                     </div>
