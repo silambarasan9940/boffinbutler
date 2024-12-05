@@ -23,7 +23,7 @@ const ShippingPlacementDetails: React.FC<ShippingPlacementDetailsProps> = ({
     { label: "Shipment", value: status.shipment_status },
     { label: "Delivery", value: status.delivery_status },
   ];
-console.log(status, 'response list ')
+
   return (
     <div className="relative flex items-center justify-center">
       {/* Container for indicators */}

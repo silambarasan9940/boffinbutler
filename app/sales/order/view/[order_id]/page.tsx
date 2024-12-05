@@ -119,6 +119,7 @@ const OrderDetails: React.FC = () => {
     };
 
     fetchOrderDetails();
+    
   }, [id, tokenApi]);
 
   const printOrder = () => {
@@ -143,6 +144,7 @@ const OrderDetails: React.FC = () => {
                 text-align: left;
                 border: 1px solid #ddd;
               }
+               
                 h2,p {
                 text-align: center;
                 }
@@ -161,6 +163,36 @@ const OrderDetails: React.FC = () => {
       printWindow.print();
     }
   };
+
+  const downloadInvoice = async (invoiceId: string) => {
+    try {
+      const response = await api.get(`invoice/${invoiceId}`, {
+        headers,
+      });
+  
+      if (typeof response.data === "string") {
+        const base64Data = response.data;
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = Array.from(byteCharacters, (char) =>
+          char.charCodeAt(0)
+        );
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Invoice-${invoiceId}.pdf`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      } else {
+        throw new Error("Unexpected response format.");
+      }
+    } catch (error: any) {
+      console.error("Failed to download the invoice:", error.message);
+      setError("Failed to download the invoice. Please try again.");
+    }
+  };
+  
+  
 
   if (loading) return <div><Loader/></div>;
 
@@ -197,8 +229,10 @@ const OrderDetails: React.FC = () => {
             <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
               <ul className="py-1">
                 {invoiceList.length > 0 ? (
-                  invoiceList.map((item, index) => {
-                    return <li key={index}>{item}</li>;
+                  invoiceList.map((invoiceId, index) => {
+                    return <li key={index} className="p-2 cursor-pointer border-b-2 border-gray-300 hover:bg-gray-100 last:border-none"
+                    onClick={() => downloadInvoice(invoiceId)}
+                    >Invoice #{invoiceId}</li>;
                   })
                 ) : (
                   <p className="p-4 text-center">No Invoice Found</p>
