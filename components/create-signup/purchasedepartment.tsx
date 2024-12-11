@@ -271,10 +271,11 @@ const PurchaseDepartment = ({ cities, states, departments, institutes }: { citie
       </Link>
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3"
+        className="flex flex-col gap-6 pt-3"
       >
-        {/* Left Column - Personal Information */}
-        <div>
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Left Column - Personal Information */}
+        <div className="w-full md:w-1/2">
           <h3 className="text-xl font-semibold mb-4 border-b border-gray-300 pb-3 text-indigo-500">
             Personal Information
           </h3>
@@ -488,7 +489,7 @@ const PurchaseDepartment = ({ cities, states, departments, institutes }: { citie
         </div>
 
         {/* Right Column - Address Information */}
-        <div className="border-l pl-6">
+        <div className="md:border-l md:pl-6 w-full md:w-1/2">
           <h3 className="text-xl font-semibold mb-4 border-b border-gary-300 pb-3 text-indigo-500">Address Information</h3>
 
           <div className="space-y-4">
@@ -591,6 +592,7 @@ const PurchaseDepartment = ({ cities, states, departments, institutes }: { citie
               {formErrors.postalCode && <p className="text-red-500 text-sm">{formErrors.postalCode}</p>}
             </div>
           </div>
+        </div>
         </div>
 
         {/* Terms & Conditions */}

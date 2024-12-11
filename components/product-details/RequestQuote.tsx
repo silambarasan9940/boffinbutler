@@ -66,6 +66,7 @@ const RequestQuote = ({id,name,price,qty_val,brand,toggleModal}: RequestQuotePro
             {!isSubmitted ? (
               <>
                 {/* Table of Products */}
+                <div className="overflow-x-auto mb-4">
                 <table className="w-full mb-4 border border-gray-200 rounded-md">
                   <thead>
                     <tr className="bg-gray-100 text-left">
@@ -89,13 +90,15 @@ const RequestQuote = ({id,name,price,qty_val,brand,toggleModal}: RequestQuotePro
                          brand
                         }
                       </td>
-                      <td className="p-2 border-b">₹ {price}</td>
+                      <td className="p-2 flex flex-row pt-5 md:pt-3"><span className="pe-1">₹</span> {price}</td>
                       <td className="p-2 border-b text-center">
                         <input type="checkbox" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
+                </div>
+                
 
                 {/* Requested Quantity and Submit Button */}
                 <div className="flex items-center justify-between">

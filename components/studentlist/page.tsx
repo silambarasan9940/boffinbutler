@@ -122,6 +122,7 @@ const StudentListing = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4 text-center">Students List</h1>
+      <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>
@@ -174,6 +175,7 @@ const StudentListing = () => {
           ))}
         </tbody>
       </table>
+      </div>
 
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm">

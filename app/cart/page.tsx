@@ -41,11 +41,11 @@ const Cart = () => {
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
   };
-  useEffect(() => {
-    const fetchCartItems = async () => {
+  const fetchCartItems = async () => {
       
+    if(tokenApi) {
       try {
-       
+     
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
         
@@ -66,7 +66,7 @@ const Cart = () => {
           quoteId: item.quote_id ,
           
         }));
-
+  
         setCartItems(fetchedItems);
         setCartTotals({ grand_total, subtotal, discount_amount, shipping_amount, tax_amount, items_qty });
       } catch (error) {
@@ -74,7 +74,10 @@ const Cart = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
 
     fetchCartItems();
   }, [tokenApi]);

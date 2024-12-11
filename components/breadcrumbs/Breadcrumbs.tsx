@@ -8,7 +8,7 @@ const Breadcrumbs = () => {
   const pathnames = pathname.split('/').filter((x) => x);
 
   return (
-    <div className="w-11/12 mx-auto pt-6 pb-4 px-4">
+    <div className="w-11/12 mx-auto pt-10 md:pt-6 pb-4 px-4">
       <nav aria-label="breadcrumb py-3">
       <ol className="flex space-x-2 text-gray-500">
         

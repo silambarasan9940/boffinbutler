@@ -26,13 +26,13 @@ const ProductIcon: React.FC<ProductIconProps> = ({
   const dispatch = useDispatch();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchCartItems = async () => {
+  const fetchCartItems = async () => {
+    if(tokenApi) {
       try {
         const headers = {
           Authorization: `Bearer ${tokenApi}`,
         };
-
+  
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
         
@@ -43,13 +43,20 @@ const ProductIcon: React.FC<ProductIconProps> = ({
       } catch (error) {
         console.error('Error fetching cart items:', error);
       } 
-    };
+    }
+    
+  };
 
+  useEffect(() => {
     fetchCartItems();
   }, [tokenApi]);
   
 const handlecart = () => {
-  router.push('/cart');
+  if(tokenApi) {
+    router.push('/cart');
+  }else{
+    router.push('/customer/account/login');
+  }
 }
   return (
     <div className="relative inline-block drop-shadow-md cursor-pointer" onClick={handlecart}>

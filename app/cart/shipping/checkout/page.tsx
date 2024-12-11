@@ -208,16 +208,19 @@ const CheckoutPage: React.FC = () => {
     items_qty: 0,
   });
 
-  useEffect(() => {
-    const fetchCartData = async () => {
-     
+  const fetchCartData = async () => {
+     if(tokenApi) {
       try {
         const response = await api.get('/carts/mine/totals', { headers });
         setCartTotals(response.data);
       } catch (error) {
         console.error("Error fetching cart data:", error);
       }
-    };
+     }
+    
+  };
+  useEffect(() => {
+    
 
     fetchCartData();
   }, []);

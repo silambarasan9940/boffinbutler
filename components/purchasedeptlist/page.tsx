@@ -123,7 +123,8 @@ const PurchaseDeptListing = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-4 text-center">Purchase Department List</h1>
-      <table className="min-w-full bg-white border border-gray-200">
+     <div className="overflow-x-auto">
+     <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>
             <th className="p-2 border-b">ID</th>
@@ -175,6 +176,7 @@ const PurchaseDeptListing = () => {
           ))}
         </tbody>
       </table>
+     </div>
 
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm">

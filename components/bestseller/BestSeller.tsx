@@ -19,7 +19,7 @@ const BestSeller = () => {
   return (
     <div className='pb-6'>
       
-      <BestSellerCard  showAddToCartButton={true}/>
+      <BestSellerCard  showAddToCartButton={false}/>
     </div>
   )
 }

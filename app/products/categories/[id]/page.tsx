@@ -73,6 +73,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
   const [aggregations, setAggregations] = useState<Aggregations | null>(null);
   const [totalProducts, setTotalProducts] = useState(0);
   const [pageSize, setPageSize] = useState(12);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<FilterValues>({
     brands: [],
     materials: [],
@@ -178,13 +179,21 @@ const handleShowMore = () => {
           <div className="py-4 flex flex-col">
             <div>
               <div className="flex items-center gap-4 p-4">
-                <div className="flex items-center w-1/2 md:w-3/4 border border-gray-300 rounded-lg p-2">
+                <div className="flex items-center w-full md:w-3/4 border border-gray-300 rounded-lg ps-2">
                   <FiSearch className="text-gray-500 mr-2" />
-                  <input type="text" placeholder="Search..." className="w-full outline-none" />
+                  <input type="text" 
+                  placeholder="Search..." 
+                  className="w-full outline-none" 
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <button
+                    className="ml-2 bg-indigo-500 text-white rounded-lg px-6 py-2 hover:bg-indigo-600"
+                    
+                  >
+                    Search
+                  </button>
                 </div>
-                <div className="text-gray-700 font-semibold">
-                  Brand <span className="text-indigo-500">MERCK (3790)</span>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -194,17 +203,16 @@ const handleShowMore = () => {
             <ProductFilter aggregations={aggregations} onFilterChange={handleFilterChange} />
           </div>
           <div className="flex flex-wrap w-full mx-auto py-6">
-            <Suspense fallback={<div>Loading account options...</div>}>
               <div className="w-full md:w-full ps-2">
                 <div className="flex flex-col md:flex-row md:justify-between mb-4">
                   <h2 className="text-xl font-bold">{title}</h2>
                   <div className="flex flex-col md:flex-row items-center">
-                  <span className="pe-2">
+                  <span className="pe-2 mt-3 md:mt-0">
                     Showing {(currentPage - 1) * pageSize + 1}-
                     {Math.min(currentPage * pageSize, totalProducts)} of{" "}
                     {totalProducts} Products
                   </span>
-                    <div className="flex items-center">
+                    <div className="flex items-center mt-3 md:mt-0">
                       <label htmlFor="sort" className="mr-2">
                         Sort by:
                       </label>
@@ -239,7 +247,7 @@ const handleShowMore = () => {
                 }
               </div>
               </div>
-            </Suspense>
+           
           </div>
         </div>
         <Testimonial />
@@ -248,4 +256,12 @@ const handleShowMore = () => {
   );
 };
 
-export default ProductsCategoriesPage;
+//export default ProductsCategoriesPage;
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductsCategoriesPage />
+    </Suspense>
+  );
+}

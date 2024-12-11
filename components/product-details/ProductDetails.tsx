@@ -69,23 +69,29 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   }, []);
 
   const handleAddToCart = async () => {
-    const productDetails = {
-      sku: product.sku,
-      qty: quantity,
-      quote_id: cartId,
-    };
-    try {
-      await api.post(
-        "/carts/mine/items",
-        { cartItem: productDetails },
-        { headers }
-      );
-      toast.success("Added to cart successfully");
-    } catch (error) {
-      console.log("Failed to update cart quantity",error);
+    if(tokenApi) {
+      const productDetails = {
+        sku: product.sku,
+        qty: quantity,
+        quote_id: cartId,
+      };
+      try {
+        await api.post(
+          "/carts/mine/items",
+          { cartItem: productDetails },
+          { headers }
+        );
+        toast.success("Added to cart successfully");
+      } catch (error) {
+        console.log("Failed to update cart quantity",error);
+      }
+      setInCart(true);
+    }else{
+      router.push('/customer/account/login');
     }
-    setInCart(true);
-  };
+    }
+    
+    
 
   // Increase the product quantity and update the cart
   const handleIncrease = () => {
@@ -163,7 +169,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-400 font-semibold">
-              ₹{product.price} + GST
+              ₹{product.extension_attributes.original_final_price}
             </span>
             {Number(product.extension_attributes.discount_percent) > 0 && (
               <span className="bg-green-100 text-green-500 rounded-full px-3 py-1 font-sm">
@@ -173,13 +179,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           </div>
           <div className="flex items-center space-x-2">
             <p className="text-3xl text-gray-700 font-semibold">
-              ₹{product.price}
+              ₹{product.extension_attributes.custom_final_price}
             </p>
             <div className="flex">
               <div className="text-sm text-gray-400 font-semibold">
                 + ₹{product.extension_attributes.gst_final_price}
               </div>
-              <span className="text-gray-400 text-sm ps-1">400.87 GST</span>
+              <span className="text-gray-400 text-sm ps-1">GST</span>
             </div>
           </div>
           <p className="text-xl text-gray-800 font-semibold">

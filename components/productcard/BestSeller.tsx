@@ -97,14 +97,14 @@ const ProductDataBestSeller: React.FC<ProductDataProps> = ({
             Request a Quote
       </button>
       
-      {showButton && (
+      {/* {showButton && (
         <button
           onClick={handleClick}
           className="w-full bg-white mt-3 text-customBlue border-2 border-customBlue py-2 px-4 rounded-full hover:text-white hover:bg-indigo-600 transition duration-300 cursor-pointer"
         >
           Add to Cart
         </button>
-      )}
+      )} */}
     </div>
     {
       isModalOpen && 

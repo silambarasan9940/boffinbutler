@@ -44,18 +44,17 @@ const Tabs = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [productLinks, setProductLinks] = useState<ProductLink[]>([]);
 
+  const fetchProductLinks = async () => {
+    try {
+      const response = await api.get("/fetch/categories");
+      const products = response.data[0][0].children;
+      setProductLinks(products);
+    } catch (error) {
+      console.error("Error fetching product links:", error);
+    }
+  };
   // Fetch product links from API
   useEffect(() => {
-    const fetchProductLinks = async () => {
-      
-      try {
-        const response = await api.get("/fetch/categories");
-        const products = response.data[0][0].children;
-        setProductLinks(products);
-      } catch (error) {
-        console.error("Error fetching product links:", error);
-      }
-    };
 
     fetchProductLinks();
   }, []);
@@ -65,6 +64,12 @@ const Tabs = () => {
       <ProductCard title={label.name} showAddToCartButton={false} category_id={label.id} />
     </div>
   ));
+
+  // const fetchTabContents = (label:any, index:any) => {
+  //   <div key={index}>
+  //     <ProductCard title={label.name} showAddToCartButton={false} category_id={label.id} />
+  //   </div>
+  // }
 
   const handleDropdownChange = (index: number) => {
     setActiveTab(index);
@@ -112,7 +117,10 @@ const Tabs = () => {
       {/* Scrollable tab buttons for larger screens */}
       <div className="hidden sm:flex overflow-x-auto md:custom-scrollbar scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4" role="tablist">
         {productLinks.map((label, index) => (
-          <Tab key={index} label={label.name} isActive={activeTab === index} onClick={() => setActiveTab(index)} />
+          <Tab key={index} label={label.name} isActive={activeTab === index} onClick={() => {
+            setActiveTab(index);
+            //  fetchTabContents(label,index);
+          }} />
         ))}
       </div>
 

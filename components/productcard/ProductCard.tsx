@@ -22,7 +22,7 @@ interface Product {
 
 const ProductCard: React.FC<{ title: string; showAddToCartButton?: boolean; category_id:string; }> = ({
   title,
-  showAddToCartButton = true,
+  showAddToCartButton = false,
   category_id,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);

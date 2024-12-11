@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import { imageUrl } from "@/services/common";
 
 interface ProductLink {
   id: string;
@@ -79,6 +80,15 @@ const SearchInput: React.FC<SearchInputProps> = ({
   toggleSearch,
   onKeyDown,
 }) => {
+  const router = useRouter();
+
+  const handleSearchClick = () => {
+    if (query.trim() !== "") {
+      toggleSearch(); 
+      router.push(`/catalogsearch/result?q=${query}`);
+    }
+  };
+
   return (
     <div className="flex items-center w-full relative">
       <input
@@ -92,7 +102,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         ${isSearchVisible ? "rounded-full pl-6 md:border-l-2 md:border-gray-500" : "hidden md:block rounded-r-full md:border-l-2 md:border-gray-500"}`}
       />
       <button
-        onClick={toggleSearch}
+        onClick={handleSearchClick}
         className={`absolute right-0 transition-all duration-300 ease-in-out bg-gray-100 p-3 rounded-full focus:outline-none 
         ${isSearchVisible ? "absolute right-0" : "md:block me-2"}`}
       >
@@ -191,7 +201,7 @@ const ProductSearchBar = () => {
                 >
                   <div className="flex items-center">
                     <img
-                      src={`https://beta.boffinbutler.com/media/catalog/product${suggestion._source.image}`}
+                      src={`${imageUrl}catalog/product${suggestion._source.image}`}
                       alt={suggestion._source.name}
                       className="w-10 h-10 object-cover mr-2"
                     />

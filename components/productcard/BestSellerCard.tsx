@@ -24,7 +24,7 @@ interface BestSellerCardProps {
 }
 
 const BestSellerCard =  ({
-    showAddToCartButton=true}:BestSellerCardProps) => {
+    showAddToCartButton=false}:BestSellerCardProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const fetchBestSellerData = async () => {
         try {

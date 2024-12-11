@@ -126,47 +126,41 @@ const CreateAccount = () => {
 
   return (
     <div className="w-11/12 mx-auto">
-      {/* Show AccountTypeRenderer only if type is present */}
       {type ? (
-        
-          <AccountTypeRenderer 
+        <AccountTypeRenderer
           type={type}
-           cities= {cities} 
-           states={States} 
-           departments={departments}
-           institutes={institutes}
-           />
-        
+          cities={cities}
+          states={States}
+          departments={departments}
+          institutes={institutes}
+        />
       ) : (
         <div className="flex flex-col items-center justify-center min-h-80">
-          <h1 className="text-3xl font-bold mb-8">CREATE ACCOUNT</h1>
-
-          <div className="flex flex-col md:flex-row justify-center space-x-4 w-full">
-            <div className="bg-gray-50 shadow-md rounded-lg p-6 w-1/2">
+          <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 mt-14 md:mt-0">CREATE ACCOUNT</h1>
+  
+          <div className="flex flex-col md:flex-row items-center justify-center md:space-x-4 w-full gap-4">
+            <div className="bg-gray-50 shadow-md rounded-lg p-4 md:p-6 w-full md:w-1/2">
               <div className="flex flex-col items-center">
                 <img
                   src={`${imageUrl}wysiwyg/buyer-icon-clipart.png`}
                   alt="Buyer Icon"
-                  className="w-16 h-16 mb-4"
+                  className="w-12 h-12 md:w-16 md:h-16 mb-4"
                 />
-
+  
                 <button
-                  className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
+                  className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 w-full md:w-auto"
                   onClick={handleBuyerClick}
                 >
                   Buyer
                 </button>
-
+  
                 {showOrganizationDropdown && (
-                  <div className="mt-4 flex flex-col md:flex-row items-center">
-                    <label className="block mb-2 pe-2">
-                      Organization Type:
-                    </label>
-
+                  <div className="mt-4 flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0">
+                    <label className="block mb-2 md:pe-2">Organization Type:</label>
                     <select
                       value={selectedOrganizationType}
                       onChange={handleOrganizationSelect}
-                      className="border rounded-lg p-2"
+                      className="border rounded-lg p-2 w-full md:w-auto"
                     >
                       <option value="">--Select--</option>
                       <option value="corporate">Corporate</option>
@@ -174,14 +168,13 @@ const CreateAccount = () => {
                     </select>
                   </div>
                 )}
-
+  
                 {selectedOrganizationType === "institute" && (
-                  <div className="mt-4 flex flex-col md:flex-row items-center">
-                    <label className="block mb-2 pe-2">Register As:</label>
-
+                  <div className="mt-4 flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0">
+                    <label className="block mb-2 md:pe-2">Register As:</label>
                     <select
                       onChange={handleDepartmentSelect}
-                      className="border rounded-lg p-2"
+                      className="border rounded-lg p-2 w-full md:w-auto"
                     >
                       <option value="">--Select--</option>
                       <option value="faculty">Faculty</option>
@@ -192,16 +185,16 @@ const CreateAccount = () => {
                 )}
               </div>
             </div>
-
-            <div className="bg-gray-50 shadow-md rounded-lg p-6 w-1/2">
+  
+            <div className="bg-gray-50 shadow-md rounded-lg p-4 md:p-6 w-full md:w-1/2">
               <div className="flex flex-col items-center">
                 <img
                   src={`${imageUrl}wysiwyg/seller-icon-clipart.png`}
                   alt="Seller Icon"
-                  className="w-16 h-16 mb-4"
+                  className="w-12 h-12 md:w-16 md:h-16 mb-4"
                 />
-
-                <button className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600">
+  
+                <button className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 w-full md:w-auto">
                   Seller
                 </button>
               </div>
@@ -211,6 +204,7 @@ const CreateAccount = () => {
       )}
     </div>
   );
+  
 };
 
 //export default CreateAccount;

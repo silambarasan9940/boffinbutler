@@ -33,7 +33,7 @@ useEffect(()=>{
   fetchsliderData();
 },[])
   return (
-    <div>
+    <div className="w-11/12 mx-auto">
       <Carousel
         additionalTransfrom={0}
         arrows

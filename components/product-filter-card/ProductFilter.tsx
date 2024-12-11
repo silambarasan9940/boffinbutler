@@ -20,6 +20,7 @@ interface Aggregations {
 interface ProductFilterProps {
   aggregations: Aggregations | null;
   onFilterChange: (filters: FilterValues) => void;
+  onFilterClear: (filters: FilterValues) => void;
 }
 
 interface FilterValues {
@@ -34,7 +35,9 @@ interface FilterValues {
 const ProductFilter: React.FC<ProductFilterProps> = ({
   aggregations,
   onFilterChange,
+  
 }) => {
+  
   const [isPriceOpen, setIsPriceOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPackSizeOpen, setIsPackSizeOpen] = useState(true);
@@ -58,6 +61,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     setSelectedPackSize((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
+    
   };
 
   const handleBrandChange = (brand: string) => {
@@ -72,6 +76,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         ? prev.filter((m) => m !== material)
         : [...prev, material]
     );
+    
   };
 
   const handlePurityChange = (purity: string) => {
@@ -90,6 +95,8 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     );
   };
 
+  
+  
   useEffect(() => {
     if (onFilterChange) {
       onFilterChange({
@@ -101,14 +108,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         quantity_val: selectedPackSize,
       });
     }
-  }, [
-    selectedBrands,
-    selectedMaterials,
-    selectedPurity,
-    priceRange,
-    selectedCategoryId,
-    selectedPackSize,
-  ]);
+  }, []);
 
   return (
     <div className="fixed inset-x-0 top-[150px] bottom-0 rounded-2xl border border-gray-300 bg-white overflow-y-auto mx-3 md:mx-0 md:static md:top-0 md:max-h-full p-4 z-50 md:z-auto">
@@ -349,6 +349,19 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         className="mt-4 w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
       >
         Apply Filters
+      </button>
+      <button
+        onClick={() => onFilterChange({
+          brands: [],
+          materials: [],
+          purity: [],
+          priceRange,
+          category_id: [],
+          quantity_val: [],
+        })}
+        className="mt-4 w-full border-2 border-gray-300 text-gray-500 hover:border-indigo-500 hover:text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
+      >
+        Clear Filters
       </button>
     </div>
   );

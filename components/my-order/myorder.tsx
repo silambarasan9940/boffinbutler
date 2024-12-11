@@ -53,13 +53,17 @@ const MyOrder:React.FC<MyOrderProps> = ({ hideOrdersHeading = true, hideOrderIte
   };
 
   const fetchOrderData = async () => {
-    try {
-      const response = await api.get<OrdersResponse>(`/mtwo/me/orders?searchCriteria[pageSize]=${itemsPerPage}&searchCriteria[currentPage]=${currentPage}`, { headers });
-      setOrders(response.data.items);
-      setTotalCount(response.data.total_count);
-      
-    } catch (error) {
-      console.log("Failed to fetch data", error);
+    if(tokenApi) {
+      try {
+        const response = await api.get<OrdersResponse>(`/mtwo/me/orders?searchCriteria[pageSize]=${itemsPerPage}&searchCriteria[currentPage]=${currentPage}`, { headers });
+        setOrders(response.data.items);
+        setTotalCount(response.data.total_count);
+        
+      } catch (error) {
+        console.log("Failed to fetch data", error);
+      }
+    }else{
+      router.push('/customer/account/login');
     }
   };
 
@@ -78,6 +82,7 @@ const MyOrder:React.FC<MyOrderProps> = ({ hideOrdersHeading = true, hideOrderIte
   return (
     <div className="p-6">
        {hideOrdersHeading && <h1 className="text-2xl font-semibold mb-4 text-center">My Orders</h1>}
+      <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>
@@ -105,6 +110,7 @@ const MyOrder:React.FC<MyOrderProps> = ({ hideOrdersHeading = true, hideOrderIte
           ))}
         </tbody>
       </table>
+      </div>
 
       {hideOrderItemShowing && <div className="flex justify-between items-center mt-4">
         <div className="text-sm">

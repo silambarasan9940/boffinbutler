@@ -85,6 +85,7 @@ interface ProductsPageProps {
 const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
   title = "Products",
 }) => {
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -125,7 +126,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
     { label: "Price Low to High", sort: "price", sortby: "asc" },
     { label: "Price High to Low", sort: "price", sortby: "desc" },
   ];
-  
+
   // Fetch Product Data
   const fetchProductDataList = async (append = false) => {
     const currentSortOption = sortingOptions.find(
@@ -144,6 +145,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
       sortby: currentSortOption?.sortby,
     };
     try {
+      setLoading(true);
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
@@ -154,16 +156,19 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
       }
       setAggregations(response.data[0].aggregations);
       setTotalProducts(response.data[0].total);
+      
     } catch (error) {
       console.log("loading failed fetch product list", error);
+    }finally{
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     setCurrentPage(1);
     fetchProductDataList();
-    
-  }, [filters, searchQuery, sortOption]);
+  }, [filters, sortOption]);
+
   useEffect(() => {
     fetchProductDataList(true);
   }, [currentPage]);
@@ -179,7 +184,6 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
     indexOfFirstProduct,
     indexOfLastProduct
   );
-  
 
   // Sort Option Handler
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -187,37 +191,46 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
   };
   const handleFilterChange = useCallback((newFilters: FilterValues) => {
     setFilters(newFilters);
+    
   }, []);
 
   const handleShowMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  const placeholderText = `Search for '${searchQuery || query}'`;
+
+  const handleSearch = () => {
+    fetchProductDataList();
+  };
+  
   return (
     <>
       <Breadcrumbs />
       <div className="w-11/12 mx-auto">
         <div className="d-block">
           <div className="text-2xl font-semibold">
-            Search for '<span>{searchQuery || query}</span>''
+            Search for '<span>{searchQuery || query}</span>'
           </div>
 
           <div className="py-4 flex flex-col">
             <div>
-              <div className="flex items-center gap-4 p-4">
+              <div className="flex items-center justify-end gap-4 p-4">
                 {/* Search Field with Icon */}
-                <div className="flex items-center w-1/2 md:w-3/4 border border-gray-300 rounded-lg p-2">
+                <div className="flex items-center w-1/2 md:w-1/3 border border-gray-300 rounded-lg ps-2">
                   <FiSearch className="text-gray-500 mr-2" />
                   <input
                     type="text"
-                    placeholder="Search..."
+                    placeholder={placeholderText}
                     className="w-full outline-none"
-                    onChange={(e)=>setSearchQuery(e.target.value)}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                </div>
-
-                <div className="text-gray-700 font-semibold">
-                  Brand <span className="text-indigo-500">MERCK (3790)</span>
+                  <button
+                    className="ml-2 bg-indigo-500 text-white rounded-lg px-3 py-1 hover:bg-indigo-600"
+                    onClick={() => handleSearch()}
+                  >
+                    Search
+                  </button>
                 </div>
               </div>
             </div>
@@ -233,21 +246,21 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
           </div>
           <div className="flex flex-wrap w-full mx-auto py-6">
             {/* Product Display Section */}
-           
-              <div className={`w-full ps-2`}>
-                <div className="flex flex-col md:flex-row md:justify-between mb-4">
-                  <h2 className="text-xl font-bold">{title}</h2>
-                  <div className="flex flex-col md:flex-row items-center">
-                    <span className="pe-2">
-                      Showing {(currentPage - 1) * pageSize + 1}-
-                      {Math.min(currentPage * pageSize, totalProducts)} of{" "}
-                      {totalProducts} Products
-                    </span>
-                    <div className="flex items-center">
-                      <label htmlFor="sort" className="mr-2">
-                        Sort by:
-                      </label>
-                      <select
+
+            <div className={`w-full ps-2`}>
+              <div className="flex flex-col md:flex-row md:justify-between mb-4">
+                <h2 className="text-xl font-bold">{title}</h2>
+                <div className="flex flex-col md:flex-row items-center">
+                  <span className="pe-2">
+                    Showing {(currentPage - 1) * pageSize + 1}-
+                    {Math.min(currentPage * pageSize, totalProducts)} of{" "}
+                    {totalProducts} Products
+                  </span>
+                  <div className="flex items-center">
+                    <label htmlFor="sort" className="mr-2">
+                      Sort by:
+                    </label>
+                    <select
                       id="sort"
                       value={sortOption}
                       onChange={handleSortChange}
@@ -259,46 +272,43 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                         </option>
                       ))}
                     </select>
-                    </div>
-                    <div className="d-block md:hidden">
-                      <FilterModal
-                        aggregations={aggregations}
-                        onFilterChange={handleFilterChange}
-                      />
-                    </div>
+                  </div>
+                  <div className="d-block md:hidden">
+                    <FilterModal
+                      aggregations={aggregations}
+                      onFilterChange={handleFilterChange}
+                    />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                  {products.map((product) => (
-                    <div>
-                      <ProductData
-                        {...product}
-                        showButton={false}
-                        id={product._id}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div>
-                {products.length >= 12 &&
-                  <button
-                  onClick={handleShowMore}
-                  className="py-2 px-4 bg-indigo-500 text-white rounded-md"
-                >
-                  Show more
-                </button>
-                }
-                </div>
               </div>
-           
+              {loading ? <p>Loading ...</p> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                {products.map((product) => (
+                  <div>
+                    <ProductData
+                      {...product}
+                      showButton={false}
+                      id={product._id}
+                    />
+                  </div>
+                ))}
+              </div>}
+              <div>
+                {products.length >= 12 && (
+                  <button
+                    onClick={handleShowMore}
+                    className="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                  >
+                    Show more
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      
     </>
   );
 };
-
 
 //export default ProductsCategoriesPage;
 

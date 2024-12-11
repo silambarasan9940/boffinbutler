@@ -92,14 +92,15 @@ const BrandPage = () => {
     <>
       <Breadcrumbs />
       <div className="w-11/12 mx-auto pt-6">
-        <div className="flex flex-row">
+        <div className="flex flex-col lg:flex-row">
           {/* Sidebar Section */}
-          <div className="w-full md:w-1/4 my-3 md:me-3">
+          <div className="w-full lg:w-1/4 my-3 md:me-3">
             <div className="h-auto bg-gray-200 p-4 rounded-lg md:my-3">
               <div className="text-xl font-semibold text-gray-600 border-b border-gray-300 pb-2">
                 Search Brands
               </div>
-              <div className="flex items-center mb-2 pt-4">
+              <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="flex items-center mb-2 pt-4 sm:w-3/4">
                 <input
                   type="text"
                   value={searchTerm}
@@ -113,13 +114,14 @@ const BrandPage = () => {
               </div>
 
               {/* Clear Button on New Row */}
-              <div className="mb-4">
+              <div className="mb-4 sm:ms-3 sm:w-1/4 sm:pt-4 sm:mb-2">
                 <button
                   onClick={handleClearSearch}
                   className="w-full px-3 py-2 bg-gray-300 border border-gray-300 rounded-lg text-gray-600 hover:bg-indigo-500 hover:text-white"
                 >
                   Clear
                 </button>
+              </div>
               </div>
 
               {/* A to Z Letters */}
@@ -139,7 +141,7 @@ const BrandPage = () => {
                 ))}
               </div>
             </div>
-            <div className="h-auto bg-gray-200 p-4 rounded-lg md:my-3">
+            <div className="h-auto bg-gray-200 p-4 rounded-lg hidden md:my-3">
               <div className="text-xl font-semibold text-gray-600 border-b border-gray-300 pb-2">
                 My Wish List
               </div>
@@ -148,7 +150,7 @@ const BrandPage = () => {
           </div>
 
           {/* Main Content Section */}
-          <div className="w-full md:w-3/4 md:ms-3">
+          <div className="w-full lg:w-3/4 md:ms-3">
             <h2 className="px-5 text-3xl font-bold text-indigo-500 pb-4 border-b border-gray-300">
               ALL BRANDS
             </h2>
@@ -173,7 +175,7 @@ const BrandPage = () => {
               <div className="text-red-500 text-center py-10">{error}</div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 pt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 p-4 pt-3">
                   {brands.length > 0 ? (
                     <BrandList brands={brands} />
                   ) : (

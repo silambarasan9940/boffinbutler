@@ -88,6 +88,7 @@ const StudentOrder = () => {
       ) : (
         <>
           {/* Orders table */}
+          <div className="overflow-auto">
           <table className="w-full border border-gray-300 mb-4 sm:table">
             <thead>
               <tr className="bg-gray-200 text-gray-700 font-semibold">
@@ -137,6 +138,7 @@ const StudentOrder = () => {
                     <h2 className="text-lg font-semibold mb-2 text-gray-700">
                       Order Details for {order.id}
                     </h2>
+                    <div className="overflow-auto">
                     <table className="w-full border border-gray-300">
                       <thead className="bg-gray-200 text-gray-600 font-medium">
                         <tr>
@@ -176,11 +178,13 @@ const StudentOrder = () => {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
 
           {/* Mobile view: Stack order details */}
           <div className="sm:hidden">
