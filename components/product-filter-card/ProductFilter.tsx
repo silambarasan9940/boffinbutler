@@ -110,6 +110,23 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     }
   }, []);
 
+  const handleClearFilters = () => {
+    setSelectedCategoryId([]);
+    setSelectedPurity([]); 
+    setSelectedBrands([]);
+    setSelectedMaterials([]);
+    setSelectedPackSize([]);
+    
+    onFilterChange({
+      brands: [],
+      materials: [],
+      purity: [],
+      priceRange,
+      category_id: [],
+      quantity_val: [],
+    });
+  };
+
   return (
     <div className="fixed inset-x-0 top-[150px] bottom-0 rounded-2xl border border-gray-300 bg-white overflow-y-auto mx-3 md:mx-0 md:static md:top-0 md:max-h-full p-4 z-50 md:z-auto">
       {/* Categories Section */}
@@ -351,14 +368,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         Apply Filters
       </button>
       <button
-        onClick={() => onFilterChange({
-          brands: [],
-          materials: [],
-          purity: [],
-          priceRange,
-          category_id: [],
-          quantity_val: [],
-        })}
+       onClick={handleClearFilters}
         className="mt-4 w-full border-2 border-gray-300 text-gray-500 hover:border-indigo-500 hover:text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
       >
         Clear Filters
