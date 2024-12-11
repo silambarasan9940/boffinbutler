@@ -67,6 +67,7 @@ const BlogCard: React.FC = () => {
                   url_key={post.url_key}
                   titleFontSize="text-sm" 
                   contentLength={50} 
+                  author={post.author}
                 />
               ))}
             </div>
@@ -82,7 +83,8 @@ const BlogCard: React.FC = () => {
                   content={post.content}
                   url_key={post.url_key}
                   titleFontSize="text-sm" 
-                  contentLength={50}  
+                  contentLength={50} 
+                  author={post.author}
                 />
               ))}
             </div>

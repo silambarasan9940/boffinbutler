@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
     remotePatterns: [
       {
@@ -22,7 +23,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
- 
+  
 };
 
 export default nextConfig;

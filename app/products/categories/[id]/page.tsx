@@ -172,11 +172,11 @@ const handleShowMore = () => {
                 }}
               />
             ) : (
-              <p>Description not available.</p>
+              <p>Description not available.</p> 
             )}
           </div>
 
-          <div className="py-4 flex flex-col">
+          {/* <div className="py-4 flex flex-col">
             <div>
               <div className="flex items-center gap-4 p-4">
                 <div className="flex items-center w-full md:w-3/4 border border-gray-300 rounded-lg ps-2">
@@ -196,7 +196,7 @@ const handleShowMore = () => {
                 
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-row">
           <div className="hidden md:block md:w-1/4 pe-2">
