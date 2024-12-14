@@ -4,7 +4,6 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import ProductDetails from "@/components/product-details/ProductDetails";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import { CirclesWithBar } from "react-loader-spinner";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/loader";
 

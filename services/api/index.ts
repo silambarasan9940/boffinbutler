@@ -54,7 +54,7 @@ api.interceptors.response.use(
       const errorMessage =
         data.message ||
         (status === 401
-          ? 'Unauthorized! Please log in again.'
+          ? `${localStorage.removeItem("authToken")}`
           : status === 403
           ? 'Access denied. You do not have the necessary permissions.'
           : status >= 500

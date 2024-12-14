@@ -21,9 +21,9 @@ const Topheader = () => {
     // Dispatch the signOut action
     dispatch(signOut());
   };
-
+  const authToken = localStorage.getItem("authToken");
   useEffect(() => {
-    if (isSignedIn) {
+    if (isSignedIn && authToken) {
       // Fetch the user data after login
       api.get("/customers/me", {
           headers: {
