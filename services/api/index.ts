@@ -53,8 +53,8 @@ api.interceptors.response.use(
       const { status, data } = error.response;
       if(status === 401) {
         localStorage.removeItem("authToken")
-        if(error.config?.url == '/customer/me/' || error.config?.url == "/carts/mine/")
-        {
+        if (error.config?.url?.replace(/\/$/, "") === "/customer/me" || 
+        error.config?.url?.replace(/\/$/, "") === "/carts/mine") {
           activeToastId = null;
         }
       }
