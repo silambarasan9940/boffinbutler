@@ -55,7 +55,10 @@ api.interceptors.response.use(
         localStorage.removeItem("authToken")
         if (error.config?.url?.replace(/\/$/, "") === "/customer/me" || 
         error.config?.url?.replace(/\/$/, "") === "/carts/mine") {
-          activeToastId = null;
+          activeToastId = null;   
+           console.log(error.config?.url+"rtyu");
+
+
         }
       }
       
@@ -68,8 +71,11 @@ api.interceptors.response.use(
           : status >= 500
           ? 'Server error! Please try again later.'
           : 'An error occurred!');
+          console.log(activeToastId +" ==activeToastId");
 
-      if (!activeToastId) {
+      if (activeToastId != null) {
+        console.log(error.config?.url+" No error activeToastId");
+
         activeToastId = `error-${status}`;
         toast.error(errorMessage, {
           position: 'top-right',
