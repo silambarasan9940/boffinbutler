@@ -48,13 +48,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError<ErrorResponse>) => {
+    console.log(error.config?.url);
     if (error.response) {
       const { status, data } = error.response;
-
+      if(status === 401) {
+        localStorage.removeItem("authToken")
+        if(error.config?.url == '/customer/me/' || error.config?.url == "/carts/mine/")
+        {
+          activeToastId = null;
+        }
+      }
+      
       const errorMessage =
         data.message ||
         (status === 401
-          ? `${localStorage.removeItem("authToken")}`
+          ? 'Unauthorized! Please log in again.'
           : status === 403
           ? 'Access denied. You do not have the necessary permissions.'
           : status >= 500
