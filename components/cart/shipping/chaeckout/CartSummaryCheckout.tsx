@@ -109,12 +109,14 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
   };
 
   const fetchCartData = async () => {
-    try {
-      const response = await api.get("/carts/mine", { headers });
-      setCartData(response.data);
-    } catch (error) {
-      console.log("Failed to fetch cart data", error);
-      throw error;
+    if(tokenApi) {
+      try {
+        const response = await api.get("/carts/mine", { headers });
+        setCartData(response.data);
+      } catch (error) {
+        console.log("Failed to fetch cart data", error);
+        throw error;
+      }
     }
   };
 
