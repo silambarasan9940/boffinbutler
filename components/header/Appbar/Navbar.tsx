@@ -46,21 +46,29 @@ const Navbar = () => {
     if (isProductLink) setIsDropdownOpen(false);
     setIsOpen(false); 
   };
-
+  const fetchProductLinks = async () => {
+    try {
+      const response = await api.get("/fetch/categories");
+      const products = response.data[0][0].children; 
+      setProductLinks(products); 
+      localStorage.setItem('categories',JSON.stringify(products));
+    } catch (error) {
+      console.error("Error fetching product links:", error);
+    }
+  };
   // Fetch product links from API
   useEffect(() => {
-    const fetchProductLinks = async () => {
-      try {
-        const response = await api.get("/fetch/categories");
-        const products = response.data[0][0].children; 
-        setProductLinks(products); 
-      } catch (error) {
-        console.error("Error fetching product links:", error);
-      }
-    };
-
-    fetchProductLinks();
+    const storedCategories = localStorage.getItem('categories');
+    
+    if (storedCategories) {
+      // Parse and set the stored categories from localStorage
+      setProductLinks(JSON.parse(storedCategories));
+    } else {
+      // Fetch from API if not available in localStorage
+      fetchProductLinks();
+    }
   }, []);
+  
 
   // Check the current pathname for active link
   useEffect(() => {

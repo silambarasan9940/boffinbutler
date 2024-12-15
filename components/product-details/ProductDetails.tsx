@@ -65,7 +65,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   useEffect(() => {
-    fetchCartID();
+    if(tokenApi){
+    if(localStorage.getItem("quote_id")){
+// do nothing
+    }else{
+      fetchCartID();
+    }
+  }
   }, []);
 
   const handleAddToCart = async () => {

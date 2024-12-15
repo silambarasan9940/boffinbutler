@@ -31,7 +31,7 @@ const AddProductCard: React.FC<AddProductCardProps> = ({
   const router = useRouter();
    // Function to navigate to the product details page
    const handleClick = () => {
-    router.push(`/products/${url_key}?id=${entity_id}`);
+    router.push(`/products/${url_key}`);
   };
 
   return (

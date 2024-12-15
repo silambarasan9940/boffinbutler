@@ -119,3 +119,7 @@ p {
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: #f1f1f1; 
 }
+.quote_download {
+  color:rgb(78 69 228);
+  text-decoration: underline;
+}

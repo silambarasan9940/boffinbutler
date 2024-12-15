@@ -35,11 +35,14 @@ const ProductIcon: React.FC<ProductIconProps> = ({
   
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
-        
+        if(response.data.id) {
         // Destructure the required totals from the API response
         const { items_qty } = response.data;
-        
         dispatch(setCount(items_qty));
+      }
+      // else{
+      //   router.push('/cart')
+      // }
       } catch (error) {
         console.error('Error fetching cart items:', error);
       } 
@@ -48,7 +51,9 @@ const ProductIcon: React.FC<ProductIconProps> = ({
   };
 
   useEffect(() => {
-    fetchCartItems();
+    if(localStorage.getItem("quote_id")){
+      fetchCartItems();
+    }
   }, [tokenApi]);
   
 const handlecart = () => {

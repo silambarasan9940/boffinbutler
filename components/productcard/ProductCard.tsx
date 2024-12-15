@@ -20,9 +20,10 @@ interface Product {
   
 }
 
-const ProductCard: React.FC<{ title: string; showAddToCartButton?: boolean; category_id:string; }> = ({
+const ProductCard: React.FC<{ title: string; showAddToCartButton?: boolean; category_id:string; showQouteButton?:boolean;}> = ({
   title,
   showAddToCartButton = false,
+  showQouteButton = true,
   category_id,
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -60,7 +61,7 @@ useEffect(() => {
       <h2 className="text-3xl font-semibold mb-6">{title}</h2>
       <Carousel responsive={responsive} ssr={true} infinite={true} autoPlay={true} autoPlaySpeed={4000}>
         {products.map((product, index) => (
-          <ProductData key={index} {...product} showButton={showAddToCartButton} id={product._id}/>
+          <ProductData key={index} {...product} showButton={showAddToCartButton} id={product._id} showQuoteBtn={showQouteButton}/>
         ))}
       </Carousel>
     </div>

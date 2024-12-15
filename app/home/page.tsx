@@ -7,8 +7,6 @@ import ProductList from '@/components/newly-added-products/ProductList';
 import Tabs from '@/components/tab/Tabs';
 import Testimonial from '@/components/testimonial/Testimonial';
 
-
-
 const Home = () => {
   return (
     <>

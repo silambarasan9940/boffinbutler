@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import CheckoutSteps from "@/components/checkoutcard/CheckoutSteps";
-import TestimonialSlider from "@/components/testimonial/Testimonial";
 import CartSummaryCheckout from "@/components/cart/shipping/chaeckout/CartSummaryCheckout";
 import api from "@/services/api";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,7 @@ import { RootState } from "@/redux/store/store";
 import { Address, CustomAttribute, ExtensionAttributes, CustomerResponse } from '@/services/types/address-types/index';
 import { UseDispatch } from "react-redux";
 import {setPaymentMethod} from '@/redux/store/slices/paymentSlice';
-
+import {useRouter} from "next/navigation";
 
 
 const PaymentMethod: React.FC = () => {
@@ -194,6 +193,8 @@ const PaymentMethod: React.FC = () => {
 };
 
 const CheckoutPage: React.FC = () => {
+  const router = useRouter();
+  
   const tokenApi = useSelector((state:RootState) => state.auth.token);
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
@@ -211,8 +212,17 @@ const CheckoutPage: React.FC = () => {
   const fetchCartData = async () => {
      if(tokenApi) {
       try {
+        
         const response = await api.get('/carts/mine/totals', { headers });
-        setCartTotals(response.data);
+        if(response.data.id){
+          setCartTotals(response.data);
+          // fetchCustomerAddress();
+
+        }
+        // else{
+        //   router.push('/cart')
+
+        // }
       } catch (error) {
         console.error("Error fetching cart data:", error);
       }
@@ -255,9 +265,7 @@ const CheckoutPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="w-full bg-gray-100 pb-8 mt-6">
-        <TestimonialSlider />
-      </div>
+      
     </>
   );
 };

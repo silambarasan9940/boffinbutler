@@ -49,19 +49,27 @@ const Tabs = () => {
       const response = await api.get("/fetch/categories");
       const products = response.data[0][0].children;
       setProductLinks(products);
+      // localStorage.setItem('categories',JSON.stringify(products));
     } catch (error) {
       console.error("Error fetching product links:", error);
     }
   };
   // Fetch product links from API
   useEffect(() => {
-
-    fetchProductLinks();
+    const storedCategories = localStorage.getItem('categories');
+    
+    if (storedCategories) {
+      // Parse and set the stored categories from localStorage
+      setProductLinks(JSON.parse(storedCategories));
+    } else {
+      // Fetch from API if not available in localStorage
+      fetchProductLinks();
+    }
   }, []);
 
   const tabContents = productLinks.map((label, index) => (
     <div key={index}>
-      <ProductCard title={label.name} showAddToCartButton={false} category_id={label.id} />
+      <ProductCard title={label.name} showAddToCartButton={false} category_id={label.id} showQouteButton={false}/>
     </div>
   ));
 

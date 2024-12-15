@@ -5,10 +5,10 @@ import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { FiSearch, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import ProductFilter from "@/components/product-filter-card/ProductFilter";
-import Testimonial from "@/components/testimonial/Testimonial";
 import FilterModal from "@/components/product-filter-card/FilterModal";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import api from "@/services/api";
+import Loader from "@/components/loader";
 
 // Define types for products
 interface ProductSource {
@@ -208,16 +208,16 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
     <>
       <Breadcrumbs />
       <div className="w-11/12 mx-auto">
-        <div className="d-block">
-          <div className="text-2xl font-semibold">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="text-2xl font-semibold w-full">
             Search for '<span>{searchQuery || query}</span>'
           </div>
 
-          <div className="py-4 flex flex-col">
-            <div>
-              <div className="flex items-center justify-end gap-4 p-4">
+          <div className="w-full py-4 flex flex-col">
+            <div className="w-full">
+              <div className="w-full flex items-center justify-end gap-4 p-4">
                 {/* Search Field with Icon */}
-                <div className="flex items-center w-1/2 md:w-1/3 border border-gray-300 rounded-lg ps-2">
+                <div className="flex items-center w-full md:w-2/3 border border-gray-300 rounded-lg ps-2">
                   <FiSearch className="text-gray-500 mr-2" />
                   <input
                     type="text"
@@ -281,7 +281,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                   </div>
                 </div>
               </div>
-              {loading ? <p>Loading ...</p> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+              {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
                 {products.map((product) => (
                   <div>
                     <ProductData
@@ -293,7 +293,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                 ))}
               </div>}
               <div>
-                {products.length >= 12 && (
+                {products.length < totalProducts && (
                   <button
                     onClick={handleShowMore}
                     className="py-2 px-4 bg-indigo-500 text-white rounded-md"

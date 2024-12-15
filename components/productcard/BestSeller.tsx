@@ -26,6 +26,7 @@ interface ProductDataProps extends Product {
   isProductPage?: boolean;
   isProductShadow?: boolean;
   isProductPadding?: boolean;
+  showQouteBtn?:boolean;
 }
 
 const ProductDataBestSeller: React.FC<ProductDataProps> = ({
@@ -45,12 +46,13 @@ const ProductDataBestSeller: React.FC<ProductDataProps> = ({
   isProductPage = false,
   isProductShadow = true,
   isProductPadding = true,
+  showQouteBtn = false
 }) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Function to navigate to the product details page
   const handleClick = () => {
-    router.push(`/products/${url_key}?id=${entity_id}`);
+    router.push(`/products/${url_key}`);
   };
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -66,13 +68,14 @@ const ProductDataBestSeller: React.FC<ProductDataProps> = ({
       <img
         src={`${imageUrl}catalog/product${image ? image : "/0/0/008-1.jpg"}`}
         alt={name}
-        className="w-full h-48 object-cover mb-4 rounded-md"
+        className="w-full h-48 object-cover mb-4 rounded-md cursor-pointer"
         onClick={handleClick}
       />
 
       <div className="relative group">
-        <h2 className="text-sm font-medium mb-2" onClick={handleClick}>{name.length < 29 ? name : name.substring(0,29)+'...'}</h2>
-        <div className="absolute left-0 bottom-full mb-1 hidden max-w-xs break-words px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-lg group-hover:block">
+        <h2 className="text-sm font-medium mb-2 cursor-pointer" onClick={handleClick}>{name.length < 29 ? name : name.substring(0,29)+'...'}</h2>
+        <div 
+        className="absolute left-0 bottom-full mb-1 hidden max-w-xs break-words px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-lg group-hover:block cursor-pointer">
           {name}
         </div>
       </div>
@@ -90,12 +93,13 @@ const ProductDataBestSeller: React.FC<ProductDataProps> = ({
         ₹ {parseFloat(final_price).toFixed(2)}{" "}
         <span className="font-normal text-gray-400">(Incl. of all taxes)</span>
       </p>
-      <button
+      {showQouteBtn &&
+        <button
             onClick={toggleModal}
             className="w-full bg-indigo-500 text-white font-normal py-2 px-4 rounded-full hover:bg-indigo-600 transition"
           >
             Request a Quote
-      </button>
+      </button>}
       
       {/* {showButton && (
         <button

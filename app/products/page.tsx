@@ -4,7 +4,6 @@ import ProductData from "@/components/productcard/ProductData";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import ProductFilter from "@/components/product-filter-card/ProductFilter";
-import Testimonial from "@/components/testimonial/Testimonial";
 import FilterModal from "@/components/product-filter-card/FilterModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/services/api";
@@ -209,7 +208,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                 )}
               </div>
               <div>
-                {products.length >= 12 &&
+                {products.length < totalProducts &&
                   <button
                   onClick={handleShowMore}
                   className="py-2 px-4 bg-indigo-500 text-white rounded-md"

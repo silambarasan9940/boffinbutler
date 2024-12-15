@@ -35,9 +35,7 @@ interface FilterValues {
 const ProductFilter: React.FC<ProductFilterProps> = ({
   aggregations,
   onFilterChange,
-  
 }) => {
-  
   const [isPriceOpen, setIsPriceOpen] = useState(true);
   const [isBrandOpen, setIsBrandOpen] = useState(true);
   const [isPackSizeOpen, setIsPackSizeOpen] = useState(true);
@@ -61,7 +59,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     setSelectedPackSize((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
-    
   };
 
   const handleBrandChange = (brand: string) => {
@@ -76,7 +73,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         ? prev.filter((m) => m !== material)
         : [...prev, material]
     );
-    
   };
 
   const handlePurityChange = (purity: string) => {
@@ -95,8 +91,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     );
   };
 
-  
-  
   useEffect(() => {
     if (onFilterChange) {
       onFilterChange({
@@ -108,15 +102,21 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         quantity_val: selectedPackSize,
       });
     }
-  }, []);
+  }, [
+    selectedBrands,
+    selectedMaterials,
+    selectedPurity,
+    selectedCategoryId,
+    selectedPackSize,
+  ]);
 
   const handleClearFilters = () => {
     setSelectedCategoryId([]);
-    setSelectedPurity([]); 
+    setSelectedPurity([]);
     setSelectedBrands([]);
     setSelectedMaterials([]);
     setSelectedPackSize([]);
-    
+
     onFilterChange({
       brands: [],
       materials: [],
@@ -134,12 +134,20 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         <div className="w-full flex flex-row items-center justify-between border-b border-gray-300 pb-4">
           <h2 className="text-lg font-semibold">Categories</h2>
           <div className="text-gray-400 cursor-pointer">
-            <FiSliders />
+            <button
+              onClick={handleClearFilters}
+              className="px-3 w-full border-2 border-gray-300 text-gray-500 hover:border-indigo-500 hover:text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
+            >
+              Clear all
+            </button>
           </div>
         </div>
 
         {aggregations?.category_id?.map((item) => (
-          <div key={item.key} className="w-full flex items-center justify-between py-1">
+          <div
+            key={item.key}
+            className="w-full flex items-center justify-between py-1"
+          >
             <label className="flex justify-end text-sm">{item.name}</label>
             <input
               type="checkbox"
@@ -240,7 +248,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                   className="w-full flex items-center justify-between py-1"
                 >
                   <label className="flex justify-end text-sm">
-                    {`${brand.name} (${brand ? brand.doc_count : ''})`} 
+                    {`${brand.name} (${brand ? brand.doc_count : ""})`}
                   </label>
                   <input
                     type="checkbox"
@@ -275,7 +283,9 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                   key={size.key}
                   className="w-full flex items-center justify-between py-1"
                 >
-                  <label className="text-sm">{`${size.name} (${size ? size.doc_count : ''})`}</label>
+                  <label className="text-sm">{`${size.name} (${
+                    size ? size.doc_count : ""
+                  })`}</label>
                   <input
                     type="checkbox"
                     checked={selectedPackSize.includes(size.key)}
@@ -309,7 +319,9 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
                   key={purity.key}
                   className="w-full flex items-center justify-between py-1"
                 >
-                  <label className="text-sm">{`${purity.name} (${purity ? purity.doc_count : ''})`}</label>
+                  <label className="text-sm">{`${purity.name} (${
+                    purity ? purity.doc_count : ""
+                  })`}</label>
                   <input
                     type="checkbox"
                     checked={selectedPurity.includes(purity.key)}
@@ -339,8 +351,13 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
               style={{ maxHeight: "150px" }}
             >
               {aggregations.material.map((material) => (
-                <div key={material.key} className="w-full flex items-center justify-between py-1">
-                  <label className="text-sm">{`${material.name} (${material ? material.doc_count : ''})`}</label>
+                <div
+                  key={material.key}
+                  className="w-full flex items-center justify-between py-1"
+                >
+                  <label className="text-sm">{`${material.name} (${
+                    material ? material.doc_count : ""
+                  })`}</label>
                   <input
                     type="checkbox"
                     checked={selectedMaterials.includes(material.key)}
@@ -354,7 +371,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         </div>
       )}
 
-      <button
+      {/* <button
         onClick={() => onFilterChange({
           brands: selectedBrands,
           materials: selectedMaterials,
@@ -366,13 +383,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
         className="mt-4 w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
       >
         Apply Filters
-      </button>
-      <button
-       onClick={handleClearFilters}
-        className="mt-4 w-full border-2 border-gray-300 text-gray-500 hover:border-indigo-500 hover:text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
-      >
-        Clear Filters
-      </button>
+      </button> */}
     </div>
   );
 };

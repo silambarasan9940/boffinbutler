@@ -54,7 +54,9 @@ api.interceptors.response.use(
       if(status === 401) {
         localStorage.removeItem("authToken")
         if (error.config?.url?.replace(/\/$/, "") === "/customer/me" || 
-        error.config?.url?.replace(/\/$/, "") === "/carts/mine") {
+        error.config?.url?.replace(/\/$/, "") === "/carts/mine" ||
+      error.config?.url?.replace(/\/$/, "") === "/quote/save"
+      ) {
           activeToastId = null;   
            console.log(error.config?.url+"rtyu");
 

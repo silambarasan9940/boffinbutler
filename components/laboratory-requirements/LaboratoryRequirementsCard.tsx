@@ -1,15 +1,21 @@
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from "next/navigation";
 
 interface WithStylesProps {
   title: string;
   imageurl: string;
+ url_key: string;
 }
 
-const LaboratoryRequirementsCard: React.FC<WithStylesProps> = ({ title, imageurl }) => {
+const LaboratoryRequirementsCard: React.FC<WithStylesProps> = ({ title, imageurl,url_key }) => {
+  const router = useRouter();
+  const handleClick = (url_key:string) => {
+    router.push(`/products/${url_key}`);
+  }
   return (
     <div className="max-w-sm p-4 m-4 bg-white shadow-lg rounded-xl">
-  <div className="relative">
+  <div className="relative cursor-pointer" onClick={()=>handleClick(url_key)}>
     {/* Card Image */}
     <Image
       src={imageurl}

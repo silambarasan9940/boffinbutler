@@ -5,7 +5,6 @@ import { FaRegSquare } from "react-icons/fa6";
 import BestSeller from "@/components/bestseller/BestSeller";
 import Brandtestimonial from "@/components/company-brand-logo/Brandtestimonial";
 import Tabs from "@/components/tab/Tabs";
-import Testimonial from "@/components/testimonial/Testimonial";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import leftimg from '@/src/assests/images/leftimg.png';
 import rightimg from '@/src/assests/images/rightimg.png';
@@ -246,11 +245,7 @@ const AboutUs = () => {
             <Tabs />
           </div>
         </div>
-        <div className="flex flex-1 justify-center pb-8 w-full bg-gray-100">
-          <div className="text-center w-11/12">
-            <Testimonial />
-          </div>
-        </div>
+        
     </>
   );
 };

@@ -24,7 +24,7 @@ interface ProductDataProps extends Product {
   isProductPage?: boolean;
   isProductShadow?: boolean;
   isProductPadding?: boolean;
-  
+  showQuoteBtn?: boolean;
 }
 
 const ProductData: React.FC<ProductDataProps> = ({
@@ -41,13 +41,14 @@ const ProductData: React.FC<ProductDataProps> = ({
   isProductPage = false,
   isProductShadow = true,
   isProductPadding = true,
+  showQuoteBtn = true
   
 }) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Function to navigate to the product details page
   const handleClick = () => {
-    router.push(`/products/${_source.url_key}?id=${id}`);
+    router.push(`/products/${_source.url_key}`);
   };
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -61,11 +62,11 @@ const ProductData: React.FC<ProductDataProps> = ({
       <img
         src={`${imageUrl}catalog/product${_source?.image ? _source?.image : '/0/0/008-1.jpg'}`}
         alt={name}
-        className="w-full h-48 object-cover mb-4 rounded-md"
+        className="w-full h-48 object-cover mb-4 rounded-md cursor-pointer"
         onClick={handleClick}
       />
       <div className="relative group">
-        <h2 className="text-sm font-medium mb-2"
+        <h2 className="text-sm font-medium mb-2 cursor-pointer"
         onClick={handleClick}
         >{_source?.name.length < 29 ? _source?.name : _source?.name.substring(0,29)+'...'}</h2>
         <div className="absolute left-0 bottom-full mb-1 hidden max-w-xs break-words px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-lg group-hover:block">
@@ -80,12 +81,12 @@ const ProductData: React.FC<ProductDataProps> = ({
       <p className="text-sm text-block mb-4 font-bold">
         ₹ {_source?.special_price} <span className="font-normal text-gray-400">(Incl. of all taxes)</span>
       </p>
-      <button
+     {showQuoteBtn && <button
             onClick={toggleModal}
             className="w-full bg-indigo-500 text-white font-normal mb-3 py-2 px-4 rounded-full hover:bg-indigo-600 transition"
           >
             Request a Quote
-      </button>
+      </button>}
      
       {/* {showButton && (
         <button

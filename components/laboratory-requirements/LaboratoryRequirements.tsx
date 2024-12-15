@@ -10,18 +10,17 @@ import { imageUrl } from "@/services/common";
 interface Products {
   image: string;
   name:string;
+  url_key:string;
 }
 
 
 const LaboratoryRequirements = () => {
-
   const [products, setProducts] = useState<Products[]>([]);
-
 const fetchsliderData = async () => {
   
   try {
     
-    const response = await api.get('/productblocks/1');
+    const response = await api.get('/productblocks/2');
     setProducts(response.data[0].items);
     
   } catch (error) {
@@ -99,6 +98,7 @@ useEffect(()=>{
           <WithStyles key={index}
           title={item.name}
           imageurl={`${imageUrl}catalog/product${item.image}`}
+          url_key={item.url_key}
         />
         )
           

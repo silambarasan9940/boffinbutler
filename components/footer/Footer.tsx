@@ -186,9 +186,9 @@ const Footer = () => {
             </li>
           </ul>
 
-          <div className="flex flex-col md:flex-row mx-auto items-center justify-between border-t border-gray-200 w-full md:w-11/12 px-4">
+          <div className="flex flex-col md:flex-row mx-auto items-center justify-center border-t border-gray-200 w-full md:w-11/12 px-4">
             {/* Social Media Links */}
-            <div className="pt-8 md:pt-[100px] flex px-4 max-w-xs items-center justify-center md:justify-end">
+            <div className="pt-4 flex px-4 max-w-xs items-center justify-center md:justify-end">
               {/* Social Media Icons */}
               <Link
                 href="#"
@@ -238,7 +238,7 @@ const Footer = () => {
             </div>
 
             {/* Newsletter Subscription */}
-            <div className="text-center pt-8 sm:pt-12 font-light flex flex-col items-center justify-center md:justify-start w-full">
+            {/* <div className="text-center pt-8 sm:pt-12 font-light flex flex-col items-center justify-center md:justify-start w-full">
               <h4 className="text-xl font-semibold text-center py-3">
                 SIGN UP FOR OUR NEWSLETTER
               </h4>
@@ -258,7 +258,7 @@ const Footer = () => {
                   </button>
                 </div>
               </form>
-            </div>
+            </div> */}
           </div>
         </div>
       </footer>

@@ -24,18 +24,27 @@ const CategoriesDropdown: React.FC<{
   setCategoriesValue: (id: string) => void;
 }> = ({ toggleDropdown, isOpen, setCategoriesValue }) => {
   const [categories, setCategories] = useState<ProductLink[]>([]);
-
+  
+  const fetchProductLinks = async () => {
+    try {
+      const response = await api.get("/fetch/categories");
+      const products = response.data[0][0].children;
+      setCategories(products);
+      // localStorage.setItem('categories',JSON.stringify(products));
+    } catch (error) {
+      console.error("Error fetching product links:", error);
+    }
+  };
   useEffect(() => {
-    const fetchProductLinks = async () => {
-      try {
-        const response = await api.get("/fetch/categories");
-        const products = response.data[0][0].children;
-        setCategories(products);
-      } catch (error) {
-        console.error("Error fetching product links:", error);
-      }
-    };
-    fetchProductLinks();
+    const storedCategories = localStorage.getItem('categories');
+    
+    if (storedCategories) {
+      // Parse and set the stored categories from localStorage
+      setCategories(JSON.parse(storedCategories));
+    } else {
+      // Fetch from API if not available in localStorage
+      fetchProductLinks();
+    }
   }, []);
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import api from "@/services/api";
-import { useRouter } from "next/navigation";
+import { usePathname } from 'next/navigation'
 import ProductDetails from "@/components/product-details/ProductDetails";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { useSearchParams } from "next/navigation";
@@ -10,11 +10,17 @@ import Loader from "@/components/loader";
 const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
   params,
 }) => {
+
+  const pathname = usePathname()
+  
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  //const id = searchParams.get('id');
+  const id = pathname;
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   useEffect(() => {
     fetchProductDetails();
@@ -23,7 +29,11 @@ const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
   const fetchProductDetails = async () => {
     if (!id) return; 
     try {
-      const response = await api.get(`/products/productbyid/${id}`);
+      const url_key = pathname.replace('/products/','');
+      const productData = await api.get(`/product/${url_key}`);
+      const productid =  productData.data.id;
+      const response = await api.get(`/products/productbyid/${productid}`);
+
       setProduct(response.data);
       
     } catch (err) {

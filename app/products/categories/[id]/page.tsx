@@ -5,7 +5,6 @@ import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import ProductFilter from "@/components/product-filter-card/ProductFilter";
-import Testimonial from "@/components/testimonial/Testimonial";
 import { usePathname, useRouter } from "next/navigation";
 import api from "@/services/api";
 
@@ -119,6 +118,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
       }
 
       setAggregations(response.data[0].aggregations);
+      
       setTotalProducts(response.data[0].total);
     } catch (error) {
       console.error("Failed to fetch product list:", error);
@@ -130,6 +130,8 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
     try {
       const response = await api.get(`/category/${id}`);
       setCategory(response.data);
+      filters.category_id = [response.data.id]
+      setFilters(filters)
       fetchProductDataList();
     } catch (error) {
       console.error("Failed to fetch category:", error);
@@ -250,7 +252,7 @@ const handleShowMore = () => {
            
           </div>
         </div>
-        <Testimonial />
+       
       </div>
     </>
   );

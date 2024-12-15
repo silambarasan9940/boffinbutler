@@ -24,12 +24,14 @@ const QuoteListing = () => {
   };
 
   const fetchQuoteListing = async () => {
-    try {
-      const response = await api.get('/quote/list', { headers });
-      setQuoteList(response.data);
-      console.log('quote data list', response.data);
-    } catch (error) {
-      console.log('Failed to load data', error);
+    if(tokenApi) {
+      try {
+        const response = await api.get('/quote/list', { headers });
+        setQuoteList(response.data);
+        console.log('quote data list', response.data);
+      } catch (error) {
+        console.log('Failed to load data', error);
+      }
     }
   };
 

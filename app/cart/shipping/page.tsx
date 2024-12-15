@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import TestimonialSlider from "@/components/testimonial/Testimonial";
 import "@/src/assests/css/custom.css";
 import CheckoutSteps from "@/components/checkoutcard/CheckoutSteps";
 import CartSummaryShipping from "@/components/cart/shipping/CartSummaryShipping";
@@ -35,7 +34,13 @@ const ShippingPage = () => {
     if(tokenApi) {
       try {
         const response = await api.get("/carts/mine/totals", { headers });
-        setCartTotals(response.data);
+        if(response.data.id){
+          setCartTotals(response.data);
+        }
+        // else{
+        //   router.push('/cart');
+        // }
+       
       } catch (error) {
         console.error("Error fetching cart totals:", error);
       }
@@ -165,10 +170,7 @@ const ShippingPage = () => {
         </div>
       </div>
 
-      {/* Testimonials */}
-      <div className="w-full bg-gray-100 mt-8">
-        <TestimonialSlider />
-      </div>
+      
     </>
   );
 };

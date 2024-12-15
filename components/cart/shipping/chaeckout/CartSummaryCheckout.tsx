@@ -112,7 +112,16 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     if(tokenApi) {
       try {
         const response = await api.get("/carts/mine", { headers });
+        // if has data
+        if(response.data.id){
         setCartData(response.data);
+        fetchPayment();
+      } else{
+
+        // route to cart page
+        router.push('/cart/');
+      }
+
       } catch (error) {
         console.log("Failed to fetch cart data", error);
         throw error;
@@ -122,7 +131,6 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
 
   useEffect(() => {
     fetchCartData();
-    fetchPayment();
   }, []);
 
   const fetchPlaceOrder = async () => {
