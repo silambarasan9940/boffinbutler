@@ -31,7 +31,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [backgroundPosition, setBackgroundPosition] = useState("center");
   const [quantity, setQuantity] = useState(1);
   const [inCart, setInCart] = useState(false);
-  const [cartId, setCartId] = useState("");
+  const [cartId, setCartId] = useState(localStorage.getItem("quote_id"));
   const [isQtyAvailable, setIsQtyAvailable] = useState(true);
   const router = useRouter();
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BsChevronDown } from "react-icons/bs";
@@ -28,7 +28,8 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState("Home");
   const [productLinks, setProductLinks] = useState<ProductLink[]>([]);
 
-
+  const dropdownRef = useRef<HTMLDivElement>(null); 
+  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
@@ -69,6 +70,22 @@ const Navbar = () => {
     }
   }, []);
   
+  // Close dropdown if clicked outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+        dropdownButtonRef.current && !dropdownButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false); // Close the dropdown if clicked outside
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Check the current pathname for active link
   useEffect(() => {
@@ -94,6 +111,7 @@ const Navbar = () => {
             <div key={link.label} className="relative">
               {link.hasDropdown ? (
                 <button
+                ref={dropdownButtonRef}
                   onClick={toggleDropdown}
                   aria-expanded={isDropdownOpen}
                   aria-controls="product-dropdown"
@@ -121,6 +139,7 @@ const Navbar = () => {
               )}
               {isDropdownOpen && link.hasDropdown && (
                 <div
+                ref={dropdownRef}
                   id="product-dropdown"
                   className="absolute left-0 z-10 w-72 mt-2 bg-white border rounded-md shadow-lg"
                 >

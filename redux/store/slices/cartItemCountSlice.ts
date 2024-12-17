@@ -24,9 +24,12 @@ const cartItemCountSlice = createSlice({
     resetCount: (state) => {
       state.count = 0;
     },
+    deleteCount: (state, action: PayloadAction<number>) => {
+      state.count -= action.payload;
+    }
   },
 });
 
-export const { increment, decrement, setCount, resetCount } = cartItemCountSlice.actions;
+export const { increment, decrement, setCount, resetCount, deleteCount } = cartItemCountSlice.actions;
 
 export default cartItemCountSlice.reducer;

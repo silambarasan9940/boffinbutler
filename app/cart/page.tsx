@@ -6,7 +6,7 @@ import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { setCount } from "@/redux/store/slices/cartItemCountSlice";
+import { setCount, deleteCount } from "@/redux/store/slices/cartItemCountSlice";
 import { imageUrl } from "@/services/common";
 import { useRouter } from "next/navigation";
 interface CartItemType {
@@ -37,6 +37,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
 
+
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
   };
@@ -45,7 +46,7 @@ const Cart = () => {
       try {
         // Make the API call with Axios
         const response = await api.get("/carts/mine/totals", { headers });
-        if (response.data.id) {
+        if (response.data?.items_qty > 0) {
           // Destructure the required totals from the API response
           const {
             grand_total,
@@ -150,10 +151,11 @@ const Cart = () => {
         return item;
       })
     );
+    
   };
 
   // Handler to remove an item from the cart
-  const handleRemoveItem = async (itemId: string) => {
+  const handleRemoveItem = async (itemId: string, quantity:number) => {
     try {
       const headers = {
         Authorization: `Bearer ${tokenApi}`,
@@ -166,6 +168,7 @@ const Cart = () => {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.id !== itemId)
       );
+      dispatch(deleteCount(quantity));
     } catch (error) {
       console.error("Error removing cart item:", error);
     }
@@ -205,7 +208,7 @@ const Cart = () => {
                   imageUrl={item.imageUrl}
                   onAddQuantity={() => handleAddQuantity(item.id)}
                   onRemoveQuantity={() => handleRemoveQuantity(item.id)}
-                  onRemoveItem={() => handleRemoveItem(item.id)}
+                  onRemoveItem={() => handleRemoveItem(item.id,item.quantity)}
                 />
               ))
             ) : (

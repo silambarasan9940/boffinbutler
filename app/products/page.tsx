@@ -7,6 +7,7 @@ import ProductFilter from "@/components/product-filter-card/ProductFilter";
 import FilterModal from "@/components/product-filter-card/FilterModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/services/api";
+import Loader from "@/components/loader";
 
 // Define types for products and aggregations
 interface AggregationItem {
@@ -54,6 +55,7 @@ interface ProductsPageProps {
 }
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -192,7 +194,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+              {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
                 {products.length > 0 ? (
                   products.map((product) => (
                     <div key={product._id}>
@@ -206,7 +208,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                 ) : (
                   <p className="text-center py-4">No Products available</p>
                 )}
-              </div>
+              </div>}
               <div>
                 {products.length < totalProducts &&
                   <button

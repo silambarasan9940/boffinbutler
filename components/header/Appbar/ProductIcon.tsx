@@ -35,7 +35,7 @@ const ProductIcon: React.FC<ProductIconProps> = ({
   
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
-        if(response.data.id) {
+        if(response.data?.items_qty > 0) {
         // Destructure the required totals from the API response
         const { items_qty } = response.data;
         dispatch(setCount(items_qty));

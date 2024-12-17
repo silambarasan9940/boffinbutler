@@ -7,6 +7,7 @@ import { FiSearch } from "react-icons/fi";
 import ProductFilter from "@/components/product-filter-card/ProductFilter";
 import { usePathname, useRouter } from "next/navigation";
 import api from "@/services/api";
+import Loader from "@/components/loader";
 
 // Define types for products
 interface ProductSource {
@@ -65,6 +66,7 @@ interface FilterValues {
 }
 
 const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -233,11 +235,21 @@ const handleShowMore = () => {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                  {products.map((product) => (
-                    <ProductData key={product._id} {...product} showButton={false} />
-                  ))}
-                </div>
+                {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <div key={product._id}>
+                      <ProductData
+                        {...product}
+                        showButton={false}
+                        id={product._id}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center py-4">No Products available</p>
+                )}
+              </div>}
                 <div>
                 {products.length >= 12 &&
                   <button

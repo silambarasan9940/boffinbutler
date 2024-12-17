@@ -282,15 +282,19 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                 </div>
               </div>
               {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                {products.map((product) => (
-                  <div>
-                    <ProductData
-                      {...product}
-                      showButton={false}
-                      id={product._id}
-                    />
-                  </div>
-                ))}
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <div key={product._id}>
+                      <ProductData
+                        {...product}
+                        showButton={true}
+                        id={product._id}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center py-4">No Products available</p>
+                )}
               </div>}
               <div>
                 {products.length < totalProducts && (
