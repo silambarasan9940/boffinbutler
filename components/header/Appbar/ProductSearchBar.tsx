@@ -1,9 +1,9 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { BsSearch, BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
-import { useRouter } from "next/navigation";
 import { imageUrl } from "@/services/common";
 
 interface ProductLink {
@@ -18,51 +18,44 @@ interface ProductLink {
   url_key: string;
 }
 
+// Categories Dropdown Component
 const CategoriesDropdown: React.FC<{
   toggleDropdown: () => void;
   isOpen: boolean;
   setCategoriesValue: (id: string) => void;
 }> = ({ toggleDropdown, isOpen, setCategoriesValue }) => {
   const [categories, setCategories] = useState<ProductLink[]>([]);
-  
+
   const fetchProductLinks = async () => {
     try {
       const response = await api.get("/fetch/categories");
       const products = response.data[0][0].children;
       setCategories(products);
-      // localStorage.setItem('categories',JSON.stringify(products));
     } catch (error) {
-      console.error("Error fetching product links:", error);
+      console.error("Error fetching categories:", error);
     }
   };
+
   useEffect(() => {
-    const storedCategories = localStorage.getItem('categories');
-    
-    if (storedCategories) {
-      // Parse and set the stored categories from localStorage
-      setCategories(JSON.parse(storedCategories));
-    } else {
-      // Fetch from API if not available in localStorage
-      fetchProductLinks();
-    }
+    fetchProductLinks();
   }, []);
 
   return (
-    <div className="relative hidden lg:block">
+    <div className="relative w-full">
       <button
         onClick={toggleDropdown}
-        className="bg-gray-100 px-6 py-3 rounded-l-full focus:outline-none flex items-center"
+        className="bg-gray-100 px-4 py-2 rounded focus:outline-none flex items-center justify-between w-full"
       >
         <span className="pe-2">Categories</span>
         {isOpen ? <BsChevronUp /> : <BsChevronDown />}
       </button>
       {isOpen && (
-        <ul className="absolute left-0 mt-1 bg-white border border-gray-100 rounded shadow-lg z-10 w-48">
+        <ul className="absolute mt-1 bg-white border border-gray-100 rounded shadow-lg z-10 w-full max-h-60 overflow-auto">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/products/categories/${category.url_key}`}
-              className="block px-4 py-2 text-gray-800 hover:bg-indigo-100"
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
               onClick={() => setCategoriesValue(category.id)}
             >
               {category.name}
@@ -74,78 +67,21 @@ const CategoriesDropdown: React.FC<{
   );
 };
 
-interface SearchInputProps {
-  query: string;
-  setQuery: (query: string) => void;
-  isSearchVisible: boolean;
-  toggleSearch: () => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-}
-
-const SearchInput: React.FC<SearchInputProps> = ({
-  query,
-  setQuery,
-  isSearchVisible,
-  toggleSearch,
-  onKeyDown,
-}) => {
-  const router = useRouter();
-
-  const handleSearchClick = () => {
-    if (query.trim() !== "") {
-      toggleSearch(); 
-      router.push(`/catalogsearch/result?q=${query}`);
-    }
-  };
-
-  return (
-    <div className="flex items-center w-full relative">
-      <input
-        type="text"
-        placeholder="Search by Product Name, Catalog No., or CAS# ...."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onClick={toggleSearch}
-        onKeyDown={onKeyDown}
-        className={`transition-all duration-300 ease-in-out bg-gray-100 px-6 py-3 focus:outline-none w-full 
-        ${isSearchVisible ? "rounded-full pl-6 md:border-l-2 md:border-gray-500" : "hidden md:block rounded-r-full md:border-l-2 md:border-gray-500"}`}
-      />
-      <button
-        onClick={handleSearchClick}
-        className={`absolute right-0 transition-all duration-300 ease-in-out bg-gray-100 p-3 rounded-full focus:outline-none 
-        ${isSearchVisible ? "absolute right-0" : "md:block me-2"}`}
-      >
-        <BsSearch />
-      </button>
-    </div>
-  );
-};
-
 const ProductSearchBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [categoriesValue, setCategoriesValue] = useState("");
   const [query, setQuery] = useState("");
+  const [categoriesValue, setCategoriesValue] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [suggestionsVisible, setSuggestionsVisible] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
   const router = useRouter();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
+  const openMobileSearch = () => setIsMobileSearchOpen(true);
+  const closeMobileSearch = () => setIsMobileSearchOpen(false);
 
-  const toggleSearch = () => {
-    setIsSearchVisible(!isSearchVisible);
-    setSuggestionsVisible(!isSearchVisible);
-  };
-
-  useEffect(() => {
-    if (query) {
-      fetchSearch(query);
-    } else {
-      setSuggestionsVisible(false);
-    }
-  }, [query]);
-
+  // Fetch search suggestions
   const fetchSearch = async (query: string) => {
     try {
       const response = await api.post("/search/products", {
@@ -160,68 +96,138 @@ const ProductSearchBar = () => {
       setSuggestions(products);
       setSuggestionsVisible(products.length > 0);
     } catch (error) {
-      console.error("Error fetching product links:", error);
+      console.error("Error fetching suggestions:", error);
     }
   };
 
-  const redirectSuggestion = (url_key: string, id: string) => {
-    setSuggestionsVisible(false);
-    router.push(`/products/${url_key}?id=${id}`);
-  };
-
+  // Handle Enter Key
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setSuggestionsVisible(false);
-      router.push(`/catalogsearch/result?category_ids=${categoriesValue !== '' ? categoriesValue : "46"}&q=${query}`);
+      searchProducts();
     }
   };
 
+  const searchProducts = () => {
+    router.push(
+      `/catalogsearch/result?category_ids=${
+        categoriesValue || "46"
+      }&q=${query}`
+    );
+    setSuggestionsVisible(false);
+    closeMobileSearch();
+  };
+
+  useEffect(() => {
+    if (query) {
+      fetchSearch(query);
+    } else {
+      setSuggestionsVisible(false);
+    }
+  }, [query]);
+
   return (
-    <div className="flex md:flex-row items-center justify-center text-xs drop-shadow-md relative">
-      <CategoriesDropdown
-        toggleDropdown={toggleDropdown}
-        isOpen={isOpen}
-        setCategoriesValue={setCategoriesValue}
-      />
-      <div className="hidden lg:block w-px bg-gray-300 h-6" />
+    <div className="relative flex items-center justify-between md:justify-center">
+      {/* Desktop View */}
+      <div className="hidden md:flex items-center w-full">
+        {/* Categories Dropdown */}
+        <div className="w-1/3">
+          <CategoriesDropdown
+            toggleDropdown={toggleDropdown}
+            isOpen={isOpen}
+            setCategoriesValue={setCategoriesValue}
+          />
+        </div>
 
-      <SearchInput
-        query={query}
-        setQuery={setQuery}
-        isSearchVisible={isSearchVisible}
-        toggleSearch={toggleSearch}
-        onKeyDown={handleKeyDown}
-      />
-
-      {isSearchVisible && suggestionsVisible && (
-        <div className="absolute top-full left-0 lg:left-auto mt-2 bg-white border border-gray-200 rounded shadow-lg z-[9999] w-full lg:w-96 max-h-60 overflow-y-auto">
-          <div className="border-b border-gray-300 p-2 font-semibold">
-            Popular Suggestions
-          </div>
-          <ul className="p-2">
-            {suggestions.length > 0 ? (
-              suggestions.slice(0, 5).map((suggestion, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() =>
-                    redirectSuggestion(suggestion._source.url_key, suggestion._id)
-                  }
-                >
+        {/* Search Input */}
+        <div className="relative w-2/3 mx-4">
+          <input
+            type="text"
+            placeholder="Search by Product Name, Catalog No., or CAS# ...."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="bg-gray-100 px-4 py-2 rounded focus:outline-none w-full"
+          />
+          {suggestionsVisible && (
+            <div className="absolute mt-1 bg-white border border-gray-200 rounded shadow-lg z-10 w-full max-h-60 overflow-y-auto">
+              <ul>
+                {suggestions.slice(0, 5).map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        `/products/${suggestion._source.url_key}?id=${suggestion._id}`
+                      )
+                    }
+                  >
                   <div className="flex items-center">
-                    <img
-                      src={`${imageUrl}catalog/product${suggestion._source.image}`}
-                      alt={suggestion._source.name}
-                      className="w-10 h-10 object-cover mr-2"
-                    />
-                    <span>{suggestion._source?.name}</span>
-                  </div>
-                </li>
-              ))
-            ) : (
-              <li className="px-4 py-2 text-gray-500">No Suggestions</li>
-            )}
-          </ul>
+                  <img
+                    src={`${imageUrl}catalog/product${suggestion._source.image}`}
+                    alt={suggestion._source.name || "Product Image"}
+                    className="w-10 h-10 object-cover mr-2"
+                    onError={(e) => (e.currentTarget.src = "/images/placeholder.png")} // Fallback image
+                  />
+                  <span>{suggestion._source?.name}</span>
+                </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Search Button */}
+        <button
+          onClick={searchProducts}
+          className="bg-indigo-600 text-white px-4 py-2 rounded"
+        >
+          <BsSearch />
+        </button>
+      </div>
+
+      {/* Mobile View */}
+      <button
+        onClick={openMobileSearch}
+        className="md:hidden bg-gray-200 p-2 rounded-full"
+      >
+        <BsSearch size={20} />
+      </button>
+
+      {/* Mobile Search Popup */}
+      {isMobileSearchOpen && (
+        <div className="fixed inset-0 bg-white z-50 p-4 flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Search</h2>
+            <button onClick={closeMobileSearch} className="text-2xl">
+              &times;
+            </button>
+          </div>
+
+          {/* Categories Dropdown */}
+          <CategoriesDropdown
+            toggleDropdown={toggleDropdown}
+            isOpen={isOpen}
+            setCategoriesValue={setCategoriesValue}
+          />
+
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="mt-4 bg-gray-100 px-4 py-2 rounded focus:outline-none"
+          />
+
+          {/* Search Button */}
+          <button
+            onClick={searchProducts}
+            className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded"
+          >
+            Search
+          </button>
         </div>
       )}
     </div>
