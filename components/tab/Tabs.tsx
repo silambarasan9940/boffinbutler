@@ -123,7 +123,11 @@ const Tabs = () => {
       </div>
 
       {/* Scrollable tab buttons for larger screens */}
-      <div className="hidden sm:flex overflow-x-auto md:custom-scrollbar scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4" role="tablist">
+      <div className="hidden sm:flex overflow-x-auto [&::-webkit-scrollbar]:h-4
+      [&::-webkit-scrollbar-track]:bg-gray-100
+      [&::-webkit-scrollbar-thumb]:bg-gray-300
+      dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+      dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 md:flex-row w-full mx-auto bg-white mb-4" role="tablist">
         {productLinks.map((label, index) => (
           <Tab key={index} label={label.name} isActive={activeTab === index} onClick={() => {
             setActiveTab(index);

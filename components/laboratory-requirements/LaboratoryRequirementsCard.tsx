@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 interface WithStylesProps {
   title: string;
   imageurl: string;
- url_key: string;
+  url_key: string;
 }
 
 const LaboratoryRequirementsCard: React.FC<WithStylesProps> = ({ title, imageurl,url_key }) => {
@@ -22,7 +22,7 @@ const LaboratoryRequirementsCard: React.FC<WithStylesProps> = ({ title, imageurl
       alt={title}
       width={300}
       height={250}
-      className="rounded-t-xl w-full max-h-[200px] object-cover"
+      className="rounded w-full h-[130px] md:h-[185px] object-cover"
     />
   </div>
   {/* Title Section */}
