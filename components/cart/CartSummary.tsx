@@ -75,7 +75,7 @@ const CartSummary: React.FC<CartSummaryProps> = (
     router.push('/cart/shipping')
   }
 
-  const handleContinueShipping = () => {
+  const handleContinueShopping = () => {
     router.push('/products')
   }
   const headers = {
@@ -169,7 +169,15 @@ const CartSummary: React.FC<CartSummaryProps> = (
           )}
 
           <div className="mt-4">
-            {CartSummary.length === 0 ? <button 
+            {cartTotals.items_qty === 0 ? <button 
+            className="w-full flex flex-row items-center justify-center 
+            bg-orange-500 text-white px-4 py-2 hover:bg-orange-600 transition-transform 
+            transform hover:scale-105 rounded-full"
+            onClick={handleContinueShopping}
+          >
+            Continue Shopping <GoArrowRight className='ms-2' />
+            
+          </button> : <button 
               className="w-full flex flex-row items-center justify-center 
               bg-customBlue text-white px-4 py-2 hover:bg-indigo-600 transition-transform 
               transform hover:scale-105 rounded-full"
@@ -177,16 +185,8 @@ const CartSummary: React.FC<CartSummaryProps> = (
             >
               Go to Shipping <GoArrowRight className='ms-2' />
               
-            </button> : 
-            <button 
-            className="w-full flex flex-row items-center justify-center 
-            bg-orange-500 text-white px-4 py-2 hover:bg-orange-600 transition-transform 
-            transform hover:scale-105 rounded-full"
-            onClick={handleContinueShipping}
-          >
-            Continue Shipping <GoArrowRight className='ms-2' />
+            </button>
             
-          </button>
             }
           </div>
 
