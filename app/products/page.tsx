@@ -100,6 +100,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
     };
 
     try {
+      setLoading(true);
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
@@ -113,6 +114,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
       setTotalProducts(response.data[0].total);
     } catch (error) {
       console.log("loading failed fetch product list", error);
+    }finally{
+      setLoading(false);
     }
   };
 

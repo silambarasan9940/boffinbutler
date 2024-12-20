@@ -20,7 +20,7 @@ interface Aggregations {
 interface ProductFilterProps {
   aggregations: Aggregations | null;
   onFilterChange: (filters: FilterValues) => void;
-  onFilterClear: (filters: FilterValues) => void;
+  // onFilterClear: (filters: FilterValues) => void;
 }
 
 interface FilterValues {
@@ -148,7 +148,9 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
             key={item.key}
             className="w-full flex items-center justify-between py-1"
           >
-            <label className="flex justify-end text-sm">{item.name}</label>
+            <label className="flex justify-end text-sm">
+              {`${item.name} (${item ? item.doc_count : ""})`}
+            </label>
             <input
               type="checkbox"
               checked={selectedCategoryId.includes(item.key)}

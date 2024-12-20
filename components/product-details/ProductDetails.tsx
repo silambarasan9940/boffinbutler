@@ -75,27 +75,38 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   }, []);
 
   const handleAddToCart = async () => {
-    if(tokenApi) {
+    if (tokenApi) {
       const productDetails = {
         sku: product.sku,
         qty: quantity,
         quote_id: cartId,
       };
+  
       try {
-        await api.post(
+        const response = await api.post(
           "/carts/mine/items",
           { cartItem: productDetails },
           { headers }
         );
-        toast.success("Added to cart successfully");
-      } catch (error) {
-        console.log("Failed to update cart quantity",error);
+  
+        // Assuming the API returns success confirmation
+        if (response?.status === 200) {
+          toast.success("Item added to cart successfully!");
+          setInCart(true);
+        }
+      } catch (error: any) {
+        // Fallback in case `error.response` is undefined
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+        toast.error(errorMessage);
+        console.error("Failed to add item to cart:", error);
       }
-      setInCart(true);
-    }else{
-      router.push('/customer/account/login');
+    } else {
+      // Redirect to login if user is not authenticated
+      router.push("/customer/account/login");
     }
-    }
+  };
+  
     
     
 
