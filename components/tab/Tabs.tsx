@@ -55,6 +55,7 @@ const Tabs = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [productLinks, setProductLinks] = useState<ProductLink[]>([]);
+  // const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
 
   const fetchProductLinks = async () => {
     try {
@@ -78,6 +79,19 @@ const Tabs = () => {
       fetchProductLinks();
     }
   }, []);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setWindowWidth(window.innerWidth);
+  //   };
+
+  //   window.addEventListener('resize', handleResize);
+    
+    
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   const tabContents = productLinks.map((label, index) => (
     <div key={index}>
@@ -146,11 +160,11 @@ const Tabs = () => {
 
       {/* Scrollable tab buttons for larger screens */}
       <div
-        className="hidden sm:flex overflow-x-auto md:custom-scrollbar scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4"
+        className="hidden sm:flex overflow-x-auto md:scrollbar-custom-horizontal lg:scrollbar-custom-horizontal scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4"
         role="tablist"
       >
         {productLinks
-          .slice(0, window.innerWidth >= 900 ? 8 : window.innerWidth >= 760 ? 6 : window.innerWidth >= 580 ? 3 : productLinks.length)
+          // .slice(0, windowWidth  >= 900 ? 8 : windowWidth  >= 760 ? 6 : windowWidth  >= 580 ? 3 : productLinks.length)
           .map((label, index) => (
             <Tab
               key={index}

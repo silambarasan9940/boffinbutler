@@ -40,13 +40,13 @@ interface Brand {
 const InquireNow: React.FC = () => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const me = JSON.parse(localStorage.getItem("me") || "{}");
-
+  
+  // var me = {};
   const [formData, setFormData] = useState<FormData>({
-    firstName: me?.firstname || "",
-    lastName: me?.lastname || "",
-    email: me?.email || "",
-    phone: me?.addresses[0]?.telephone || "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
     message: "",
     brand: "",
     products: "",
@@ -189,6 +189,19 @@ const InquireNow: React.FC = () => {
   };
 
   useEffect(() => {
+    const me = JSON.parse(localStorage.getItem("me") || "{}");
+     setFormData(
+      {
+        firstName: me?.firstname || "",
+        lastName: me?.lastname || "",
+        email: me?.email || "",
+        phone: me?.addresses?.[0]?.telephone || "",
+        message: "",
+        brand: "",
+        products: "",
+        attachment: null,
+      }
+     );
     fetchBrands();
   }, []);
 
