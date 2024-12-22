@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import ProductCard from '../productcard/ProductCard';
-import api from '@/services/api';
-import '@/src/assests/css/custom.css';
+import React, { useEffect, useState } from "react";
+import ProductCard from "../productcard/ProductCard";
+import api from "@/services/api";
+import "@/src/assests/css/custom.css";
 
 interface ProductLink {
   id: string;
@@ -14,14 +14,19 @@ interface ProductLink {
   product_count: number;
   url_key: string;
   children_data: ProductLink[];
-  
 }
 
 // Tab component
-const Tab: React.FC<{ label: string; isActive: boolean; onClick: () => void }> = ({ label, isActive, onClick }) => (
+const Tab: React.FC<{
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}> = ({ label, isActive, onClick }) => (
   <button
     className={`py-2 px-4 mb-3 font-semibold whitespace-nowrap focus:outline-none ${
-      isActive ? 'bg-white text-block border-b-4 border-customBlue' : 'bg-white text-gray-700'
+      isActive
+        ? "bg-white text-block border-b-4 border-customBlue"
+        : "bg-white text-gray-700"
     }`}
     onClick={onClick}
     aria-selected={isActive}
@@ -32,8 +37,15 @@ const Tab: React.FC<{ label: string; isActive: boolean; onClick: () => void }> =
 );
 
 // Tab content component
-const TabContent: React.FC<{ content: React.ReactNode; isActive: boolean; }> = ({ content, isActive }) => (
-  <div className={`p-4 transition-opacity duration-100 ${isActive ? 'opacity-100' : 'opacity-0 hidden'}`}>
+const TabContent: React.FC<{ content: React.ReactNode; isActive: boolean }> = ({
+  content,
+  isActive,
+}) => (
+  <div
+    className={`p-4 transition-opacity duration-100 ${
+      isActive ? "opacity-100" : "opacity-0 hidden"
+    }`}
+  >
     {content}
   </div>
 );
@@ -56,8 +68,8 @@ const Tabs = () => {
   };
   // Fetch product links from API
   useEffect(() => {
-    const storedCategories = localStorage.getItem('categories');
-    
+    const storedCategories = localStorage.getItem("categories");
+
     if (storedCategories) {
       // Parse and set the stored categories from localStorage
       setProductLinks(JSON.parse(storedCategories));
@@ -69,7 +81,12 @@ const Tabs = () => {
 
   const tabContents = productLinks.map((label, index) => (
     <div key={index}>
-      <ProductCard title={label.name} showAddToCartButton={false} category_id={label.id} showQouteButton={false}/>
+      <ProductCard
+        title={label.name}
+        showAddToCartButton={false}
+        category_id={label.id}
+        showQouteButton={false}
+      />
     </div>
   ));
 
@@ -90,20 +107,25 @@ const Tabs = () => {
       <div className="block sm:hidden relative w-full">
         <button
           className="flex items-center justify-between py-2 px-4 border border-gray-500 font-semibold rounded-xl bg-white text-gray-700 w-full"
-          onClick={() => setIsDropdownOpen(prev => !prev)}
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
           aria-haspopup="true"
           aria-expanded={isDropdownOpen}
         >
           {productLinks[activeTab]?.name}
           <svg
-            className={`ml-2 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+            className={`ml-2 transform transition-transform ${
+              isDropdownOpen ? "rotate-180" : ""
+            }`}
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             fill="currentColor"
             viewBox="0 0 16 16"
           >
-            <path fillRule="evenodd" d="M4.293 5.293a1 1 0 011.414 0L8 7.586l2.293-2.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+            <path
+              fillRule="evenodd"
+              d="M4.293 5.293a1 1 0 011.414 0L8 7.586l2.293-2.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            />
           </svg>
         </button>
         {isDropdownOpen && (
@@ -123,19 +145,33 @@ const Tabs = () => {
       </div>
 
       {/* Scrollable tab buttons for larger screens */}
-      <div className="hidden sm:flex overflow-x-auto md:custom-scrollbar scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4" role="tablist">
-        {productLinks.map((label, index) => (
-          <Tab key={index} label={label.name} isActive={activeTab === index} onClick={() => {
-            setActiveTab(index);
-            //  fetchTabContents(label,index);
-          }} />
-        ))}
+      <div
+        className="hidden sm:flex overflow-x-auto md:custom-scrollbar scrollbar-hide md:flex-row w-full mx-auto bg-white mb-4"
+        role="tablist"
+      >
+        {productLinks
+          .slice(0, window.innerWidth >= 900 ? 8 : window.innerWidth >= 760 ? 6 : window.innerWidth >= 580 ? 3 : productLinks.length)
+          .map((label, index) => (
+            <Tab
+              key={index}
+              label={label.name}
+              isActive={activeTab === index}
+              onClick={() => {
+                setActiveTab(index);
+                // fetchTabContents(label, index);
+              }}
+            />
+          ))}
       </div>
 
       {/* Tab contents */}
       <div>
         {tabContents.map((content, index) => (
-          <TabContent key={index} content={content} isActive={activeTab === index} />
+          <TabContent
+            key={index}
+            content={content}
+            isActive={activeTab === index}
+          />
         ))}
       </div>
     </div>

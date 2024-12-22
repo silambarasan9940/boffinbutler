@@ -3,17 +3,17 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import { CirclesWithBar } from "react-loader-spinner";
 import api from "@/services/api";
 import { Order, Address, Item } from "@/services/types/ordertypes/index";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { useSearchParams } from "next/navigation";
+import Loader from "@/components/loader";
 
 const OrderConfirmationPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const tokenApi = useSelector((state: RootState) => state.auth.token);
   const searchParams = useSearchParams();
@@ -24,41 +24,23 @@ const OrderConfirmationPage = () => {
     Authorization: `Bearer ${tokenApi}`,
     "Content-Type": "application/json",
   };
-
+  const fetchOrderDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get(`/mtwo/me/orders/${id}`, { headers });
+      setOrderDetails(response.data);
+      localStorage.removeItem("quote_id");
+    } catch (error) {
+      setError("Failed to load order details. Please try again.");
+    } finally{
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchOrderDetails = async () => {
-      try {
-        const response = await api.get(`/mtwo/me/orders/${id}`, { headers });
-        setOrderDetails(response.data);
-        localStorage.removeItem("quote_id");
-      } catch (error) {
-        setError("Failed to load order details. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchOrderDetails();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <CirclesWithBar
-          height="100"
-          width="100"
-          color="#625df5"
-          outerCircleColor="#625df5"
-          innerCircleColor="#625df5"
-          barColor="#625df5"
-          ariaLabel="circles-with-bar-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-        />
-      </div>
-    );
-  }
+  
 
   if (error) {
     return (
@@ -72,7 +54,7 @@ const OrderConfirmationPage = () => {
     <>
       <Breadcrumbs />
 
-      <div className="w-full md:w-1/2 mx-auto py-8 px-4">
+      {loading ? <Loader /> :<div className="w-full md:w-1/2 mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Order Confirmation
         </h1>
@@ -146,7 +128,7 @@ const OrderConfirmationPage = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div>}
     </>
   );
 };

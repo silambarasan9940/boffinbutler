@@ -40,12 +40,13 @@ interface Brand {
 const InquireNow: React.FC = () => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const me = JSON.parse(localStorage.getItem("me") || "{}");
 
   const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+    firstName: me?.firstname || "",
+    lastName: me?.lastname || "",
+    email: me?.email || "",
+    phone: me?.addresses[0]?.telephone || "",
     message: "",
     brand: "",
     products: "",
@@ -124,7 +125,7 @@ const InquireNow: React.FC = () => {
 
     return newErrors;
   };
-
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formErrors = validateForm();
@@ -150,8 +151,10 @@ const InquireNow: React.FC = () => {
 
       try {
         const response = await api.post("/save/enquiry", payload, { headers });
-        toast.success("Form submitted successfully!");
-
+        if(response.status === 200) {
+          toast.success(response.data[0].message);
+        }
+       
         // Clear the form after successful submission
         setFormData({
           firstName: "",
@@ -166,7 +169,10 @@ const InquireNow: React.FC = () => {
 
         // Clear validation errors
         setErrors({});
-      } catch (error) {
+      } catch (error:any) {
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+        toast.error(errorMessage);
         console.log("Error submitting the form.");
         
       }

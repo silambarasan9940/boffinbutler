@@ -17,7 +17,8 @@ const Topheader = () => {
 
   const handleSignOut = () => {
     // Clear from localStorage
-    ["authToken", "customerAddress", "quote_id", "name"].forEach(item => localStorage.removeItem(item));
+    // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));
+    localStorage.clear();
     // Dispatch the signOut action
     dispatch(signOut());
   };
@@ -34,7 +35,8 @@ const Topheader = () => {
         .then((response) => {
           const { firstname, lastname } = response.data;
           setUser({ firstname: firstname, lastname: lastname });
-          localStorage.setItem('name',firstname +' '+ lastname)
+          localStorage.setItem('name',firstname +' '+ lastname);
+          localStorage.setItem("me",JSON.stringify(response.data));
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);

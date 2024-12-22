@@ -68,7 +68,7 @@ const ProductData: React.FC<ProductDataProps> = ({
       <div className="relative group">
         <h2 className="text-sm font-medium mb-2 cursor-pointer"
         onClick={handleClick}
-        >{_source?.name.length < 29 ? _source?.name : _source?.name.substring(0,29)+'...'}</h2>
+        >{_source?.name.length < 27 ? _source?.name : _source?.name.substring(0,24)+'...'}</h2>
         <div className="absolute left-0 bottom-full mb-1 hidden max-w-xs break-words px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-lg group-hover:block">
           {_source?.name}
         </div>
