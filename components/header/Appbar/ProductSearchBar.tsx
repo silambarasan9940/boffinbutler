@@ -113,7 +113,7 @@ const ProductSearchBar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (query) {
       fetchSearch(query);
     } else {

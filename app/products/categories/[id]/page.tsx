@@ -259,6 +259,7 @@ const handleShowMore = () => {
                         {...product}
                         showButton={false}
                         id={product._id}
+                        showQuoteBtn={false}
                       />
                     </div>
                   ))

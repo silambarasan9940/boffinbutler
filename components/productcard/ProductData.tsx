@@ -56,8 +56,8 @@ const ProductData: React.FC<ProductDataProps> = ({
   return (
     <>
     <div
-      className={`${isProductPadding ? 'p-4' : 'p-1'} ${isProductPage ? "m-1" : "m-3"} bg-white ${isProductShadow ? 'shadow-lg' : ''} rounded-xl text-left`} 
-      // onClick={handleClick}
+      className={`${isProductPadding ? 'p-4' : 'p-1'} ${isProductPage ? "m-1" : "m-3"} bg-white ${isProductShadow ? 'shadow-lg' : ''} rounded-xl text-left min-h-80 cursor-pointer`} 
+      onClick={handleClick}
     >
       <img
         src={`${imageUrl}catalog/product${_source?.image ? _source?.image : '/0/0/008-1.jpg'}`}

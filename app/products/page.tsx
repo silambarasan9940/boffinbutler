@@ -193,6 +193,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                     <FilterModal
                       aggregations={aggregations}
                       onFilterChange={handleFilterChange}
+                      
                     />
                   </div>
                 </div>
@@ -205,6 +206,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                         {...product}
                         showButton={true}
                         id={product._id}
+                        showQuoteBtn={false}
                       />
                     </div>
                   ))
@@ -216,7 +218,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                 {products.length < totalProducts &&
                   <button
                   onClick={handleShowMore}
-                  className="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                  className="py-2 px-4 mt-5 bg-indigo-500 text-white rounded-md"
                 >
                   Show more
                 </button>

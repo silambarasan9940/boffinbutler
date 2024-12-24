@@ -250,7 +250,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
             <div className={`w-full ps-2`}>
               <div className="flex flex-col md:flex-row md:justify-between mb-4">
                 <h2 className="text-xl font-bold">{title}</h2>
-                <div className="flex flex-col md:flex-row items-center">
+                <div className="flex flex-col gap-3 md:gap-1 md:flex-row items-center">
                   <span className="pe-2">
                     Showing {(currentPage - 1) * pageSize + 1}-
                     {Math.min(currentPage * pageSize, totalProducts)} of{" "}
@@ -289,6 +289,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                         {...product}
                         showButton={true}
                         id={product._id}
+                        showQuoteBtn={false}
                       />
                     </div>
                   ))
@@ -300,7 +301,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                 {products.length < totalProducts && (
                   <button
                     onClick={handleShowMore}
-                    className="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                    className="py-2 px-4 mt-5 bg-indigo-500 text-white rounded-md"
                   >
                     Show more
                   </button>

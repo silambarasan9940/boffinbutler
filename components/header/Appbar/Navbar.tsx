@@ -99,7 +99,7 @@ const Navbar = () => {
       <nav className="flex flex-col md:flex-row items-center justify-between px-4 mx-auto w-11/12">
         {/* Desktop Header */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link href="https://boffinbutler.com/">
+          <Link href="/home">
             <Image
               src="https://media.boffinbutler.com/media/logo/websites/1/BoffinButler_homepage_logo.png"
               alt="BoffinButler Pvt Ltd"
