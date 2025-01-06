@@ -87,12 +87,12 @@ const Banner = () => {
           bannerImages.map((image, index) => (
             image.bannerImageUrl ? (
               <Link href={image.url_banner || '#'} key={index}> 
-                <div className="relative w-full h-[300px] sm:h-[500px]"> 
+                <div className="relative w-full h-[150px] sm:h-[500px]"> 
                   <Image
                     src={image.bannerImageUrl} 
                     alt={image.name || `Slide ${index + 1}`}
                     fill
-                    className="object-cover w-full h-full" 
+                    className="object-fill w-full h-full" 
                     priority
                   />
                 </div>

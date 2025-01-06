@@ -39,7 +39,7 @@ const ProductList = () => {
       <h2 className="text-center text-3xl font-semibold py-8">
         NEWLY ADDED PRODUCTS
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {products.slice(0, 4).map((product, index) => ( 
           <div
             key={index}

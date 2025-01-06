@@ -12,6 +12,12 @@ const config: Config = {
       fontFamily: {
         display: ['Montserrat', 'sans-serif'],
       },
+      fontSize: {
+        sm: ['14px', '20px'],
+        base: ['11px', '18px'],
+        lg: ['16px', '24px'],
+        xl: ['20px', '28px'],
+      },
       colors: {
         customBlue: '#4453E2',
         background: 'hsl(var(--background))',

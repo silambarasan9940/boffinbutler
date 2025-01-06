@@ -207,7 +207,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                   <p className="text-center py-4">No Products available</p>
                 )}
               </div>
-              <div>
+              <div className="text-center py-4">
                 {products.length < totalProducts &&
                   <button
                   onClick={handleShowMore}

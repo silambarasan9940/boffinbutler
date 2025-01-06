@@ -79,9 +79,10 @@ const Navbar = () => {
 
   return (
     <div className="py-3 bg-white shadow">
-      <nav className="flex flex-col md:flex-row items-center justify-between px-4 mx-auto w-11/12">
+      <nav className="flex flex-col md:flex-row items-center justify-between md:px-4 mx-auto w-11/12">
         {/* Desktop Header */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden flex-col md:flex xl:flex-row items-center w-full">
+          <div className="flex items-center space-x-4">
           <Link href="https://boffinbutler.com/">
             <Image
               src="https://media.boffinbutler.com/media/logo/websites/1/BoffinButler_homepage_logo.png"
@@ -97,7 +98,7 @@ const Navbar = () => {
                   onClick={toggleDropdown}
                   aria-expanded={isDropdownOpen}
                   aria-controls="product-dropdown"
-                  className="flex items-center text-gray-800 hover:text-customBlue dark:hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase"
+                  className="flex items-center text-gray-800 hover:text-customBlue dark:hover:text-white px-3 py-2 rounded-md text-base lg:text-lg font-medium uppercase"
                 >
                   {link.label}
                   <BsChevronDown
@@ -113,9 +114,9 @@ const Navbar = () => {
                     activeLink === link.label
                       ? "bg-white text-customBlue font-bold"
                       : "text-gray-800 hover:text-customBlue dark:hover:text-white"
-                  } block px-3 py-2 rounded-md text-base font-medium uppercase`}
+                  } block px-3 py-2 rounded-md text-base lg:text-lg font-medium uppercase`}
                   onClick={() => handleLinkClick(link.label)}
-                >
+                > 
                   {link.label}
                 </Link>
               )}
@@ -139,7 +140,8 @@ const Navbar = () => {
             </div>
           ))}
           {/* Right Side Elements (Search Bar and Cart Icon) */}
-          <div className="flex items-center space-x-2">
+          </div>
+          <div className="flex items-center space-x-4 xl:ml-auto">
               <ProductSearchBar />
               <ProductIcon
                 icon={<FaShoppingCart size={16} />}
@@ -147,7 +149,7 @@ const Navbar = () => {
                 bgColor="bg-indigo-500"
                 notificationBgColor="bg-yellow-500"
               />
-            </div>
+          </div>
         </div>
 
         {/* Mobile Header */}

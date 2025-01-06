@@ -248,7 +248,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
             {/* Product Display Section */}
 
             <div className={`w-full ps-2`}>
-              <div className="flex flex-col md:flex-row md:justify-between mb-4">
+              <div className="flex flex-col md:flex-row md:justify-between mx-4 mb-4">
                 <h2 className="text-xl font-bold">{title}</h2>
                 <div className="flex flex-col md:flex-row items-center">
                   <span className="pe-2">
@@ -292,7 +292,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                   </div>
                 ))}
               </div>}
-              <div>
+              <div className="text-center py-4">
                 {products.length < totalProducts && (
                   <button
                     onClick={handleShowMore}
