@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import api from '@/services/api';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { setCount } from "@/redux/store/slices/cartItemCountSlice";
+import { resetCount, setCount } from "@/redux/store/slices/cartItemCountSlice";
 
 
 interface ProductIconProps {
@@ -35,16 +35,19 @@ const ProductIcon: React.FC<ProductIconProps> = ({
   
         // Make the API call with Axios
         const response = await api.get('/carts/mine/totals', { headers });
-        if(response.data.id) {
+        if(response.data?.items_qty > 0) {
         // Destructure the required totals from the API response
         const { items_qty } = response.data;
         dispatch(setCount(items_qty));
+        
       }
       // else{
-      //   router.push('/cart')
+      //   dispatch(resetCount());
       // }
       } catch (error) {
         console.error('Error fetching cart items:', error);
+        // dispatch(resetCount());
+        
       } 
     }
     
@@ -54,7 +57,7 @@ const ProductIcon: React.FC<ProductIconProps> = ({
     if(localStorage.getItem("quote_id")){
       fetchCartItems();
     }
-  }, [tokenApi]);
+  }, [tokenApi, count]);
   
 const handlecart = () => {
   if(tokenApi) {

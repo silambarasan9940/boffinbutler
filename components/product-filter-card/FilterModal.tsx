@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FiSliders } from 'react-icons/fi';
 import ProductFilter from './ProductFilter';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface AggregationItem {
   key: string;
@@ -19,6 +20,8 @@ interface Aggregations {
 interface FilterModalProps {
   aggregations: Aggregations | null;
   onFilterChange: (filters: FilterValues) => void;
+  
+
 }
 interface FilterValues {
   brands: string[];
@@ -30,7 +33,7 @@ interface FilterValues {
 }
 
 
-const FilterModal: React.FC<FilterModalProps> = ({ aggregations, onFilterChange }) => {
+const FilterModal: React.FC<FilterModalProps> = ({ aggregations, onFilterChange}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleModal = () => {
@@ -52,7 +55,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ aggregations, onFilterChange 
           <div className="bg-white rounded-lg shadow-lg p-4 w-11/12 md:hidden overflow-y-auto">
             <div className="mx-3">
               {aggregations ? (
-                <ProductFilter aggregations={aggregations} onFilterChange={onFilterChange} />
+                <>
+              <ProductFilter aggregations={aggregations} onFilterChange={onFilterChange} />
+              </>
+                
               ) : (
                 <p>Loading filters...</p>
               )}

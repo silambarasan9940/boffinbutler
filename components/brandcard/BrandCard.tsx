@@ -24,7 +24,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
   };
   return (
     <div className="group relative max-w-xs bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex flex-col justify-center items-center pb-4 cursor-pointer border border-gray-300">
-      <div className="w-full flex flex-col justify-center items-center p-4"
+      <div className="w-full flex flex-col justify-center items-center p-4 w-full"
       onClick={() => handleBrand(brand_id)}
       >
         <Image src={`${imageUrl}${image}`} alt={name} width={200} height={200} className="w-full h-auto object-cover pb-4" />

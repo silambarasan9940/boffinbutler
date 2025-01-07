@@ -9,10 +9,10 @@ import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import CartItem from "../../CartItem";
 import api from "@/services/api";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
-import PromoCode from "./PromoCode";
 import { GoTag } from "react-icons/go";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store/store";
+import { resetCount, setCount } from "@/redux/store/slices/cartItemCountSlice";
 
 interface BillingAddress {
   customer_address_id?: string;
@@ -95,6 +95,8 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
   itemsQty,
 }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const [placeOrder, setPlaceOrder] = useState("");
   const [cartData, setCartData] = useState(null);
   const [paymentSummary, setPaymentSummary] = useState<Totals | null>(null);
@@ -179,10 +181,11 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
       setPlaceOrder(response.data);
 
       if (response.status === 200) {
-        console.log(response.status, "check status");
+        dispatch(resetCount());
         toast.success("Your Order has been placed", {
           icon: <FaCheckCircle className="text-green-500" />,
           progressStyle: { backgroundColor: "green" },
+          autoClose: 1000,
           onClose: () => router.push(`/order-confirmation?id=${response.data}`),
         });
       } else {

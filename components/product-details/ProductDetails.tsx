@@ -31,8 +31,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [backgroundPosition, setBackgroundPosition] = useState("center");
   const [quantity, setQuantity] = useState(1);
   const [inCart, setInCart] = useState(false);
-  const [cartId, setCartId] = useState("");
+  const [cartId, setCartId] = useState(localStorage.getItem("quote_id"));
   const [isQtyAvailable, setIsQtyAvailable] = useState(true);
+  const [expiryCart, setExpiryCart] = useState(1);
   const router = useRouter();
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -54,10 +55,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     "Content-Type": "application/json",
   };
 
+
   const fetchCartID = async () => {
     try {
       const response = await api.post("/carts/mine/", {}, { headers });
       setCartId(response.data);
+      const cartId = response.data;
       localStorage.setItem("quote_id", JSON.stringify(response.data));
     } catch (error) {
       console.log("Failed to fetch cart ID", error);
@@ -65,37 +68,89 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   useEffect(() => {
+    console.log("useEfect tokenApi " + tokenApi)
     if(tokenApi){
+      console.log("useEfect"+localStorage.getItem("quote_id"))
+
     if(localStorage.getItem("quote_id")){
+      
 // do nothing
     }else{
       fetchCartID();
+      
     }
   }
   }, []);
 
   const handleAddToCart = async () => {
-    if(tokenApi) {
+    if (tokenApi) {
+
+      
+    if(localStorage.getItem("quote_id")){
+      console.log("handleAddToCart Quote ID "+localStorage.getItem("quote_id"))
+
+      // do nothing
+          }else{
+            fetchCartID();
+            
+          }
+        
+        console.log("handleAddToCart cartId ID "+cartId)
+
+
       const productDetails = {
         sku: product.sku,
         qty: quantity,
         quote_id: cartId,
       };
+
+      
+    if(localStorage.getItem("quote_id")){
+      
+// do nothing
+    }else{
+      fetchCartID();
+      
+    }
+  
+  
       try {
-        await api.post(
+        const response = await api.post(
           "/carts/mine/items",
           { cartItem: productDetails },
           { headers }
         );
-        toast.success("Added to cart successfully");
-      } catch (error) {
-        console.log("Failed to update cart quantity",error);
+  
+        // Assuming the API returns success confirmation
+        if (response?.status === 200) {
+          toast.success("Item added to cart successfully!");
+          setInCart(true);
+        }
+      } catch (error: any) {
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+        toast.error(errorMessage);
+         if(expiryCart === 1) {
+           localStorage.removeItem('quote_id');
+           fetchCartID();
+           
+           setExpiryCart(0);
+           handleAddToCart();
+         }else {
+      //  // Fallback in case `error.response` is undefined
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+         toast.error(errorMessage);
+        }
+       
+        console.error("Failed to add item to cart:", error);
       }
-      setInCart(true);
-    }else{
-      router.push('/customer/account/login');
+    } else {
+      // Redirect to login if user is not authenticated
+      router.push("/customer/account/login");
     }
-    }
+  };
+  
     
     
 
@@ -128,7 +183,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   return (
     <div className="w-11/12 mx-auto flex flex-col gap-8 p-4">
       <div className="flex flex-col md:flex-row w-full">
-        <div className="flex flex-col md:flex-row w-full md:w-1/2">
+        <div className="flex flex-col md:flex-row w-full md:w-1/2 me-3">
           <div className="flex md:flex-col order-2 md:order-1 gap-4 mb-4 md:mb-0 me-3">
             {imageUrl.map((imageUrl, index) => (
               <div key={index} className="cursor-pointer border-2 rounded-lg">

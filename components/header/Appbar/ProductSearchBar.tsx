@@ -1,7 +1,7 @@
 "use client";
 import api from "@/services/api";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { imageUrl } from "@/services/common";
@@ -22,33 +22,31 @@ const CategoriesDropdown: React.FC<{
   toggleDropdown: () => void;
   isOpen: boolean;
   setCategoriesValue: (id: string) => void;
-}> = ({ toggleDropdown, isOpen, setCategoriesValue }) => {
+  dropdownRef: React.RefObject<HTMLDivElement>;
+}> = ({ toggleDropdown, isOpen, setCategoriesValue, dropdownRef }) => {
   const [categories, setCategories] = useState<ProductLink[]>([]);
-  
+
   const fetchProductLinks = async () => {
     try {
       const response = await api.get("/fetch/categories");
       const products = response.data[0][0].children;
       setCategories(products);
-      // localStorage.setItem('categories',JSON.stringify(products));
     } catch (error) {
       console.error("Error fetching product links:", error);
     }
   };
+
   useEffect(() => {
-    const storedCategories = localStorage.getItem('categories');
-    
+    const storedCategories = localStorage.getItem("categories");
     if (storedCategories) {
-      // Parse and set the stored categories from localStorage
       setCategories(JSON.parse(storedCategories));
     } else {
-      // Fetch from API if not available in localStorage
       fetchProductLinks();
     }
   }, []);
 
   return (
-    <div className="relative hidden lg:block">
+    <div ref={dropdownRef} className="relative hidden lg:block">
       <button
         onClick={toggleDropdown}
         className="bg-gray-100 px-6 py-3 rounded-l-full focus:outline-none flex items-center"
@@ -74,53 +72,6 @@ const CategoriesDropdown: React.FC<{
   );
 };
 
-interface SearchInputProps {
-  query: string;
-  setQuery: (query: string) => void;
-  isSearchVisible: boolean;
-  toggleSearch: () => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-}
-
-const SearchInput: React.FC<SearchInputProps> = ({
-  query,
-  setQuery,
-  isSearchVisible,
-  toggleSearch,
-  onKeyDown,
-}) => {
-  const router = useRouter();
-
-  const handleSearchClick = () => {
-    if (query.trim() !== "") {
-      toggleSearch(); 
-      router.push(`/catalogsearch/result?q=${query}`);
-    }
-  };
-
-  return (
-    <div className="flex items-center w-full relative">
-      <input
-        type="text"
-        placeholder="Search by Product Name, Catalog No., or CAS# ...."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onClick={toggleSearch}
-        onKeyDown={onKeyDown}
-        className={`transition-all duration-300 ease-in-out bg-gray-100 px-6 py-3 focus:outline-none w-full 
-        ${isSearchVisible ? "rounded-full pl-6 md:border-l-2 md:border-gray-500" : "hidden md:block rounded-r-full md:border-l-2 md:border-gray-500"}`}
-      />
-      <button
-        onClick={handleSearchClick}
-        className={`absolute right-0 transition-all duration-300 ease-in-out bg-gray-100 p-3 rounded-full focus:outline-none 
-        ${isSearchVisible ? "absolute right-0" : "md:block me-2"}`}
-      >
-        <BsSearch />
-      </button>
-    </div>
-  );
-};
-
 const ProductSearchBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -131,14 +82,38 @@ const ProductSearchBar = () => {
 
   const router = useRouter();
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  // Refs for handling outside click
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
+  const toggleDropdown = () => setIsOpen(!isOpen);
   const toggleSearch = () => {
     setIsSearchVisible(!isSearchVisible);
     setSuggestionsVisible(!isSearchVisible);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
+    }
+
+    if (
+      suggestionsRef.current &&
+      !suggestionsRef.current.contains(event.target as Node)
+    ) {
+      setSuggestionsVisible(false);
+    }
+  };
+
   useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => { 
     if (query) {
       fetchSearch(query);
     } else {
@@ -172,7 +147,11 @@ const ProductSearchBar = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setSuggestionsVisible(false);
-      router.push(`/catalogsearch/result?category_ids=${categoriesValue !== '' ? categoriesValue : "46"}&q=${query}`);
+      router.push(
+        `/catalogsearch/result?category_ids=${
+          categoriesValue !== "" ? categoriesValue : "46"
+        }&q=${query}`
+      );
     }
   };
 
@@ -182,48 +161,67 @@ const ProductSearchBar = () => {
         toggleDropdown={toggleDropdown}
         isOpen={isOpen}
         setCategoriesValue={setCategoriesValue}
+        dropdownRef={dropdownRef}
       />
       <div className="hidden lg:block w-px bg-gray-300 h-6" />
 
-      <SearchInput
-        query={query}
-        setQuery={setQuery}
-        isSearchVisible={isSearchVisible}
-        toggleSearch={toggleSearch}
-        onKeyDown={handleKeyDown}
-      />
-
-      {isSearchVisible && suggestionsVisible && (
-        <div className="absolute top-full left-0 lg:left-auto mt-2 bg-white border border-gray-200 rounded shadow-lg z-[9999] w-full lg:w-96 max-h-60 overflow-y-auto">
-          <div className="border-b border-gray-300 p-2 font-semibold">
-            Popular Suggestions
-          </div>
-          <ul className="p-2">
-            {suggestions.length > 0 ? (
-              suggestions.slice(0, 5).map((suggestion, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() =>
-                    redirectSuggestion(suggestion._source.url_key, suggestion._id)
-                  }
-                >
-                  <div className="flex items-center">
-                    <img
-                      src={`${imageUrl}catalog/product${suggestion._source.image}`}
-                      alt={suggestion._source.name}
-                      className="w-10 h-10 object-cover mr-2"
-                    />
-                    <span>{suggestion._source?.name}</span>
-                  </div>
-                </li>
-              ))
-            ) : (
-              <li className="px-4 py-2 text-gray-500">No Suggestions</li>
-            )}
-          </ul>
+      <div className="relative flex-1">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search by Product Name, Catalog No., or CAS# ...."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onClick={toggleSearch}
+            onKeyDown={handleKeyDown}
+            className="transition-all duration-300 ease-in-out bg-gray-100 px-6 py-3 focus:outline-none w-full rounded-r-full"
+          />
+          <button
+            onClick={() =>
+              query.trim() &&
+              router.push(`/catalogsearch/result?q=${query}`)
+            }
+            className="absolute right-0 bg-gray-100 p-3 rounded-full focus:outline-none"
+          >
+            <BsSearch />
+          </button>
         </div>
-      )}
+
+        {suggestionsVisible && (
+          <div
+            ref={suggestionsRef}
+            className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded shadow-lg z-[9999] w-full lg:w-96 max-h-60 overflow-y-auto"
+          >
+            <div className="border-b border-gray-300 p-2 font-semibold">
+              Popular Suggestions
+            </div>
+            <ul className="p-2">
+              {suggestions.length > 0 ? (
+                suggestions.slice(0, 5).map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() =>
+                      redirectSuggestion(suggestion._source.url_key, suggestion._id)
+                    }
+                  >
+                    <div className="flex items-center">
+                      <img
+                        src={`${imageUrl}catalog/product${suggestion._source.image}`}
+                        alt={suggestion._source.name}
+                        className="w-10 h-10 object-cover mr-2"
+                      />
+                      <span>{suggestion._source?.name}</span>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="px-4 py-2 text-gray-500">No Suggestions</li>
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

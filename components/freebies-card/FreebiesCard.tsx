@@ -175,7 +175,7 @@ const FreebiesCard: React.FC<FreebiesCardProps> = ({
       <div
         className="max-w-xs bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out flex flex-col justify-center items-center pb-4 cursor-pointer"
       >
-        <div className="flex flex-col justify-center items-center p-4">
+        <div className="flex flex-col justify-center items-center p-4 w-full">
           <Image
             src={image_url}
             alt={name}

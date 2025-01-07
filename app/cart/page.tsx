@@ -6,9 +6,11 @@ import CartItem from "@/components/cart/CartItem";
 import CartSummary from "@/components/cart/CartSummary";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { setCount } from "@/redux/store/slices/cartItemCountSlice";
+import { setCount, deleteCount } from "@/redux/store/slices/cartItemCountSlice";
 import { imageUrl } from "@/services/common";
 import { useRouter } from "next/navigation";
+import { GoArrowRight } from "react-icons/go";
+import Loader from "@/components/loader";
 interface CartItemType {
   id: string;
   itemId: string;
@@ -25,7 +27,7 @@ const Cart = () => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [cartTotals, setCartTotals] = useState({
     grand_total: 0,
     subtotal: 0,
@@ -37,6 +39,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
 
+
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
   };
@@ -45,7 +48,7 @@ const Cart = () => {
       try {
         // Make the API call with Axios
         const response = await api.get("/carts/mine/totals", { headers });
-        if (response.data.id) {
+        if (response.data?.items_qty > 0) {
           // Destructure the required totals from the API response
           const {
             grand_total,
@@ -150,10 +153,11 @@ const Cart = () => {
         return item;
       })
     );
+    
   };
 
   // Handler to remove an item from the cart
-  const handleRemoveItem = async (itemId: string) => {
+  const handleRemoveItem = async (itemId: string, quantity:number) => {
     try {
       const headers = {
         Authorization: `Bearer ${tokenApi}`,
@@ -166,29 +170,33 @@ const Cart = () => {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.id !== itemId)
       );
+      dispatch(deleteCount(quantity));
     } catch (error) {
       console.error("Error removing cart item:", error);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
+  const handleContinueShopping = () => {
+    router.push('/products')
   }
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center h-screen">
+  //       <p>Loading...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="w-full">
       <Breadcrumbs />
+      {loading ? <Loader /> :
       <div className="w-11/12 mx-auto">
         <h1 className="text-4xl font-bold mb-6 pt-4">Your cart</h1>
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div
             className={`w-full md:w-3/5 min-h-96 mx-auto px-4 border border-gray-300 rounded-xl ${
               cartItems.length === 0
-                ? "flex flex-col items-center justify-center"
+                ? "md:w-full flex flex-col items-center justify-center"
                 : ""
             }`}
           >
@@ -205,15 +213,29 @@ const Cart = () => {
                   imageUrl={item.imageUrl}
                   onAddQuantity={() => handleAddQuantity(item.id)}
                   onRemoveQuantity={() => handleRemoveQuantity(item.id)}
-                  onRemoveItem={() => handleRemoveItem(item.id)}
+                  onRemoveItem={() => handleRemoveItem(item.id,item.quantity)}
                 />
               ))
             ) : (
-              <p>Your cart is empty.</p>
+              <>
+              <p className="pb-4">Your cart is empty. 
+                {/* <span onClick={handleContinueShopping} className="text-indigo-500 cursor-pointer">Continue Shopping <GoArrowRight className='ms-2' />
+                </span> */}
+              </p> 
+              <button 
+            className="w-full sm:w-[300px] flex flex-row items-center justify-center 
+            bg-orange-500 text-white px-4 py-2 hover:bg-orange-600 transition-transform 
+            transform hover:scale-105 rounded-full"
+            onClick={handleContinueShopping}
+          >
+            Continue Shopping <GoArrowRight className='ms-2' />
+            
+          </button>
+              </>
             )}
           </div>
 
-          <div className="w-full md:w-2/5">
+          <div className={`${cartItems.length === 0 ? "hidden" : "w-full md:w-2/5"}`}>
             <CartSummary
               grandtotal={cartTotals.grand_total}
               subtotal={cartTotals.subtotal}
@@ -224,7 +246,7 @@ const Cart = () => {
             />
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

@@ -214,7 +214,7 @@ const CheckoutPage: React.FC = () => {
       try {
         
         const response = await api.get('/carts/mine/totals', { headers });
-        if(response.data.id){
+        if(response.data?.items_qty > 0){
           setCartTotals(response.data);
           // fetchCustomerAddress();
 

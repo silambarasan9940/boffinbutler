@@ -17,7 +17,8 @@ const Topheader = () => {
 
   const handleSignOut = () => {
     // Clear from localStorage
-    ["authToken", "customerAddress", "quote_id", "name"].forEach(item => localStorage.removeItem(item));
+    // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));
+    localStorage.clear();
     // Dispatch the signOut action
     dispatch(signOut());
   };
@@ -34,7 +35,8 @@ const Topheader = () => {
         .then((response) => {
           const { firstname, lastname } = response.data;
           setUser({ firstname: firstname, lastname: lastname });
-          localStorage.setItem('name',firstname +' '+ lastname)
+          localStorage.setItem('name',firstname +' '+ lastname);
+          localStorage.setItem("me",JSON.stringify(response.data));
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -44,7 +46,7 @@ const Topheader = () => {
 
   return (
     <div className="flex flex-col md:block bg-customBlue w-full">
-      <div className="w-11/12 mx-auto py-2">
+      <div className="w-11/12 mx-auto py-2 px-4 mx-auto">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="hidden md:flex md:flex-row items-center text-white text-sm gap-1">
             <div className="flex items-center">

@@ -1,10 +1,13 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoTag } from "react-icons/go";
 import { GoArrowRight } from "react-icons/go";
 import { MdLockOutline } from "react-icons/md";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai"; 
 import { useRouter } from 'next/navigation';
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store/store";
+import api from '@/services/api';
 
 interface CartSummaryProps {
   grandtotal: number;
@@ -24,16 +27,18 @@ const CartSummary: React.FC<CartSummaryProps> = (
     isCheckoutPage = false, 
     isShippingPage = false, 
     isShippingPageHeight = false,
-    grandtotal,
-  subtotal,
-  discountAmount,
-  shippingAmount,
-  taxAmount,
-  itemsQty,
+  //   grandtotal,
+  // subtotal,
+  // discountAmount,
+  // shippingAmount,
+  // taxAmount,
+  // itemsQty,
 
   }
 ) => {
   const router = useRouter();
+  const tokenApi = useSelector((state: RootState) => state.auth.token);
+  const count = useSelector((state: RootState) => state.cartItemCount.count);
   const dummyAddresses = [
     '123 Main St, Cityville, CA 90210',
     '456 Elm St, Townsville, TX 75001',
@@ -43,7 +48,15 @@ const CartSummary: React.FC<CartSummaryProps> = (
   const [promoCode, setPromoCode] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null); 
-
+  const [loading, setLoading] = useState(true);
+  const [cartTotals, setCartTotals] = useState({
+    grand_total: 0,
+    subtotal: 0,
+    discount_amount: 0,
+    shipping_amount: 0,
+    tax_amount: 0,
+    items_qty: 0,
+  });
   const handleApplyPromoCode = () => {
     console.log(`Applying promo code: ${promoCode}`);
     setPromoCode('');
@@ -61,6 +74,47 @@ const CartSummary: React.FC<CartSummaryProps> = (
   const handleGoTOShipping = () => {
     router.push('/cart/shipping')
   }
+
+  const handleContinueShopping = () => {
+    router.push('/products')
+  }
+  const headers = {
+    Authorization: `Bearer ${tokenApi}`,
+  };
+  const fetchCartItems = async () => {
+    if (tokenApi) {
+      try {
+        // Make the API call with Axios
+        const response = await api.get("/carts/mine/totals", { headers });
+        if (response.data?.items_qty > 0) {
+          // Destructure the required totals from the API response
+          const {
+            grand_total,
+            subtotal,
+            discount_amount,
+            shipping_amount,
+            tax_amount,
+            items_qty,
+          } = response.data;
+          setCartTotals({
+            grand_total,
+            subtotal,
+            discount_amount,
+            shipping_amount,
+            tax_amount,
+            items_qty,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, [count]);
+
   return (
     <div className={`w-full ${isShippingPageHeight ? 'md:mt-0' : ''} min-h-96 p-4 mt-3 md:ms-3 bg-white rounded-xl ${ isCheckoutPage ? "border-none p-0 mt-3 md:ms-0" : 'border border-gray-300'}`}>
       <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
@@ -70,25 +124,25 @@ const CartSummary: React.FC<CartSummaryProps> = (
         <div>
           <div className="flex justify-between font-bold mt-4">
             <span>Subtotal:</span>
-            <span>₹ {subtotal}</span>
+            <span>₹ {cartTotals.subtotal}</span>
           </div>
-          {discountAmount > 0 && (
+          {cartTotals.discount_amount > 0 && (
             <div className="flex justify-between mt-2">
               <span>Discount</span>
-              <span className='text-green-500 font-bold'>₹ {discountAmount}</span>
+              <span className='text-green-500 font-bold'>₹ {cartTotals.discount_amount}</span>
             </div>
           )}
           <div className="flex justify-between mt-2">
             <span>Delivery Fee</span>
-            <span className='font-bold'>₹ {shippingAmount}</span>
+            <span className='font-bold'>₹ {cartTotals.shipping_amount}</span>
           </div>
           <div className="flex justify-between mt-2">
             <span>Tax</span>
-            <span className='font-bold'>₹ {taxAmount}</span>
+            <span className='font-bold'>₹ {cartTotals.tax_amount}</span>
           </div>
           <div className="flex justify-between font-bold mt-4 pt-3 border-t border-gray-300">
             <span>Total:</span>
-            <span>₹ {grandtotal}</span>
+            <span>₹ {cartTotals.grand_total}</span>
           </div>
 
           {/* Address Dropdown for Checkout Page Only */}
@@ -115,14 +169,25 @@ const CartSummary: React.FC<CartSummaryProps> = (
           )}
 
           <div className="mt-4">
-            <button 
+            {cartTotals.items_qty === 0 ? <button 
+            className="w-full flex flex-row items-center justify-center 
+            bg-orange-500 text-white px-4 py-2 hover:bg-orange-600 transition-transform 
+            transform hover:scale-105 rounded-full"
+            onClick={handleContinueShopping}
+          >
+            Continue Shopping <GoArrowRight className='ms-2' />
+            
+          </button> : <button 
               className="w-full flex flex-row items-center justify-center 
               bg-customBlue text-white px-4 py-2 hover:bg-indigo-600 transition-transform 
               transform hover:scale-105 rounded-full"
               onClick={handleGoTOShipping}
             >
               Go to Shipping <GoArrowRight className='ms-2' />
+              
             </button>
+            
+            }
           </div>
 
           {/* Secure Checkout and Additional Info for Checkout and Shipping Pages */}

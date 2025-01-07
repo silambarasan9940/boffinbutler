@@ -248,9 +248,9 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
             {/* Product Display Section */}
 
             <div className={`w-full ps-2`}>
-              <div className="flex flex-col md:flex-row md:justify-between mb-4">
+              <div className="flex flex-col md:flex-row md:justify-between mx-4 mb-4">
                 <h2 className="text-xl font-bold">{title}</h2>
-                <div className="flex flex-col md:flex-row items-center">
+                <div className="flex flex-col gap-3 md:gap-1 md:flex-row items-center">
                   <span className="pe-2">
                     Showing {(currentPage - 1) * pageSize + 1}-
                     {Math.min(currentPage * pageSize, totalProducts)} of{" "}
@@ -282,21 +282,26 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                 </div>
               </div>
               {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                {products.map((product) => (
-                  <div>
-                    <ProductData
-                      {...product}
-                      showButton={false}
-                      id={product._id}
-                    />
-                  </div>
-                ))}
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <div key={product._id}>
+                      <ProductData
+                        {...product}
+                        showButton={true}
+                        id={product._id}
+                        showQuoteBtn={false}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center py-4">No Products available</p>
+                )}
               </div>}
-              <div>
+              <div className="text-center py-4">
                 {products.length < totalProducts && (
                   <button
                     onClick={handleShowMore}
-                    className="py-2 px-4 bg-indigo-500 text-white rounded-md"
+                    className="py-2 px-4 mt-5 bg-indigo-500 text-white rounded-md"
                   >
                     Show more
                   </button>

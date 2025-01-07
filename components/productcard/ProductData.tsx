@@ -56,8 +56,8 @@ const ProductData: React.FC<ProductDataProps> = ({
   return (
     <>
     <div
-      className={`${isProductPadding ? 'p-4' : 'p-1'} ${isProductPage ? "m-1" : "m-3"} bg-white ${isProductShadow ? 'shadow-lg' : ''} rounded-xl text-left`} 
-      // onClick={handleClick}
+      className={`${isProductPadding ? 'p-4' : 'p-1'} ${isProductPage ? "m-1" : "m-3"} bg-white ${isProductShadow ? 'shadow-lg' : ''} rounded-xl text-left min-h-80 cursor-pointer`} 
+      onClick={handleClick}
     >
       <img
         src={`${imageUrl}catalog/product${_source?.image ? _source?.image : '/0/0/008-1.jpg'}`}
@@ -68,7 +68,7 @@ const ProductData: React.FC<ProductDataProps> = ({
       <div className="relative group">
         <h2 className="text-sm font-medium mb-2 cursor-pointer"
         onClick={handleClick}
-        >{_source?.name.length < 29 ? _source?.name : _source?.name.substring(0,29)+'...'}</h2>
+        >{_source?.name.length < 27 ? _source?.name : _source?.name.substring(0,24)+'...'}</h2>
         <div className="absolute left-0 bottom-full mb-1 hidden max-w-xs break-words px-2 py-1 text-xs text-white bg-gray-800 rounded shadow-lg group-hover:block">
           {_source?.name}
         </div>

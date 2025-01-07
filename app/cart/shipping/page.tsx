@@ -34,7 +34,7 @@ const ShippingPage = () => {
     if(tokenApi) {
       try {
         const response = await api.get("/carts/mine/totals", { headers });
-        if(response.data.id){
+        if(response.data?.items_qty > 0){
           setCartTotals(response.data);
         }
         // else{

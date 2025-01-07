@@ -164,9 +164,9 @@ const handleShowMore = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className="w-11/12 mx-auto">
+      <div className="w-11/12 mx-auto px-4">
         <div className="d-block">
-          <div className="text-md text-block py-2">
+          <div className="text-md text-block pb-6">
             {descriptionAttribute ? (
               <div
                 dangerouslySetInnerHTML={{
@@ -206,7 +206,7 @@ const handleShowMore = () => {
           </div>
           <div className="flex flex-wrap w-full mx-auto py-6">
               <div className="w-full md:w-full ps-2">
-                <div className="flex flex-col md:flex-row md:justify-between mb-4">
+                <div className="flex flex-col md:flex-row md:justify-between mx-4 mb-4">
                   <h2 className="text-xl font-bold">{title}</h2>
                   <div className="flex flex-col md:flex-row items-center">
                   <span className="pe-2 mt-3 md:mt-0">
@@ -238,7 +238,7 @@ const handleShowMore = () => {
                     <ProductData key={product._id} {...product} showButton={false} />
                   ))}
                 </div>
-                <div>
+                <div className="text-center py-4">
                 {products.length >= 12 &&
                   <button
                   onClick={handleShowMore}

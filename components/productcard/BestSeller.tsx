@@ -62,8 +62,8 @@ const ProductDataBestSeller: React.FC<ProductDataProps> = ({
     <div
       className={`${isProductPadding ? "p-4" : "p-1"} ${
         isProductPage ? "m-1" : "m-3"
-      } bg-white ${isProductShadow ? "shadow-lg" : ""} rounded-xl text-left`}
-      
+      } bg-white ${isProductShadow ? "shadow-lg" : ""} rounded-xl text-left min-h-80 cursor-pointer`}
+      onClick={handleClick}
     >
       <img
         src={`${imageUrl}catalog/product${image ? image : "/0/0/008-1.jpg"}`}
