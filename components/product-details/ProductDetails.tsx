@@ -94,7 +94,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             fetchCartID();
             
           }
-        }
+        
         console.log("handleAddToCart cartId ID "+cartId)
 
 
@@ -112,7 +112,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       fetchCartID();
       
     }
-  }
+  
   
       try {
         const response = await api.post(
