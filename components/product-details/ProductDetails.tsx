@@ -68,7 +68,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   useEffect(() => {
-    console.log("useEfect")
+    console.log("useEfect tokenApi " + tokenApi)
     if(tokenApi){
       console.log("useEfect"+localStorage.getItem("quote_id"))
 
