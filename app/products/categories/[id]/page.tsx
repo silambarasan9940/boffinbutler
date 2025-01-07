@@ -4,10 +4,9 @@ import ProductData from "@/components/productcard/ProductData";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
+import ProductFilter from "@/components/product-filter-card/ProductFilter";
 import { usePathname, useRouter } from "next/navigation";
 import api from "@/services/api";
-import Loader from "@/components/loader";
-import ProductFilter from "@/components/product-filter-card/ProductFilter";
 
 // Define types for products
 interface ProductSource {
@@ -66,7 +65,6 @@ interface FilterValues {
 }
 
 const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -110,7 +108,6 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
     };
    
     try {
-      setLoading(true);
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
@@ -125,8 +122,6 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
       setTotalProducts(response.data[0].total);
     } catch (error) {
       console.error("Failed to fetch product list:", error);
-    }finally{
-      setLoading(false);
     }
   };
 
@@ -147,15 +142,6 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
     fetchCategoryId();
   }, [id]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-    fetchProductDataList();
-  }, [filters, sortOption]);
-
-  useEffect(() => {
-    fetchProductDataList(true);
-  }, [currentPage]);
-
   const descriptionAttribute = category?.custom_attributes?.find(
     (attr) => attr.attribute_code === "description"
   );
@@ -167,7 +153,6 @@ const handleShowMore = () => {
 
   const handleFilterChange = useCallback((newFilters: FilterValues) => {
     setFilters(newFilters);
-    console.log('new filters', newFilters);
   }, []);
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -179,9 +164,9 @@ const handleShowMore = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className="w-11/12 mx-auto">
+      <div className="w-11/12 mx-auto px-4">
         <div className="d-block">
-          <div className="text-md text-block py-2">
+          <div className="text-md text-block pb-6">
             {descriptionAttribute ? (
               <div
                 dangerouslySetInnerHTML={{
@@ -217,14 +202,11 @@ const handleShowMore = () => {
         </div>
         <div className="flex flex-row">
           <div className="hidden md:block md:w-1/4 pe-2">
-          <ProductFilter
-              aggregations={aggregations}
-              onFilterChange={handleFilterChange}
-            />
+            <ProductFilter aggregations={aggregations} onFilterChange={handleFilterChange} />
           </div>
           <div className="flex flex-wrap w-full mx-auto py-6">
               <div className="w-full md:w-full ps-2">
-                <div className="flex flex-col md:flex-row md:justify-between mb-4">
+                <div className="flex flex-col md:flex-row md:justify-between mx-4 mb-4">
                   <h2 className="text-xl font-bold">{title}</h2>
                   <div className="flex flex-col md:flex-row items-center">
                   <span className="pe-2 mt-3 md:mt-0">
@@ -251,23 +233,12 @@ const handleShowMore = () => {
                     </div>
                   </div>
                 </div>
-                {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                {products.length > 0 ? (
-                  products.map((product) => (
-                    <div key={product._id}>
-                      <ProductData
-                        {...product}
-                        showButton={false}
-                        id={product._id}
-                        showQuoteBtn={false}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center py-4">No Products available</p>
-                )}
-              </div>}
-                <div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                  {products.map((product) => (
+                    <ProductData key={product._id} {...product} showButton={false} />
+                  ))}
+                </div>
+                <div className="text-center py-4">
                 {products.length >= 12 &&
                   <button
                   onClick={handleShowMore}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BsChevronDown } from "react-icons/bs";
@@ -28,8 +28,7 @@ const Navbar = () => {
   const [activeLink, setActiveLink] = useState("Home");
   const [productLinks, setProductLinks] = useState<ProductLink[]>([]);
 
-  const dropdownRef = useRef<HTMLDivElement>(null); 
-  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
+
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
@@ -70,22 +69,6 @@ const Navbar = () => {
     }
   }, []);
   
-  // Close dropdown if clicked outside of it
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
-        dropdownButtonRef.current && !dropdownButtonRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false); // Close the dropdown if clicked outside
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   // Check the current pathname for active link
   useEffect(() => {
@@ -96,10 +79,11 @@ const Navbar = () => {
 
   return (
     <div className="py-3 bg-white shadow">
-      <nav className="flex flex-col md:flex-row items-center justify-between px-4 mx-auto w-11/12">
+      <nav className="flex flex-col md:flex-row items-center justify-between md:px-4 mx-auto w-11/12">
         {/* Desktop Header */}
-        <div className="hidden md:flex items-center space-x-8">
-          <Link href="/home">
+        <div className="hidden flex-col md:flex xl:flex-row items-center w-full">
+          <div className="flex items-center space-x-4">
+          <Link href="https://boffinbutler.com/">
             <Image
               src="https://media.boffinbutler.com/media/logo/websites/1/BoffinButler_homepage_logo.png"
               alt="BoffinButler Pvt Ltd"
@@ -111,11 +95,10 @@ const Navbar = () => {
             <div key={link.label} className="relative">
               {link.hasDropdown ? (
                 <button
-                ref={dropdownButtonRef}
                   onClick={toggleDropdown}
                   aria-expanded={isDropdownOpen}
                   aria-controls="product-dropdown"
-                  className="flex items-center text-gray-800 hover:text-customBlue dark:hover:text-white px-3 py-2 rounded-md text-base font-medium uppercase"
+                  className="flex items-center text-gray-800 hover:text-customBlue dark:hover:text-white px-3 py-2 rounded-md text-base lg:text-lg font-medium uppercase"
                 >
                   {link.label}
                   <BsChevronDown
@@ -131,15 +114,14 @@ const Navbar = () => {
                     activeLink === link.label
                       ? "bg-white text-customBlue font-bold"
                       : "text-gray-800 hover:text-customBlue dark:hover:text-white"
-                  } block px-3 py-2 rounded-md text-base font-medium uppercase`}
+                  } block px-3 py-2 rounded-md text-base lg:text-lg font-medium uppercase`}
                   onClick={() => handleLinkClick(link.label)}
-                >
+                > 
                   {link.label}
                 </Link>
               )}
               {isDropdownOpen && link.hasDropdown && (
                 <div
-                ref={dropdownRef}
                   id="product-dropdown"
                   className="absolute left-0 z-10 w-72 mt-2 bg-white border rounded-md shadow-lg"
                 >
@@ -158,7 +140,8 @@ const Navbar = () => {
             </div>
           ))}
           {/* Right Side Elements (Search Bar and Cart Icon) */}
-          <div className="flex items-center space-x-2">
+          </div>
+          <div className="flex items-center space-x-4 xl:ml-auto">
               <ProductSearchBar />
               <ProductIcon
                 icon={<FaShoppingCart size={16} />}
@@ -166,7 +149,7 @@ const Navbar = () => {
                 bgColor="bg-indigo-500"
                 notificationBgColor="bg-yellow-500"
               />
-            </div>
+          </div>
         </div>
 
         {/* Mobile Header */}

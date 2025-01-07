@@ -7,7 +7,6 @@ import ProductFilter from "@/components/product-filter-card/ProductFilter";
 import FilterModal from "@/components/product-filter-card/FilterModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/services/api";
-import Loader from "@/components/loader";
 
 // Define types for products and aggregations
 interface AggregationItem {
@@ -55,7 +54,6 @@ interface ProductsPageProps {
 }
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -100,7 +98,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
     };
 
     try {
-      setLoading(true);
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
@@ -114,8 +111,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
       setTotalProducts(response.data[0].total);
     } catch (error) {
       console.log("loading failed fetch product list", error);
-    }finally{
-      setLoading(false);
     }
   };
 
@@ -193,12 +188,11 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                     <FilterModal
                       aggregations={aggregations}
                       onFilterChange={handleFilterChange}
-                      
                     />
                   </div>
                 </div>
               </div>
-              {loading ? <Loader /> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
                 {products.length > 0 ? (
                   products.map((product) => (
                     <div key={product._id}>
@@ -206,19 +200,18 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
                         {...product}
                         showButton={true}
                         id={product._id}
-                        showQuoteBtn={false}
                       />
                     </div>
                   ))
                 ) : (
                   <p className="text-center py-4">No Products available</p>
                 )}
-              </div>}
-              <div>
+              </div>
+              <div className="text-center py-4">
                 {products.length < totalProducts &&
                   <button
                   onClick={handleShowMore}
-                  className="py-2 px-4 mt-5 bg-indigo-500 text-white rounded-md"
+                  className="py-2 px-4 bg-indigo-500 text-white rounded-md"
                 >
                   Show more
                 </button>
