@@ -22,12 +22,12 @@ const LaboratoryRequirementsCard: React.FC<WithStylesProps> = ({ title, imageurl
       alt={title}
       width={300}
       height={250}
-      className="rounded-t-xl w-full max-h-[200px] object-cover"
+      className="rounded w-full h-[130px] md:h-[185px] object-cover"
     />
   </div>
   {/* Title Section */}
   <div className="relative group mt-4">
-    <h3 className="text-lg font-bold text-center text-gray-800">
+    <h3 className="text-lg font-bold text-center text-gray-800 break-all">
       {title.length < 20 ? title : title.substring(0, 20) + "..."}
     </h3>
     {/* Hover Tooltip */}
