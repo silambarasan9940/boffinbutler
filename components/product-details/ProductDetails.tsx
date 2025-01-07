@@ -84,11 +84,35 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleAddToCart = async () => {
     if (tokenApi) {
+
+      
+    if(localStorage.getItem("quote_id")){
+      console.log("handleAddToCart Quote ID "+localStorage.getItem("quote_id"))
+
+      // do nothing
+          }else{
+            fetchCartID();
+            
+          }
+        }
+        console.log("handleAddToCart cartId ID "+cartId)
+
+
       const productDetails = {
         sku: product.sku,
         qty: quantity,
         quote_id: cartId,
       };
+
+      
+    if(localStorage.getItem("quote_id")){
+      
+// do nothing
+    }else{
+      fetchCartID();
+      
+    }
+  }
   
       try {
         const response = await api.post(
@@ -106,16 +130,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         const errorMessage =
           error.response?.data?.message || "An unexpected error occurred";
         toast.error(errorMessage);
-      //   if(expiryCart === 1) {
-      //     fetchCartID();
-      //     handleAddToCart();
-      //     setExpiryCart(0);
-      //   }else {
+         if(expiryCart === 1) {
+           localStorage.removeItem('quote_id');
+           fetchCartID();
+           
+           setExpiryCart(0);
+           handleAddToCart();
+         }else {
       //  // Fallback in case `error.response` is undefined
-      //   const errorMessage =
-      //     error.response?.data?.message || "An unexpected error occurred";
-      //   toast.error(errorMessage);
-      //   }
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+         toast.error(errorMessage);
+        }
        
         console.error("Failed to add item to cart:", error);
       }
