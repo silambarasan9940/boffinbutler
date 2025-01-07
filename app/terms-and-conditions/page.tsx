@@ -112,7 +112,7 @@ const TermsAndConditionsPage = () => {
           All visitors and users herewith agree to the following on entering the
           Website:
         </p>
-        <ol type="i" className="unordered-list">
+        <ol type="i" className="unordered-list listing">
           <li>
             abide by all applicable local, state, national, and international
             laws and regulations in your use of the Website (including laws
