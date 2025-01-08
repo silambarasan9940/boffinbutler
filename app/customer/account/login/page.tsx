@@ -51,7 +51,7 @@ const CustomerLogin = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 border border-gray-300 rounded-md mt-8">
+    <div className="w-full max-w-md mx-auto p-6 rounded-md mt-8 mb-8 shadow-lg">
       {isNewCustomer ? (
         <div>
           {/* New Customers Section */}

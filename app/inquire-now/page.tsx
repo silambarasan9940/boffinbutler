@@ -209,7 +209,7 @@ const InquireNow: React.FC = () => {
     <>
       <Breadcrumbs />
 
-      <div className="w-full sm:max-w-3xl p-6 border rounded-lg mt-8 bg-gray-50 mx-2 md:mx-auto">
+      <div className="w-full sm:max-w-3xl p-6 border rounded-lg mt-8 mb-8 bg-gray-50 mx-2 md:mx-auto">
         <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Post Your Enquiry</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* First Name and Last Name */}

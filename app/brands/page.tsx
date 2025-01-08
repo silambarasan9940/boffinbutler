@@ -93,7 +93,7 @@ const BrandPage = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className="w-11/12 mx-auto pt-6">
+      <div className="w-11/12 mx-auto pt-6 mb-8">
         <div className="flex flex-col lg:flex-row">
           {/* Sidebar Section */}
           <div className="w-full lg:w-1/4 my-3 md:me-3">
