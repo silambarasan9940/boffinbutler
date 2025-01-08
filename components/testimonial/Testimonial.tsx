@@ -1,6 +1,8 @@
 "use client";
 import api from "@/services/api";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import loader from '@/src/assests/images/loader.gif';
 
 interface TestimonialProps {
   name: string;
@@ -40,7 +42,16 @@ const TestimonialSlider = () => {
   }, [testimonials.length]);
 
   if (testimonials.length === 0) {
-    return <div>Loading testimonials...</div>;
+    // loading testimonials
+    return <div className="flex justify-center pt-6"> 
+      <Image
+        src={loader}
+        alt="About Us"
+        width={60}
+        height={60}
+        className="w-[60px] h-[60px] object-cover"
+      />
+    </div>;
   }
 
   return (

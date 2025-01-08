@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { FiSearch } from "react-icons/fi";
 import api from "@/services/api/index";
-import { CirclesWithBar } from "react-loader-spinner";
+//import { CirclesWithBar } from "react-loader-spinner";
+import Image from "next/image";
+import loader from '@/src/assests/images/loader.gif';
 import BrandList from "@/components/brandcard/BrandList";
 interface Brand {
   id: number;
@@ -158,7 +160,14 @@ const BrandPage = () => {
             {/* Display loading, error, or brands */}
             {loading ? (
                 <div className="flex justify-center items-center pt-40">
-                  <CirclesWithBar
+                  <Image
+                    src={loader}
+                    alt="About Us"
+                    width={46}
+                    height={46}
+                    className="w-full h-[46px] object-cover"
+                  />
+                  {/* <CirclesWithBar
                     height="100"
                     width="100"
                     color="#4fa94d"
@@ -169,7 +178,7 @@ const BrandPage = () => {
                     wrapperStyle={{}}
                     wrapperClass=""
                     visible={true}
-                  />
+                  /> */}
                 </div>
             ) : error ? (
               <div className="text-red-500 text-center py-10">{error}</div>
