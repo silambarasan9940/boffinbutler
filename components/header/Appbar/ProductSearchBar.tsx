@@ -156,7 +156,7 @@ const ProductSearchBar = () => {
   };
 
   return (
-    <div className="flex md:flex-row items-center justify-center text-xs drop-shadow-md relative">
+    <div className="flex md:flex-row items-center justify-center text-xs drop-shadow-md relative xl:w-[308px]">
       <CategoriesDropdown
         toggleDropdown={toggleDropdown}
         isOpen={isOpen}

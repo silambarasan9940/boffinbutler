@@ -260,7 +260,7 @@ const CreateNewEmployerAccount = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-gray-50 rounded-lg mt-14">
+    <div className="max-w-4xl mx-auto p-6 rounded-lg mt-14 mb-14 shadow-lg">
       <h2 className="text-2xl font-bold mb-4 border-b border-gary-300 pb-3">
         Create New Employer Account
       </h2>

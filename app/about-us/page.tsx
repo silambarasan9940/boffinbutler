@@ -63,8 +63,9 @@ const AboutUs = () => {
 
   return (
     <>
+        <Breadcrumbs />
         <div className="w-11/12 bg-white mx-auto">
-          <Breadcrumbs />
+          
           {/* Section 1: Image and Tabs */}
           <div className="flex flex-wrap items-start py-10">
             {/* Left side: Image Section */}

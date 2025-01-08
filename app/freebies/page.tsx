@@ -36,7 +36,7 @@ const FreebiesPage: React.FC = () => {
   return (
     <>
       <Breadcrumbs />
-      <div className="w-11/12 mx-auto pt-6">
+      <div className="w-11/12 mx-auto pt-6 mb-8">
         {loading ? (
           <p>Loading freebies...</p>
         ) : error ? (
