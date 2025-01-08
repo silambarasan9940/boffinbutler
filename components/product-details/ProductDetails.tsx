@@ -33,9 +33,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const [inCart, setInCart] = useState(false);
   const [cartId, setCartId] = useState(localStorage.getItem("quote_id"));
   const [isQtyAvailable, setIsQtyAvailable] = useState(true);
-  const [expiryCart, setExpiryCart] = useState(1);
+  const [expiryCart, setExpiryCart] = useState(true);
   const router = useRouter();
-
+  var expy = 1;
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
@@ -84,8 +84,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleAddToCart = async () => {
     if (tokenApi) {
-
-      
     if(localStorage.getItem("quote_id")){
       console.log("handleAddToCart Quote ID "+localStorage.getItem("quote_id"))
 
@@ -95,9 +93,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             
           }
         
-        console.log("handleAddToCart cartId ID "+cartId)
-
-
       const productDetails = {
         sku: product.sku,
         qty: quantity,
@@ -105,13 +100,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       };
 
       
-    if(localStorage.getItem("quote_id")){
+//     if(localStorage.getItem("quote_id")){
       
-// do nothing
-    }else{
-      fetchCartID();
+// // do nothing
+//     }else{
+//       fetchCartID();
       
-    }
+//     }
   
   
       try {
@@ -129,15 +124,20 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       } catch (error: any) {
         const errorMessage =
           error.response?.data?.message || "An unexpected error occurred";
-        toast.error(errorMessage);
-         if(expiryCart === 1) {
+        toast.error(errorMessage,);
+         
+         const words = ["customer", "not", "active", "cart"];
+
+      const containsAll = stringContainsAllWords(errorMessage, words);
+
+         if((expy === 1) && containsAll) {
+          expy = 0
+          //  setExpiryCart(false)
            localStorage.removeItem('quote_id');
            fetchCartID();
-           
-           setExpiryCart(0);
            handleAddToCart();
          }else {
-      //  // Fallback in case `error.response` is undefined
+      // Fallback in case `error.response` is undefined
         const errorMessage =
           error.response?.data?.message || "An unexpected error occurred";
          toast.error(errorMessage);
@@ -179,6 +179,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const handleGoToCart = () => {
     router.push("/cart");
   };
+
+
+  function stringContainsAllWords(str:string, words:any) {
+    return words.every(word => str.includes(word));
+  }
 
   return (
     <div className="w-11/12 mx-auto flex flex-col gap-8 p-4">
@@ -229,13 +234,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <div className="w-full md:w-1/2 flex flex-col justify-start items-start space-y-4">
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-400 font-semibold">
-              ₹{product.extension_attributes.original_final_price}
-            </span>
+            
             {Number(product.extension_attributes.discount_percent) > 0 && (
+             <>
+              <span className="text-sm text-gray-400 font-semibold">
+              <s>₹{product.price}</s>
+            </span>
               <span className="bg-green-100 text-green-500 rounded-full px-3 py-1 font-sm">
                 {product.extension_attributes.discount_percent}% OFF
               </span>
+             </>
             )}
           </div>
           <div className="flex items-center space-x-2">

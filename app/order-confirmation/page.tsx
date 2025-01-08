@@ -12,7 +12,7 @@ import Loader from "@/components/loader";
 
 const OrderConfirmationPage = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [orderDetails, setOrderDetails] = useState<Order | null>(null);
   const [error, setError] = useState<string | null>(null);
   const tokenApi = useSelector((state: RootState) => state.auth.token);
@@ -54,7 +54,7 @@ const OrderConfirmationPage = () => {
     <>
       <Breadcrumbs />
 
-      {loading ? <Loader /> :<div className="w-full md:w-1/2 mx-auto py-8 px-4">
+      {loading ? <Loader /> : <div className="w-full md:w-1/2 mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8 text-center">
           Order Confirmation
         </h1>

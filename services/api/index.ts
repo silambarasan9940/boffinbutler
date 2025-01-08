@@ -48,7 +48,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError<ErrorResponse>) => {
-    console.log(error.config?.url);
+    // console.log(error.config?.url);
     if (error.response) {
       const { status, data } = error.response;
       if(status === 401) {
@@ -73,10 +73,10 @@ api.interceptors.response.use(
           : status >= 500
           ? 'Server error! Please try again later.'
           : 'An error occurred!');
-          console.log(activeToastId +" ==activeToastId");
+          // console.log(activeToastId +" ==activeToastId");
 
       if (activeToastId != null) {
-        console.log(error.config?.url+" No error activeToastId");
+        // console.log(error.config?.url+" No error activeToastId");
 
         activeToastId = `error-${status}`;
         toast.error(errorMessage, {
