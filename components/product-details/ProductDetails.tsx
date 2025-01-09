@@ -1,13 +1,23 @@
 import React, { useState, useEffect, MouseEvent } from "react";
+
 import Image from "next/image";
+
 import { useRouter } from "next/navigation";
+
 import ProductDetailsTabs from "./ProductDetailsTabs";
+
 import { Product } from "@/services/types";
+
 import api from "@/services/api/index";
+
 import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
+
 import { useSelector } from "react-redux";
+
 import { RootState } from "@/redux/store/store";
+
 import SimilarProducts from "../similarproducts/similarproducts";
 
 interface ProductDetailsProps {
@@ -18,6 +28,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const defaultImageUrl = "https://beta.boffinbutler.com/media/catalog/product";
+
   const imageAttribute = product.custom_attributes.filter(
     (attr) => attr.attribute_code === "image"
   );
@@ -27,40 +38,58 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   );
 
   const [selectedImage, setSelectedImage] = useState(imageUrl[0] || "");
+
   const [backgroundSize, setBackgroundSize] = useState("100%");
+
   const [backgroundPosition, setBackgroundPosition] = useState("center");
+
   const [quantity, setQuantity] = useState(1);
+
   const [inCart, setInCart] = useState(false);
+
   const [cartId, setCartId] = useState(localStorage.getItem("quote_id"));
+
   const [isQtyAvailable, setIsQtyAvailable] = useState(true);
+
   const [expiryCart, setExpiryCart] = useState(true);
+
   const router = useRouter();
+
   var expy = 1;
+
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
+
     const x = ((e.pageX - left) / width) * 100;
+
     const y = ((e.pageY - top) / height) * 100;
+
     setBackgroundPosition(`${x}% ${y}%`);
+
     setBackgroundSize("200%");
   };
 
   const handleMouseLeave = () => {
     setBackgroundSize("100%");
+
     setBackgroundPosition("center");
   };
 
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
+
     "Content-Type": "application/json",
   };
-
 
   const fetchCartID = async () => {
     try {
       const response = await api.post("/carts/mine/", {}, { headers });
+
       setCartId(response.data);
+
       const cartId = response.data;
+
       localStorage.setItem("quote_id", JSON.stringify(response.data));
     } catch (error) {
       console.log("Failed to fetch cart ID", error);
@@ -68,110 +97,127 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   useEffect(() => {
-    console.log("useEfect tokenApi " + tokenApi)
-    if(tokenApi){
-      console.log("useEfect"+localStorage.getItem("quote_id"))
+    console.log("useEfect tokenApi " + tokenApi);
 
-    if(localStorage.getItem("quote_id")){
-      
-// do nothing
-    }else{
-      fetchCartID();
-      
+    if (tokenApi) {
+      console.log("useEfect" + localStorage.getItem("quote_id"));
+
+      if (localStorage.getItem("quote_id")) {
+        // do nothing
+      } else {
+        fetchCartID();
+      }
     }
-  }
   }, []);
 
   const handleAddToCart = async () => {
     if (tokenApi) {
-    if(localStorage.getItem("quote_id")){
-      console.log("handleAddToCart Quote ID "+localStorage.getItem("quote_id"))
+      if (localStorage.getItem("quote_id")) {
+        console.log(
+          "handleAddToCart Quote ID " + localStorage.getItem("quote_id")
+        );
 
-      // do nothing
-          }else{
-            fetchCartID();
-            
-          }
-        
+        // do nothing
+      } else {
+        fetchCartID();
+      }
+
       const productDetails = {
         sku: product.sku,
+
         qty: quantity,
+
         quote_id: cartId,
       };
 
-      
-//     if(localStorage.getItem("quote_id")){
-      
-// // do nothing
-//     }else{
-//       fetchCartID();
-      
-//     }
-  
-  
+      // if(localStorage.getItem("quote_id")){
+
+      // // do nothing
+
+      // }else{
+
+      // fetchCartID();
+
+      // }
+
       try {
         const response = await api.post(
           "/carts/mine/items",
+
           { cartItem: productDetails },
+
           { headers }
         );
-  
+
         // Assuming the API returns success confirmation
+
         if (response?.status === 200) {
           toast.success("Item added to cart successfully!");
+
           setInCart(true);
         }
       } catch (error: any) {
         const errorMessage =
           error.response?.data?.message || "An unexpected error occurred";
-        toast.error(errorMessage,);
-         
-         const words = ["customer", "not", "active", "cart"];
 
-      const containsAll = stringContainsAllWords(errorMessage, words);
+        toast.error(errorMessage);
 
-         if((expy === 1) && containsAll) {
-          expy = 0
-          //  setExpiryCart(false)
-           localStorage.removeItem('quote_id');
-           fetchCartID();
-           handleAddToCart();
-         }else {
-      // Fallback in case `error.response` is undefined
-        const errorMessage =
-          error.response?.data?.message || "An unexpected error occurred";
-         toast.error(errorMessage);
+        const words = ["customer", "not", "active", "cart"];
+
+        const containsAll = stringContainsAllWords(errorMessage, words);
+
+        if (expy === 1 && containsAll) {
+          expy = 0;
+
+          // setExpiryCart(false)
+
+          localStorage.removeItem("quote_id");
+
+          fetchCartID();
+
+          handleAddToCart();
+        } else {
+          // Fallback in case `error.response` is undefined
+
+          const errorMessage =
+            error.response?.data?.message || "An unexpected error occurred";
+
+          toast.error(errorMessage);
         }
-       
+
         console.error("Failed to add item to cart:", error);
       }
     } else {
       // Redirect to login if user is not authenticated
+
       router.push("/customer/account/login");
     }
   };
-  
-    
-    
 
   // Increase the product quantity and update the cart
+
   const handleIncrease = () => {
-    if(quantity === product.extension_attributes.custom_stock_item.qty){
+    if (quantity === product.extension_attributes.custom_stock_item.qty) {
       setIsQtyAvailable(false);
-    }else {
+    } else {
       const newQuantity = quantity + 1;
+
       setQuantity(newQuantity);
     }
-    
+
     // dispatch(increment());
   };
 
   // Decrease the product quantity and update the cart
+
   const handleDecrease = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
+
       setQuantity(newQuantity);
+
       setIsQtyAvailable(true);
+
       // dispatch(decrement());
     }
   };
@@ -180,9 +226,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     router.push("/cart");
   };
 
-
-  function stringContainsAllWords(str:string, words:any) {
-    return words.every(word => str.includes(word));
+  function stringContainsAllWords(str: string, words: any) {
+    return words.every((word) => str.includes(word));
   }
 
   return (
@@ -217,10 +262,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               className="absolute inset-0 bg-center bg-cover transition-transform duration-300"
               style={{
                 backgroundImage: `url(${selectedImage})`,
+
                 backgroundSize: backgroundSize,
+
                 backgroundPosition: backgroundPosition,
               }}
             />
+
             <Image
               src={selectedImage}
               alt="Selected product"
@@ -233,30 +281,35 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
         <div className="w-full md:w-1/2 flex flex-col justify-start items-start space-y-4">
           <h1 className="text-2xl font-bold">{product.name}</h1>
+
           <div className="flex items-center space-x-4">
-            
             {Number(product.extension_attributes.discount_percent) > 0 && (
-             <>
-              <span className="text-sm text-gray-400 font-semibold">
-              <s>₹{product.price}</s>
-            </span>
-              <span className="bg-green-100 text-green-500 rounded-full px-3 py-1 font-sm">
-                {product.extension_attributes.discount_percent}% OFF
-              </span>
-             </>
+              <>
+                <span className="text-sm text-gray-400 font-semibold">
+                  <s>₹{product.price}</s>
+                </span>
+
+                <span className="bg-green-100 text-green-500 rounded-full px-3 py-1 font-sm">
+                  {product.extension_attributes.discount_percent}% OFF
+                </span>
+              </>
             )}
           </div>
+
           <div className="flex items-center space-x-2">
             <p className="text-3xl text-gray-700 font-semibold">
               ₹{product.extension_attributes.custom_final_price}
             </p>
+
             <div className="flex">
               <div className="text-sm text-gray-400 font-semibold">
                 + ₹{product.extension_attributes.gst_final_price}
               </div>
+
               <span className="text-gray-400 text-sm ps-1">GST</span>
             </div>
           </div>
+
           <p className="text-xl text-gray-800 font-semibold">
             ₹
             {parseFloat(
@@ -278,15 +331,22 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 >
                   -
                 </button>
+
                 <span className="text-sm font-semibold">{quantity}</span>
+
                 <button
                   onClick={handleIncrease}
-                  className={`${!isQtyAvailable ? 'cursor-not-allowed' : 'text-gray-600 hover:text-gray-800'}`}
+                  className={`${
+                    !isQtyAvailable
+                      ? "cursor-not-allowed"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
                   disabled={!isQtyAvailable}
                 >
                   +
                 </button>
               </div>
+
               <button
                 onClick={inCart ? handleGoToCart : handleAddToCart}
                 className={`w-full ${
@@ -300,9 +360,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             </div>
           ) : (
             <div className="text-center mx-auto">
-             <p className="bg-red-600 text-white py-2 px-4 rounded-md">
-              Out of Stock
-            </p>
+              <p className="bg-red-600 text-white py-2 px-4 rounded-md">
+                Out of Stock
+              </p>
             </div>
           )}
         </div>
@@ -325,6 +385,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           }
         />
       </div>
+
       <ToastContainer />
     </div>
   );

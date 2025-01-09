@@ -7,6 +7,8 @@ import { FiSearch } from "react-icons/fi";
 import ProductFilter from "@/components/product-filter-card/ProductFilter";
 import { usePathname, useRouter } from "next/navigation";
 import api from "@/services/api";
+import Loader from "@/components/loader";
+import FilterModal from "@/components/product-filter-card/FilterModal";
 
 // Define types for products
 interface ProductSource {
@@ -65,6 +67,7 @@ interface FilterValues {
 }
 
 const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products" }) => {
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("Price Low to High");
   const [products, setProducts] = useState<Product[]>([]);
@@ -100,14 +103,15 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
       size: pageSize,
       query: "*",
       category_id: filters.category_id || "",
-      materials: filters.materials.join(","),
-      purity: filters.purity.join(","),
-      quantity_val: filters.quantity_val.join(","),
+      materials: filters.materials || "",
+      purity: filters.purity || "",
+      quantity_val: filters.quantity_val || "",
       sort: currentSortOption?.sort,
       sortby: currentSortOption?.sortby,
     };
    
     try {
+      setLoading(true);
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
@@ -116,12 +120,12 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
       } else {
         setProducts(newProducts);
       }
-
       setAggregations(response.data[0].aggregations);
-      
       setTotalProducts(response.data[0].total);
     } catch (error) {
       console.error("Failed to fetch product list:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -151,6 +155,16 @@ const handleShowMore = () => {
   setCurrentPage((prevPage) => prevPage + 1);
 };
 
+// Use `useEffect` to fetch more products when the page number changes
+  useEffect(() => {
+    setCurrentPage(1)
+    fetchProductDataList();
+  }, [filters, sortOption]);
+  useEffect(() => {
+
+    fetchProductDataList(true);
+  }, [ currentPage]);
+  
   const handleFilterChange = useCallback((newFilters: FilterValues) => {
     setFilters(newFilters);
   }, []);
@@ -201,9 +215,14 @@ const handleShowMore = () => {
           </div> */}
         </div>
         <div className="flex flex-row">
-          <div className="hidden md:block md:w-1/4 pe-2">
-            <ProductFilter aggregations={aggregations} onFilterChange={handleFilterChange} />
-          </div>
+        <div className="hidden md:block md:w-1/4 pe-2">
+              {aggregations && (
+                <ProductFilter
+                  aggregations={aggregations}
+                  onFilterChange={handleFilterChange}
+                />
+              )}
+            </div>
           <div className="flex flex-wrap w-full mx-auto py-6">
               <div className="w-full md:w-full ps-2">
                 <div className="flex flex-col md:flex-row md:justify-between mx-4 mb-4">
@@ -231,13 +250,29 @@ const handleShowMore = () => {
                         ))}
                       </select>
                     </div>
+                    <div className="d-block md:hidden">
+                    <FilterModal
+                      aggregations={aggregations}
+                      onFilterChange={handleFilterChange}
+                    />
+                  </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                  {products.map((product) => (
-                    <ProductData key={product._id} {...product} showButton={false} />
-                  ))}
-                </div>
+                {loading ? <Loader /> :<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                {products.length > 0 ? (
+                  products.map((product) => (
+                    <div key={product._id}>
+                      <ProductData
+                        {...product}
+                        showButton={true}
+                        id={product._id}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center py-4">No Products available</p>
+                )}
+              </div>}
                 <div className="text-center py-4">
                 {products.length >= 12 &&
                   <button
