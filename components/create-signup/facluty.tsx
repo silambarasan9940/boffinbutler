@@ -47,9 +47,11 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
     try {
       const response = await api.post("/generate/otp", {
         telephone: formData.telephone,
+        name: formData.firstname,
+        email: formData.email,
       });
       // if (response.status === 200) {
-      toast.success("OTP sent to mobile number");
+      toast.success("OTP sent to your Email Address");
       setIsOtpSent(true);
       setShowOtpModal(true);
 
