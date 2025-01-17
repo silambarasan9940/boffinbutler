@@ -15,13 +15,15 @@ const CustomerLogin = () => {
 
   const dispatch = useDispatch();
   const router = useRouter(); 
-
+  const referer = router.query.referer || '/';
+  
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     setLoading(true);
     setError("");
 
@@ -42,7 +44,10 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      router.push("/");
+      
+
+
+      router.push(referer);
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");

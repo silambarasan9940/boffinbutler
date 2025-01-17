@@ -56,7 +56,7 @@ const ProductData: React.FC<ProductDataProps> = ({
     event.stopPropagation(); // Prevents the default action of the event from happening
 
     if(!tokenApi){
-      router.push(`/customer/account/login`);
+      router.push(`/customer/account/login?referer=${router.asPath}`);
       return;
     }
     setIsModalOpen(!isModalOpen);
