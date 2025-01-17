@@ -45,7 +45,6 @@ const CustomerLogin = () => {
       
       // Navigate to the home page
       router.push(referer ? decodeURIComponent(referer) : '/');
-
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");
