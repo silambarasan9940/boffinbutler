@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import { useDispatch } from "react-redux";
 import { signIn } from "@/redux/store/slices/authSlice";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 
 const CustomerLogin = () => {
