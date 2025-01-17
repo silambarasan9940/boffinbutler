@@ -24,6 +24,7 @@ const CustomerLogin = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    const { referer } = router.query;
 
     try {
       const response = await api.post(
@@ -42,7 +43,10 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      router.push("/");
+      
+      router.push(referer ? decodeURIComponent(referer) : '/');
+
+      // router.push("/");
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");
@@ -114,13 +118,13 @@ const CustomerLogin = () => {
                 required
               />
             </div>
-
+{/* 
             <div className="mb-6 flex items-center">
               <input type="checkbox" className="mr-2" />
               <label className="text-gray-700">
                 Remember Me <strong>What's this?</strong>
               </label>
-            </div>
+            </div> */}
 
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
