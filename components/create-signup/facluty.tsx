@@ -147,7 +147,7 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
     if (!formData.department) errors.department = "Please select department";
     if ((formData.department === '220' || formData.department === 'others') && !formData.other_department) errors.other_department = "Please select department";
     
-    if (formData.faculty_idcard === '' ) errors.faculty_idcard = "Please Upload Your Id Card";
+    if (formData.facultyidcard.base64 === '' ) errors.facultyidcard = "Please Upload Your Id Card";
 
     return errors;
   };
@@ -417,9 +417,9 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
                 className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
                 onChange={handleInputChange}
               />
-              {formErrors.faculty_idcard && (
+              {formErrors.facultyidcard && (
                 <p className="text-red-500 text-sm">
-                  {formErrors.faculty_idcard}
+                  {formErrors.facultyidcard}
                 </p>
               )}
             </div>
