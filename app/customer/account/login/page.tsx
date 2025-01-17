@@ -20,6 +20,15 @@ const CustomerLogin = () => {
     setIsNewCustomer(!isNewCustomer);
   };
 
+  const isValidInternalUrl = (url) => {
+    try {
+      const refererUrl = new URL(url, window.location.origin); // Create a full URL relative to the app
+      return refererUrl.origin === window.location.origin; // Check if the origin matches the app's origin
+    } catch (error) {
+      return false; // Invalid URL
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -43,10 +52,11 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      
-      router.push(referer ? decodeURIComponent(referer) : '/');
-
-      // router.push("/");
+      if (referer && isValidInternalUrl(referer)) {
+        router.push(decodeURIComponent(referer)); // Redirect to the referer
+      } else {
+        router.push('/'); // Redirect to homepage if referer is invalid
+      }
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");
