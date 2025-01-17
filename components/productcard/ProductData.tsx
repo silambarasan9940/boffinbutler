@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { imageUrl } from "@/services/common";
 import RequestQuote from "../product-details/RequestQuote";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
 // Type for Product Props
 interface Product {
   id: string;
@@ -46,12 +47,18 @@ const ProductData: React.FC<ProductDataProps> = ({
 }) => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const tokenApi = useSelector((state: RootState) => state.auth.token);
   // Function to navigate to the product details page
   const handleClick = () => {
     router.push(`/products/${_source.url_key}`);
   };
   const toggleModal = (event) => {
     event.stopPropagation(); // Prevents the default action of the event from happening
+
+    if(!tokenApi){
+      router.push(`/customer/account/login`);
+      return;
+    }
     setIsModalOpen(!isModalOpen);
   };
   return (
