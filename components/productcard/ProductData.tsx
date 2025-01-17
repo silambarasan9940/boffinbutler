@@ -51,14 +51,14 @@ const ProductData: React.FC<ProductDataProps> = ({
     router.push(`/products/${_source.url_key}`);
   };
   const toggleModal = (event) => {
-    event.preventDefault(); // Prevents the default action of the event from happening
+    event.stopPropagation(); // Prevents the default action of the event from happening
     setIsModalOpen(!isModalOpen);
   };
   return (
     <>
     <div
       className={`${isProductPadding ? 'p-4' : 'p-1'} ${isProductPage ? "m-1" : "m-3"} bg-white ${isProductShadow ? 'shadow-lg' : ''} rounded-xl text-left min-h-80 cursor-pointer`} 
-      
+      onClick={handleClick}
     >
       <img
         src={`${imageUrl}catalog/product${_source?.image ? _source?.image : '/0/0/008-1.jpg'}`}
