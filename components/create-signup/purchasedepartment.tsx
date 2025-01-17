@@ -205,7 +205,13 @@ const PurchaseDepartment = ({ cities, states, departments, institutes }: { citie
             attributeCode: "other_department",
             value: formData.other_department
         },
-        {
+        
+          ],
+        },
+        password: formData.password,
+      };
+      if(formData.inchargeidcard.base64 != ''){
+        requestPayload.customer.customAttributes.push({
           attributeCode: "incharge_idcard",
           value: {
             base64_encoded_data:formData.inchargeidcard.base64.split(",")[1],
@@ -213,12 +219,8 @@ const PurchaseDepartment = ({ cities, states, departments, institutes }: { citie
             name:(Date.now() * 1000).toString()+'.'+formData.inchargeidcard.fileName.split(".")[1]
 
           }, 
-        },
-          ],
-        },
-        password: formData.password,
-      };
-
+        });
+      }
       const response = await api.post('/customers', requestPayload);
       if (response.status === 200) {
         toast.success("Account successfully Sign Up");

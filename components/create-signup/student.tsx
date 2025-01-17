@@ -252,19 +252,24 @@ const Student = ({ cities, states, departments, institutes }: { cities: any; sta
           attribute_code: "other_faculty_mobile",
           value: formData.other_faculty_mobile
       },
-      {
-        attributeCode: "student_idcard",
-        value: {
-          base64_encoded_data:formData.studentidcard.base64.split(",")[1],
-          type:formData.studentidcard.fileType,
-          name:(Date.now() * 1000).toString()+'.'+formData.studentidcard.fileName.split(".")[1]
-
-        }, 
-      },
+     
           ],
         },
         password: formData.password,
       };
+
+      if(formData.studentidcard.base64 != ''){
+        requestPayload.customer.customAttributes.push(
+          {
+            attributeCode: "student_idcard",
+            value: {
+              base64_encoded_data:formData.studentidcard.base64.split(",")[1],
+              type:formData.studentidcard.fileType,
+              name:(Date.now() * 1000).toString()+'.'+formData.studentidcard.fileName.split(".")[1]
+    
+            }, 
+          });
+      } 
 
       const response = await api.post('/customers', requestPayload);
       if (response.status === 200) {
