@@ -5,23 +5,8 @@ import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import { useDispatch } from "react-redux";
 import { signIn } from "@/redux/store/slices/authSlice";
-import { useEffect } from 'react';
-
 
 const CustomerLogin = () => {
-  const router = useRouter();
-  const [referrer, setReferrer] = useState('');
-
-  useEffect(() => {
-    const ref = document.referrer;
-    if (ref && new URL(ref).origin === window.location.origin) {
-      setReferrer(ref); // Only set referrer if it belongs to the same origin
-    } else {
-      setReferrer('/'); // Default to homepage if external
-    }
-  }, []);
-
-  
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,18 +14,16 @@ const CustomerLogin = () => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-   
+  const router = useRouter(); 
 
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
   };
- 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    console.log('Referrer:', document.referrer);
 
     try {
       const response = await api.post(
@@ -59,7 +42,7 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      router.push(referrer || '/');
+      router.push("/");
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");
