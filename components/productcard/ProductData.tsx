@@ -51,7 +51,8 @@ const ProductData: React.FC<ProductDataProps> = ({
     router.push(`/products/${_source.url_key}`);
   };
   const toggleModal = (event) => {
-    event.preventDefault(); // Prevents the default action
+    alert('let me check');
+    event.preventDefault(); // Prevents the default action of the event from happening
     setIsModalOpen(!isModalOpen);
   };
   return (
