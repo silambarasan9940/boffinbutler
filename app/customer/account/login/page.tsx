@@ -16,7 +16,7 @@ const CustomerLogin = () => {
   const dispatch = useDispatch();
   const router = useRouter(); 
   const referer = router.query.referer || '/';
-  
+
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
   };
@@ -44,9 +44,6 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      
-
-
       router.push(referer);
       setLoading(false);
     } catch (error) {
