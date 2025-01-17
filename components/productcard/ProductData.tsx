@@ -50,7 +50,8 @@ const ProductData: React.FC<ProductDataProps> = ({
   const handleClick = () => {
     router.push(`/products/${_source.url_key}`);
   };
-  const toggleModal = () => {
+  const toggleModal = (event) => {
+    event.preventDefault(); // Prevents the default action
     setIsModalOpen(!isModalOpen);
   };
   return (
