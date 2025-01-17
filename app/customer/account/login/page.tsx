@@ -40,6 +40,7 @@ const CustomerLogin = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    console.log('Referrer:', document.referrer);
 
     try {
       const response = await api.post(
