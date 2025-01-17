@@ -123,6 +123,7 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
 
 
   const validateForm = () => {
+    console.log('response', formData);
     let errors: any = {};
     if (!formData.firstname) errors.firstname = "First Name is required";
     if (!formData.lastname) errors.lastname = "Last Name is required";
