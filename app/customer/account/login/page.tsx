@@ -5,8 +5,23 @@ import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import { useDispatch } from "react-redux";
 import { signIn } from "@/redux/store/slices/authSlice";
+import { useEffect, useState } from 'react';
+
 
 const CustomerLogin = () => {
+  const router = useRouter();
+  const [referrer, setReferrer] = useState('');
+
+  useEffect(() => {
+    const ref = document.referrer;
+    if (ref && new URL(ref).origin === window.location.origin) {
+      setReferrer(ref); // Only set referrer if it belongs to the same origin
+    } else {
+      setReferrer('/'); // Default to homepage if external
+    }
+  }, []);
+
+  
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,26 +29,17 @@ const CustomerLogin = () => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const router = useRouter(); 
+   
 
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
   };
-
-  const isValidInternalUrl = (url) => {
-    try {
-      const refererUrl = new URL(url, window.location.origin); // Create a full URL relative to the app
-      return refererUrl.origin === window.location.origin; // Check if the origin matches the app's origin
-    } catch (error) {
-      return false; // Invalid URL
-    }
-  };
+ 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const { referer } = router.query;
 
     try {
       const response = await api.post(
@@ -52,11 +58,7 @@ const CustomerLogin = () => {
       dispatch(signIn(token));
       
       // Navigate to the home page
-      if (referer && isValidInternalUrl(referer)) {
-        router.push(decodeURIComponent(referer)); // Redirect to the referer
-      } else {
-        router.push('/'); // Redirect to homepage if referer is invalid
-      }
+      router.push(referrer || '/');
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");
@@ -128,13 +130,13 @@ const CustomerLogin = () => {
                 required
               />
             </div>
-{/* 
+
             <div className="mb-6 flex items-center">
               <input type="checkbox" className="mr-2" />
               <label className="text-gray-700">
                 Remember Me <strong>What's this?</strong>
               </label>
-            </div> */}
+            </div>
 
             {error && <p className="text-red-500 mb-4">{error}</p>}
 
