@@ -3,18 +3,21 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { IoMdCall } from "react-icons/io";
 import { FiMail, FiLogIn, FiLogOut } from "react-icons/fi";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "@/redux/store/slices/authSlice";
 import { RootState } from "@/redux/store/store";
 import api from "@/services/api";
+
 
 const Topheader = () => {
   const [user, setUser] = useState<{ firstname: string; lastname: string } | null>(null);
   const isSignedIn = useSelector((state: RootState) => state.auth.isSignedIn);
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const pathname = usePathname();
+  localStorage.setItem("redirectTo", pathname);
+  
   const handleSignOut = () => {
     // Clear from localStorage
     // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));

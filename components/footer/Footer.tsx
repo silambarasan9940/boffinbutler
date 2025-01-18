@@ -9,8 +9,11 @@ import { FaMapLocationDot } from "react-icons/fa6";
 
 
 const Footer = () => {
+  
   return (
+    
     <>
+    
       <footer className="bg-white dark:bg-gray-800 pt-4 pb-8 xl:pt-8 border-t border-gray-300">
         <div className="max-w-screen-lg px-4 mx-auto text-block-400 xl:max-w-screen-xl sm:px-6 md:px-8 dark:text-gray-300">
           <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 pb-8 text-lg font-light justify-center list-none ps-0">

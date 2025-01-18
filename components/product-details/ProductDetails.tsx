@@ -1,23 +1,13 @@
 import React, { useState, useEffect, MouseEvent } from "react";
-
 import Image from "next/image";
-
-import { useRouter } from "next/navigation";
-
+import { usePathname, useRouter } from "next/navigation";
 import ProductDetailsTabs from "./ProductDetailsTabs";
-
 import { Product } from "@/services/types";
-
 import api from "@/services/api/index";
-
 import { ToastContainer, toast } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
-
 import { useSelector } from "react-redux";
-
 import { RootState } from "@/redux/store/store";
-
 import SimilarProducts from "../similarproducts/similarproducts";
 
 interface ProductDetailsProps {
@@ -26,9 +16,7 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
-
   const defaultImageUrl = "https://beta.boffinbutler.com/media/catalog/product";
-
   const imageAttribute = product.custom_attributes.filter(
     (attr) => attr.attribute_code === "image"
   );
@@ -38,58 +26,41 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   );
 
   const [selectedImage, setSelectedImage] = useState(imageUrl[0] || "");
-
   const [backgroundSize, setBackgroundSize] = useState("100%");
-
   const [backgroundPosition, setBackgroundPosition] = useState("center");
-
   const [quantity, setQuantity] = useState(1);
-
   const [inCart, setInCart] = useState(false);
-
   const [cartId, setCartId] = useState(localStorage.getItem("quote_id"));
-
   const [isQtyAvailable, setIsQtyAvailable] = useState(true);
-
   const [expiryCart, setExpiryCart] = useState(true);
-
   const router = useRouter();
-
+  
   var expy = 1;
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
       e.currentTarget.getBoundingClientRect();
-
     const x = ((e.pageX - left) / width) * 100;
-
     const y = ((e.pageY - top) / height) * 100;
-
     setBackgroundPosition(`${x}% ${y}%`);
-
     setBackgroundSize("200%");
   };
 
   const handleMouseLeave = () => {
     setBackgroundSize("100%");
-
     setBackgroundPosition("center");
   };
 
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
-
     "Content-Type": "application/json",
   };
 
   const fetchCartID = async () => {
     try {
       const response = await api.post("/carts/mine/", {}, { headers });
-
       setCartId(response.data);
-
       const cartId = response.data;
-
       localStorage.setItem("quote_id", JSON.stringify(response.data));
     } catch (error) {
       console.log("Failed to fetch cart ID", error);
@@ -97,11 +68,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   useEffect(() => {
-    console.log("useEfect tokenApi " + tokenApi);
-
     if (tokenApi) {
       console.log("useEfect" + localStorage.getItem("quote_id"));
-
       if (localStorage.getItem("quote_id")) {
         // do nothing
       } else {
@@ -124,18 +92,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
       const productDetails = {
         sku: product.sku,
-
         qty: quantity,
-
         quote_id: cartId,
       };
 
       // if(localStorage.getItem("quote_id")){
-
       // // do nothing
-
       // }else{
-
       // fetchCartID();
 
       // }
@@ -143,54 +106,40 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       try {
         const response = await api.post(
           "/carts/mine/items",
-
           { cartItem: productDetails },
-
           { headers }
         );
-
         // Assuming the API returns success confirmation
-
         if (response?.status === 200) {
           toast.success("Item added to cart successfully!");
-
           setInCart(true);
         }
       } catch (error: any) {
         const errorMessage =
           error.response?.data?.message || "An unexpected error occurred";
-
         toast.error(errorMessage);
-
         const words = ["customer", "not", "active", "cart"];
-
         const containsAll = stringContainsAllWords(errorMessage, words);
-
         if (expy === 1 && containsAll) {
           expy = 0;
-
           // setExpiryCart(false)
-
           localStorage.removeItem("quote_id");
-
           fetchCartID();
-
           handleAddToCart();
         } else {
           // Fallback in case `error.response` is undefined
-
           const errorMessage =
             error.response?.data?.message || "An unexpected error occurred";
-
           toast.error(errorMessage);
         }
 
-        console.error("Failed to add item to cart:", error);
       }
     } else {
       // Redirect to login if user is not authenticated
-
+      // localStorage.setItem("redirectTo", pathname);
+    
       router.push("/customer/account/login");
+      console.log(localStorage, 'rediredt set');
     }
   };
 
@@ -213,11 +162,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const handleDecrease = () => {
     if (quantity > 1) {
       const newQuantity = quantity - 1;
-
       setQuantity(newQuantity);
-
       setIsQtyAvailable(true);
-
       // dispatch(decrement());
     }
   };
