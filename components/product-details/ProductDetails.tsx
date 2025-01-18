@@ -136,10 +136,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       }
     } else {
       // Redirect to login if user is not authenticated
-      // localStorage.setItem("redirectTo", pathname);
-    
       router.push("/customer/account/login");
-      console.log(localStorage, 'rediredt set');
     }
   };
 
@@ -243,8 +240,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <p className="text-3xl text-gray-700 font-semibold">
+          {product && Number(product.price) > 0 ?
+              (<>
+              <p className="text-3xl text-gray-700 font-semibold">
               ₹{product.extension_attributes.custom_final_price}
+             
             </p>
 
             <div className="flex">
@@ -253,7 +253,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               </div>
 
               <span className="text-gray-400 text-sm ps-1">GST</span>
-            </div>
+            </div> 
+            </>): null}
           </div>
 
           <p className="text-xl text-gray-800 font-semibold">

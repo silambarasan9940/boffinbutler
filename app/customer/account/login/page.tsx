@@ -15,7 +15,6 @@ const CustomerLogin = () => {
 
   const dispatch = useDispatch();
   const router = useRouter(); 
-  const referer = router.query.referer || '/';
 
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
@@ -43,13 +42,9 @@ const CustomerLogin = () => {
       // dispatch redux authslice
       dispatch(signIn(token));
       
-      // Navigate to the home page
-      // router.push("/");
       // After successful login, redirect to the saved path or default to "/"
   const redirectPath = localStorage.getItem("redirectTo") || "/";
-  localStorage.removeItem("redirectTo"); // Clear the redirect path after use
   router.push(redirectPath);
-  console.log("Redirecting to:", redirectPath);
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");

@@ -289,7 +289,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
                         {...product}
                         showButton={true}
                         id={product._id}
-                        showQuoteBtn={false}
+                        showQuoteBtn={true}
                       />
                     </div>
                   ))

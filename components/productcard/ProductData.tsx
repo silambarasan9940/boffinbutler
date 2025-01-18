@@ -52,11 +52,11 @@ const ProductData: React.FC<ProductDataProps> = ({
   const handleClick = () => {
     router.push(`/products/${_source.url_key}`);
   };
-  const toggleModal = (event) => {
+  const toggleModal = (event:any) => {
     event.stopPropagation(); // Prevents the default action of the event from happening
 
     if(!tokenApi){
-      router.push(`/customer/account/login?referer=${router.asPath}`);
+      router.push(`/customer/account/login`);
       return;
     }
     setIsModalOpen(!isModalOpen);

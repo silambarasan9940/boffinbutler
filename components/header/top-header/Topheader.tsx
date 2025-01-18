@@ -17,7 +17,7 @@ const Topheader = () => {
   const router = useRouter();
   const pathname = usePathname();
   localStorage.setItem("redirectTo", pathname);
-  
+
   const handleSignOut = () => {
     // Clear from localStorage
     // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));
@@ -49,7 +49,7 @@ const Topheader = () => {
 
   return (
     <div className="flex flex-col md:block bg-customBlue w-full">
-      <div className="w-11/12 mx-auto py-2 px-4 mx-auto">
+      <div className="w-11/12 mx-auto py-2 px-4">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="hidden md:flex md:flex-row items-center text-white text-sm gap-1">
             <div className="flex items-center">

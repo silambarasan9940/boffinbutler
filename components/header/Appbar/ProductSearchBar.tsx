@@ -154,8 +154,9 @@ const ProductSearchBar = () => {
   }, []);
 
   useEffect(() => {
-    if (query) {
+    if (query.length > 2) {
       fetchSearch(query);
+      
     } else {
       setSuggestionsVisible(false);
     }
