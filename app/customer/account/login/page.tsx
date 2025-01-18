@@ -15,6 +15,7 @@ const CustomerLogin = () => {
 
   const dispatch = useDispatch();
   const router = useRouter(); 
+  const referer = router.query.referer || '/';
 
   const toggleCustomerView = () => {
     setIsNewCustomer(!isNewCustomer);
@@ -22,6 +23,7 @@ const CustomerLogin = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     setLoading(true);
     setError("");
 

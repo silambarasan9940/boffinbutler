@@ -71,9 +71,11 @@ const CreateNewEmployerAccount = ({
     try {
       const response = await api.post("/generate/otp", {
         telephone: formData.telephone,
+        name: formData.firstname,
+        email: formData.email,
       });
       // if (response.status === 200) {
-      toast.success("OTP sent to mobile number");
+      toast.success("OTP sent to your Email Address");
       setIsOtpSent(true);
       setShowOtpModal(true);
 
@@ -192,27 +194,34 @@ const CreateNewEmployerAccount = ({
               attributeCode: "group_id",
               value: "1",
             },
-            {
-              attributeCode: "gstin_certificate",
-              value: {
-                base64_encoded_data: formData.gstinCertificate.base64.split(",")[1],
-                type:formData.gstinCertificate.fileType,
-                name:(Date.now() * 1000).toString()+'.'+formData.gstinCertificate.fileName.split(".")[1]
-              }, 
-            },
-            {
-              attributeCode: "cin_certificate",
-              value: {
-                base64_encoded_data:formData.cinCertificate.base64.split(",")[1],
-                type:formData.cinCertificate.fileType,
-                name:(Date.now() * 1000).toString()+'.'+formData.cinCertificate.fileName.split(".")[1]
-
-              }, 
-            },
           ],
         },
         password: formData.password,
       };
+
+      if(formData.cinCertificate.base64 != ''){
+        requestPayload.customer.customAttributes.push(
+          {
+            attributeCode: "cin_certificate",
+            value: {
+              base64_encoded_data:formData.cinCertificate.base64.split(",")[1],
+              type:formData.cinCertificate.fileType,
+              name:(Date.now() * 1000).toString()+'.'+formData.cinCertificate.fileName.split(".")[1]
+
+            }, 
+          });
+      }
+      if(formData.gstinCertificate.base64 != ''){
+        requestPayload.customer.customAttributes.push(
+          {
+            attributeCode: "gstin_certificate",
+            value: {
+              base64_encoded_data: formData.gstinCertificate.base64.split(",")[1],
+              type:formData.gstinCertificate.fileType,
+              name:(Date.now() * 1000).toString()+'.'+formData.gstinCertificate.fileName.split(".")[1]
+            }, 
+          });
+      } 
 
       const response = await api.post("/customers", requestPayload);
       if (response.status === 200) {

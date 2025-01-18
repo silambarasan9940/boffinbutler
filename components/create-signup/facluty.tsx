@@ -47,9 +47,11 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
     try {
       const response = await api.post("/generate/otp", {
         telephone: formData.telephone,
+        name: formData.firstname,
+        email: formData.email,
       });
       // if (response.status === 200) {
-      toast.success("OTP sent to mobile number");
+      toast.success("OTP sent to your Email Address");
       setIsOtpSent(true);
       setShowOtpModal(true);
 
@@ -121,6 +123,7 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
 
 
   const validateForm = () => {
+    console.log('response', formData);
     let errors: any = {};
     if (!formData.firstname) errors.firstname = "First Name is required";
     if (!formData.lastname) errors.lastname = "Last Name is required";
@@ -132,7 +135,7 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
     if (!formData.telephone)
       errors.telephone = "Mobile Number is required";
     if (!formData.termsCondition)
-      errors.termsCondition = "You must accept the Terms & Conditions";
+      errors.termsCondition = "Please accept the Terms & Conditions";
 
     if(!formData.street) errors.street = "You have to add Register address";
     if (!formData.country) errors.country = "Please select country";
@@ -143,6 +146,9 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
     if ((formData.institute === '230' || formData.institute === 'others') && !formData.other_institute) errors.other_institute = "Please select institute";
     if (!formData.department) errors.department = "Please select department";
     if ((formData.department === '220' || formData.department === 'others') && !formData.other_department) errors.other_department = "Please select department";
+    
+    if (formData.facultyidcard.base64 === '' ) errors.facultyidcard = "Please Upload Your Id Card";
+
     return errors;
   };
 
@@ -224,7 +230,7 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
 
       const response = await api.post('/customers', requestPayload);
       if (response.status === 200) {
-        toast.success("Account successfully Sign Up");
+        toast.success("Account Created successfully. Waiting for Admin Approval");
         // Reset form fields after successful submission
       setFormData({
         firstname: "",
@@ -411,6 +417,11 @@ const Faculty = ({ cities, states, departments, institutes }: { cities: any; sta
                 className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
                 onChange={handleInputChange}
               />
+              {formErrors.facultyidcard && (
+                <p className="text-red-500 text-sm">
+                  {formErrors.facultyidcard}
+                </p>
+              )}
             </div>
             <div>
               <label htmlFor="institute" className="block text-sm font-medium">
