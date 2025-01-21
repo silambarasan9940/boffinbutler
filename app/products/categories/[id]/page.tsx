@@ -1,3 +1,4 @@
+//ProductsCategoriesPage component dynamic
 "use client";
 import React, { useState, useEffect, Suspense, useCallback } from "react";
 import ProductData from "@/components/productcard/ProductData";
@@ -96,7 +97,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
   ];
 
   // Fetch Product Data
-  const fetchProductDataList = async (append = false) => {
+  const fetchProductDataList = async () => {
     const currentSortOption = sortingOptions.find((option) => option.label === sortOption);
     const searchParams = {
       page: currentPage,
@@ -115,7 +116,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
       const response = await api.post("/search/products", { searchParams });
       const newProducts = response.data[0].results;
 
-      if (append) {
+      if (currentPage > 1) {
         setProducts((prevProducts) => [...prevProducts, ...newProducts]);
       } else {
         setProducts(newProducts);
@@ -156,17 +157,20 @@ const handleShowMore = () => {
 };
 
 // Use `useEffect` to fetch more products when the page number changes
-  useEffect(() => {
-    setCurrentPage(1)
-    fetchProductDataList();
-  }, [filters, sortOption]);
-  useEffect(() => {
+  // useEffect(() => {
+  //   setCurrentPage(1)
+  //   fetchProductDataList();
+  // }, [filters, sortOption]);
+  
+  // useEffect(() => {
 
-    fetchProductDataList(true);
-  }, [ currentPage]);
+  //   fetchProductDataList();
+  // }, [ currentPage]);
   
   const handleFilterChange = useCallback((newFilters: FilterValues) => {
     setFilters(newFilters);
+    setCurrentPage(1);
+    fetchProductDataList();
   }, []);
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

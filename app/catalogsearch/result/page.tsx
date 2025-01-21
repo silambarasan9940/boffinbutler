@@ -1,3 +1,4 @@
+//ProductsCategoriesPage component
 "use client";
 import React, { useState, useEffect, Suspense, useCallback } from "react";
 import ProductData from "@/components/productcard/ProductData";
@@ -113,6 +114,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({
 
   useEffect(() => {
     const category_id = searchParams.get("category_ids");
+    alert('test page')
     if (category_id) {
       setCategory((prevCategory: any) => ({
         ...prevCategory,
