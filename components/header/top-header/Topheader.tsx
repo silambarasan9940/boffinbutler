@@ -16,8 +16,15 @@ const Topheader = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname();
-  localStorage.setItem("redirectTo", pathname);
+  // localStorage.setItem("redirectTo", pathname);
 
+  useEffect(() => {
+    // Ensure this runs only on the client side
+    if (typeof window !== "undefined") {
+      localStorage.setItem("redirectTo", pathname);
+    }
+  }, [pathname]);
+  
   const handleSignOut = () => {
     // Clear from localStorage
     // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));
