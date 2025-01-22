@@ -39,9 +39,9 @@ const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
     if (!id) return; 
     try {
       const url_key = pathname.replace('/products/','');
-      const productData = await api.get(`/product/${url_key}`);
-      const productid =  productData.data.id;
-      const response = await api.get(`/products/productbyid/${productid}`);
+      const response = await api.get(`/product/${url_key}`);
+      //const productid =  productData.data.id;
+      // const response = await api.get(`/products/productbyid/${productid}`);
 
       setProduct(response.data);
       
