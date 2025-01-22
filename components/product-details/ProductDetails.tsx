@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import SimilarProducts from "../similarproducts/similarproducts";
+import { imageUrl } from "@/services/common";
 
 interface ProductDetailsProps {
   product: Product;
@@ -16,16 +17,16 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
-  const defaultImageUrl = "https://beta.boffinbutler.com/media/catalog/product";
+  const defaultImageUrl = `${imageUrl}catalog/product`;
   const imageAttribute = product.custom_attributes.filter(
     (attr) => attr.attribute_code === "image"
   );
 
-  const imageUrl = imageAttribute.map(
+  const productImageUrl = imageAttribute.map(
     (imageAttr: any) => `${defaultImageUrl}${imageAttr.value}`
   );
 
-  const [selectedImage, setSelectedImage] = useState(imageUrl[0] || "");
+  const [selectedImage, setSelectedImage] = useState(productImageUrl[0] || "");
   const [backgroundSize, setBackgroundSize] = useState("100%");
   const [backgroundPosition, setBackgroundPosition] = useState("center");
   const [quantity, setQuantity] = useState(1);
@@ -69,7 +70,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   useEffect(() => {
     if (tokenApi) {
-      console.log("useEfect" + localStorage.getItem("quote_id"));
+      
       if (localStorage.getItem("quote_id")) {
         // do nothing
       } else {
@@ -170,7 +171,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   };
 
   function stringContainsAllWords(str: string, words: any) {
-    return words.every((word) => str.includes(word));
+    return words.every((word:any) => str.includes(word));
   }
 
   return (
@@ -178,19 +179,19 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       <div className="flex flex-col md:flex-row w-full">
         <div className="flex flex-col md:flex-row w-full md:w-1/2 me-3">
           <div className="flex md:flex-col order-2 md:order-1 gap-4 mb-4 md:mb-0 me-3">
-            {imageUrl.map((imageUrl, index) => (
+            {productImageUrl.map((productImageUrl, index) => (
               <div key={index} className="cursor-pointer border-2 rounded-lg">
                 <Image
-                  src={imageUrl}
+                  src={productImageUrl}
                   alt={`Thumbnail ${index}`}
                   width={100}
                   height={100}
                   className={`w-16 h-16 md:w-24 md:h-24 object-cover rounded-lg ${
-                    selectedImage === imageUrl
+                    selectedImage === productImageUrl
                       ? "border-indigo-500"
                       : "border-transparent"
                   }`}
-                  onClick={() => setSelectedImage(imageUrl)}
+                  onClick={() => setSelectedImage(productImageUrl)}
                 />
               </div>
             ))}

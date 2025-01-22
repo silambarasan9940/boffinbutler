@@ -6,6 +6,15 @@ import ProductDetails from "@/components/product-details/ProductDetails";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/loader";
+import { generateMetadata } from "./metadata";
+
+interface Props {
+  params: { id: string };
+}
+export async function getMetadata({ params }: Props) {
+  console.log(params.id, 'params ids')
+  return generateMetadata(params.id);
+}
 
 const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
   params,

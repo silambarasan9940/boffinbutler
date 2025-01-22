@@ -131,6 +131,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
   };
 
   const fetchCategoryId = async () => {
+    // redirect to the 404 page 
     if (!id) return;
     try {
       const response = await api.get(`/category/${id}`);
@@ -154,6 +155,7 @@ const ProductsCategoriesPage: React.FC<ProductsPageProps> = ({ title = "Products
 // Modify the button click handler
 const handleShowMore = () => {
   setCurrentPage((prevPage) => prevPage + 1);
+  fetchProductDataList();
 };
 
 // Use `useEffect` to fetch more products when the page number changes
