@@ -16,7 +16,7 @@ interface ProductDetailsProps {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
-  const defaultImageUrl = "https://beta.boffinbutler.com/media/catalog/product";
+  const defaultImageUrl = "https://staticbeta.boffinbutler.com/media/catalog/product";
   const imageAttribute = product.custom_attributes.filter(
     (attr) => attr.attribute_code === "image"
   );
