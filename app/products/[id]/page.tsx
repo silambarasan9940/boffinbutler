@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Head from "next/head"; // For setting dynamic metadata
 import api from "@/services/api";
 import { usePathname } from 'next/navigation'
 import ProductDetails from "@/components/product-details/ProductDetails";
@@ -67,6 +68,21 @@ const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
 
   return (
     <>
+    <Head>
+    <title>{product?.name || "Default Title"}</title>
+    <meta name="description" content={product?.excerpt || "Default description"} />
+    <link rel="canonical" href={`${process.env.NEXT_PUBLIC_API_URL}/products/${product?.id}`} />
+    {/* Open Graph Meta */}
+    <meta property="og:title" content={product?.name || "Default Title"} />
+    <meta property="og:description" content={product?.excerpt || "Default description"} />
+    <meta property="og:url" content={`${process.env.NEXT_PUBLIC_API_URL}/products/${product?.id}`} />
+    {product?.coverImage && <meta property="og:image" content={product.coverImage} />}
+    {/* Twitter Card Meta */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={product?.name || "Default Title"} />
+    <meta name="twitter:description" content={product?.excerpt || "Default description"} />
+    {product?.coverImage && <meta name="twitter:image" content={product.coverImage} />}
+    </Head>
       <Breadcrumbs />
       <div className="flex flex-row">
         <div className="w-full">
