@@ -227,13 +227,13 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
           handler: async (handlerResponse: any) => {
             console.log(handlerResponse, 'handler resp')
               if(handlerResponse?.razorpay_payment_id){
-                const additionalData = {
+                const AdditionalData = {
                     "rzp_payment_id": handlerResponse.razorpay_payment_id,
                     "order_id": handlerResponse.razorpay_order_id,
                     "rzp_signature": handlerResponse.razorpay_signature
                 } 
                  
-                payload.paymentMethod.additional_data = additionalData;
+                payload.paymentMethod.additional_data = AdditionalData;
  
             const paymentCheckResponse = await api.post(
               `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
