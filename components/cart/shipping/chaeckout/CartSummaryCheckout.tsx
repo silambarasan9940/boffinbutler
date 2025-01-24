@@ -81,7 +81,12 @@ interface Totals {
   coupon_code: string;
   items_qty: number;
 }
-
+declare global {
+  interface Window {
+   Razorpay: any;
+  }
+ 
+ }
 const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
   isCheckoutPage = false,
   isShippingPage = false,
@@ -109,7 +114,9 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
   const headers = {
     Authorization: `Bearer ${tokenApi}`,
   };
-
+  const razorHeaders = {
+    "Content-Type":'multipart/form-data'
+  };
   const fetchCartData = async () => {
     if(tokenApi) {
       try {
@@ -135,10 +142,24 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     fetchCartData();
   }, []);
 
+  const loadRazorpayScript = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve();
+      };
+      script.onerror = () => {
+        reject("Razorpay script could not be loaded.");
+      };
+      document.body.appendChild(script);
+    });
+  };
+  
   const fetchPlaceOrder = async () => {
     // const timestamp = new Date().getTime();
     // console.log(timestamp);
-
+   
     const payload = {
       cartId: localStorage.getItem("quote_id"),
       billingAddress: {
@@ -170,31 +191,102 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
         po_number: null,
         additional_data: null,
       },
+      
     };
 
     try {
-      const response = await api.post(
-        "/carts/mine/payment-information",
-        payload,
-        { headers }
-      );
-      setPlaceOrder(response.data);
+      if(paymentMethod === 'razorpay') {
+        await loadRazorpayScript();
 
-      if (response.status === 200) {
-        dispatch(resetCount());
-        toast.success("Your Order has been placed", {
-          icon: <FaCheckCircle className="text-green-500" />,
-          progressStyle: { backgroundColor: "green" },
-          autoClose: 1000,
-          onClose: () => router.push(`/order-confirmation?id=${response.data}`),
-        });
-      } else {
-        console.error("Error placing order: response unsuccessful");
-        toast.error("There was an issue placing your order.", {
-          icon: <FaExclamationCircle className="text-red-500" />,
-          progressStyle: { backgroundColor: "red" },
-        });
+        const paymentResponse = await api.post(
+           `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
+          {
+            email:"TEST_Punithavel+faculty@gmail.com",
+            billing_address: payload.billingAddress,
+            cart_id: payload.cartId,
+          }, {headers: razorHeaders, }
+  
+        );
+        console.log(paymentResponse, 'payment');
+
+       if((paymentResponse.status === 200) && (paymentResponse.data.success)) {
+        const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
+        const options = {
+          key: razorpayKey, 
+          amount: paymentResponse.data.amount,
+          currency: "INR",
+          name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
+          // description: "Test Transaction",
+          order_id: paymentResponse.data.rzp_order,
+          handler: async (handlerResponse: any) => {
+            console.log(handlerResponse, 'handler resp')
+          
+            const paymentCheckResponse = await api.post(
+              `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
+             {
+              order_check: 1,
+             }, {headers: razorHeaders, }
+     
+           );
+           console.log(paymentCheckResponse, 'handler paymentCheckResponse')
+           if(paymentCheckResponse.data.success) {
+             dispatch(resetCount());
+             const response = await api.post(
+               "/carts/mine/payment-information",
+               payload,
+               { headers }
+             );
+             setPlaceOrder(response.data);
+             toast.success("Your Order has been placed", {
+               icon: <FaCheckCircle className="text-green-500" />,
+               progressStyle: { backgroundColor: "green" },
+               autoClose: 1000,
+               onClose: () => router.push(`/order-confirmation?id=${response.data}`),
+             });
+             
+           }
+           
+          },
+          prefill: {
+            name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
+            email: "johndoe@example.com",
+            contact: payload.billingAddress.telephone,
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+        
+        const razorpayInstance = new window.Razorpay(options);
+        razorpayInstance.open();
+       }
+        
+        
+      }else{
+        const response = await api.post(
+          "/carts/mine/payment-information",
+          payload,
+          { headers }
+        );
+        setPlaceOrder(response.data);
+        if (response.status === 200) {
+          dispatch(resetCount());
+          toast.success("Your Order has been placed", {
+            icon: <FaCheckCircle className="text-green-500" />,
+            progressStyle: { backgroundColor: "green" },
+            autoClose: 1000,
+            onClose: () => router.push(`/order-confirmation?id=${response.data}`),
+          });
+        } else {
+          console.error("Error placing order: response unsuccessful");
+          toast.error("There was an issue placing your order.", {
+            icon: <FaExclamationCircle className="text-red-500" />,
+            progressStyle: { backgroundColor: "red" },
+          });
       }
+      
+      }
+
     } catch (error) {
       console.error("Failed to place order:", error);
       // toast.error("There was an issue placing your order.", {
