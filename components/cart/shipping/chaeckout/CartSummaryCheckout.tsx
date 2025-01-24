@@ -54,12 +54,6 @@ interface CartSummaryCheckoutProps {
   isBorderHidden?: boolean;
 }
 
-interface AdditionalData {
-  rzp_payment_id: string;
-  order_id: string;
-  rzp_signature: string;
-}
-
 // Totals Interface
 interface Totals {
   grand_total: number;
@@ -195,7 +189,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
       paymentMethod: {
         method: paymentMethod,
         po_number: null,
-        additional_data: null as Record<string, any> | null,
+        additional_data: null,
       },
       
     };
@@ -226,15 +220,9 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
           order_id: paymentResponse.data.rzp_order,
           handler: async (handlerResponse: any) => {
             console.log(handlerResponse, 'handler resp')
-              if(handlerResponse?.razorpay_payment_id){
-                /* const AdditionalData = {
-                    "rzp_payment_id": handlerResponse.razorpay_payment_id,
-                    "order_id": handlerResponse.razorpay_order_id,
-                    "rzp_signature": handlerResponse.razorpay_signature
-                } 
-                 
-                payload.paymentMethod.additional_data = AdditionalData;
-                */
+            
+              
+
             const paymentCheckResponse = await api.post(
               `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
              {
