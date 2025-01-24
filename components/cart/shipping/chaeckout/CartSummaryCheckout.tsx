@@ -156,10 +156,14 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     });
   };
   
+
+  
   const fetchPlaceOrder = async () => {
     // const timestamp = new Date().getTime();
     // console.log(timestamp);
-   
+    const me = JSON.parse(localStorage.getItem("me"));
+    // GET THE MOBILE NUMBER FROM ME -> mobile
+
     const payload = {
       cartId: localStorage.getItem("quote_id"),
       billingAddress: {
@@ -201,7 +205,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
         const paymentResponse = await api.post(
            `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
           {
-            email:"TEST_Punithavel+faculty@gmail.com",
+            email: me.email,
             billing_address: payload.billingAddress,
             cart_id: payload.cartId,
           }, {headers: razorHeaders, }
@@ -218,11 +222,38 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
           name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
           // description: "Test Transaction",
           order_id: paymentResponse.data.rzp_order,
+          modal: {
+            ondismiss: function() {
+              const validate = await api.post(
+                "/validate/payment",
+                {  
+                  "data": {
+                    "cart_id": payload.cartId,
+                    "rzp_order": paymentResponse.data.rzp_order
+              } },
+                { headers }
+              );
+              console.log(validate, 'validate');
+              if(validate.data.success) {
+                const response = await api.post(
+                  "/carts/mine/payment-information",
+                  payload,
+                  { headers }
+                );
+                setPlaceOrder(response.data);
+                dispatch(resetCount());
+                toast.success("Your Order has been placed", {
+                  icon: <FaCheckCircle className="text-green-500" />,
+                  progressStyle: { backgroundColor: "green" },
+                  autoClose: 1000,
+                  onClose: () => router.push(`/order-confirmation?id=${validate.data.order_id}`),
+                });
+              }
+            }
+           },
+          
           handler: async (handlerResponse: any) => {
             console.log(handlerResponse, 'handler resp')
-            
-              
-
             const paymentCheckResponse = await api.post(
               `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
              {
@@ -251,8 +282,8 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
           },
           prefill: {
             name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
-            email: "johndoe@example.com",
-            contact: payload.billingAddress.telephone,
+            email: payload.billingAddress.email,
+            contact: payload.billingAddress.email,
           },
           theme: {
             color: "#3399cc",
