@@ -45,6 +45,7 @@ const CustomerLogin = () => {
       // After successful login, redirect to the saved path or default to "/"
   const redirectPath = localStorage.getItem("redirectTo") || "/";
   router.push(redirectPath);
+  
       setLoading(false);
     } catch (error) {
       setError("Invalid login credentials. Please try again.");

@@ -27,7 +27,8 @@ const Cart = () => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showCart,setShowCart] = useState(false);
   const [cartTotals, setCartTotals] = useState({
     grand_total: 0,
     subtotal: 0,
@@ -46,6 +47,7 @@ const Cart = () => {
   const fetchCartItems = async () => {
     if (tokenApi) {
       try {
+        setLoading(true);
         // Make the API call with Axios
         const response = await api.get("/carts/mine/totals", { headers });
         if (response.data?.items_qty > 0) {
@@ -91,6 +93,7 @@ const Cart = () => {
         console.error("Error fetching cart items:", error);
       } finally {
         setLoading(false);
+        setShowCart(true);
       }
     }
   };
@@ -218,7 +221,9 @@ const Cart = () => {
               ))
             ) : (
               <>
-              <p className="pb-4">Your cart is empty. 
+              {showCart ? (
+                <>
+                <p className="pb-4">Your cart is empty. 
                 {/* <span onClick={handleContinueShopping} className="text-indigo-500 cursor-pointer">Continue Shopping <GoArrowRight className='ms-2' />
                 </span> */}
               </p> 
@@ -231,6 +236,8 @@ const Cart = () => {
             Continue Shopping <GoArrowRight className='ms-2' />
             
           </button>
+          </>
+          ) : null}
               </>
             )}
           </div>

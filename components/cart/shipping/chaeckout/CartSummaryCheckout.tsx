@@ -13,6 +13,7 @@ import { GoTag } from "react-icons/go";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { resetCount, setCount } from "@/redux/store/slices/cartItemCountSlice";
+import { env } from "process";
 
 interface BillingAddress {
   customer_address_id?: string;
@@ -87,6 +88,14 @@ declare global {
   }
  
  }
+
+ type PaymentData = {
+  rzp_payment_id: any;
+  order_id: any;
+  rzp_signature: any;
+} | null;
+
+
 const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
   isCheckoutPage = false,
   isShippingPage = false,
@@ -101,7 +110,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const [loding,setLoading] = useState(false);
   const [placeOrder, setPlaceOrder] = useState("");
   const [cartData, setCartData] = useState(null);
   const [paymentSummary, setPaymentSummary] = useState<Totals | null>(null);
@@ -156,56 +165,122 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     });
   };
   
+  const user = JSON.parse(localStorage.getItem("me") || '{}');
+  const email = user.email;
+  const mobileNumber = user.custom_attributes.find(attr => attr.attribute_code === "mobilenumber")?.value;
 
-  
-  const fetchPlaceOrder = async () => {
-    // const timestamp = new Date().getTime();
-    // console.log(timestamp);
-    const me = JSON.parse(localStorage.getItem("me"));
-    // GET THE MOBILE NUMBER FROM ME -> mobile
-
-    const payload = {
-      cartId: localStorage.getItem("quote_id"),
-      billingAddress: {
-        customerAddressId:
-          cartData?.billing_address?.customer_address_id || null,
-        countryId: cartData?.billing_address?.country_id || null,
-        regionId: cartData?.billing_address?.region_id || null,
-        regionCode: cartData?.billing_address?.region_code || null,
-        region: cartData?.billing_address?.region || null,
-        customerId: cartData?.billing_address?.customer_id || null,
-        street: cartData?.billing_address?.street || [],
-        company: cartData?.billing_address?.company || null,
-        telephone: cartData?.billing_address?.telephone || null,
-        fax: cartData?.billing_address?.fax || null,
-        postcode: cartData?.billing_address?.postcode || null,
-        city: cartData?.billing_address?.city || null,
-        firstname: cartData?.billing_address?.firstname || null,
-        lastname: cartData?.billing_address?.lastname || null,
-        middlename: cartData?.billing_address?.middlename || null,
-        prefix: cartData?.billing_address?.prefix || null,
-        suffix: cartData?.billing_address?.suffix || null,
-        vatId: cartData?.billing_address?.vat_id || null,
-        customAttributes: cartData?.billing_address?.custom_attributes || [],
-        saveInAddressBook:
-          cartData?.billing_address?.save_in_address_book || null,
-      },
-      paymentMethod: {
-        method: paymentMethod,
-        po_number: null,
-        additional_data: null,
-      },
+  const payload = {
       
-    };
+    cartId: localStorage.getItem("quote_id"),
+    billingAddress: {
+      customerAddressId:
+        cartData?.billing_address?.customer_address_id || null,
+      countryId: cartData?.billing_address?.country_id || null,
+      regionId: cartData?.billing_address?.region_id || null,
+      regionCode: cartData?.billing_address?.region_code || null,
+      region: cartData?.billing_address?.region || null,
+      customerId: cartData?.billing_address?.customer_id || null,
+      street: cartData?.billing_address?.street || [],
+      company: cartData?.billing_address?.company || null,
+      telephone: mobileNumber,
+      fax: cartData?.billing_address?.fax || null,
+      postcode: cartData?.billing_address?.postcode || null,
+      city: cartData?.billing_address?.city || null,
+      firstname: cartData?.billing_address?.firstname || null,
+      lastname: cartData?.billing_address?.lastname || null,
+      middlename: cartData?.billing_address?.middlename || null,
+      prefix: cartData?.billing_address?.prefix || null,
+      suffix: cartData?.billing_address?.suffix || null,
+      vatId: cartData?.billing_address?.vat_id || null,
+      customAttributes: cartData?.billing_address?.custom_attributes || [],
+      saveInAddressBook:
+        cartData?.billing_address?.save_in_address_book || null,
+    },
+    paymentMethod: {
+      method: paymentMethod,
+      po_number: null,
+      additional_data: null, 
+    },
+    
+    
+  };
 
+   // Function to handle payment validation on modal dismissal
+   const handlePaymentValidation = async () => {
+    try {
+      const paymentResponse = await api.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
+       {
+         email: email,
+         billing_address: payload.billingAddress,
+         cart_id: payload.cartId,
+       }, {headers: razorHeaders, }
+
+     );
+     console.log(paymentResponse, 'payment responsss')
+
+      const validate = await api.post(
+        "/validate/payment",
+        {
+          data: {
+            cart_id: payload.cartId,
+            rzp_order: paymentResponse.data.rzp_order,
+          },
+        },
+        { headers }
+      );
+
+      console.log(validate.data, 'validate validate');
+      console.log(validate.data[0], 'validate validate success');
+      if (validate.data[0].status) {
+        
+        const PaymentData = {
+          rzp_payment_id: validate.data[0].razorpay_payment_id,
+          order_id: validate.data[0].razorpay_order_id,
+          rzp_signature: validate.data[0].razorpay_signature,
+        };
+        
+        console.log(PaymentData, 'additional data')
+        if (!payload.paymentMethod.additional_data) {
+          payload.paymentMethod.additional_data = {};
+        }
+        
+        // Add data to additional_data
+        Object.assign(payload.paymentMethod.additional_data, PaymentData);
+  
+        const response = await api.post(
+          "/carts/mine/payment-information",
+          payload,
+          { headers }
+        );
+        setPlaceOrder(response.data);
+        dispatch(resetCount());
+        toast.success("Your Order has been placed", {
+          icon: <FaCheckCircle className="text-green-500" />,
+          progressStyle: { backgroundColor: "green" },
+          autoClose: 1000,
+          onClose: () =>
+            router.push(`/order-confirmation?id=${response.data}`),
+        });
+      }
+    } catch (error) {
+      console.error("Error during payment validation:", error);
+      toast.error("Payment validation failed. Please try again.");
+    }
+  };
+
+  const fetchPlaceOrder = async () => {
+    setLoading(true);
     try {
       if(paymentMethod === 'razorpay') {
         await loadRazorpayScript();
-
+        const user = JSON.parse(localStorage.getItem("me") || '{}');
+        const email = user.email;
+       
         const paymentResponse = await api.post(
-           `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
+           `${process.env.NEXT_PUBLIC_API_URL}/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
           {
-            email: me.email,
+            email: email,
             billing_address: payload.billingAddress,
             cart_id: payload.cartId,
           }, {headers: razorHeaders, }
@@ -216,104 +291,71 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
        if((paymentResponse.status === 200) && (paymentResponse.data.success)) {
         const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
         const options = {
-          key: razorpayKey, 
+          key: razorpayKey,
           amount: paymentResponse.data.amount,
           currency: "INR",
           name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
-          // description: "Test Transaction",
           order_id: paymentResponse.data.rzp_order,
-          modal: {   // ON ERROR
-            ondismiss: function() {
-              const validate = await api.post(
-                "/validate/payment",
-                {  
-                  "data": {
-                    "cart_id": payload.cartId,
-                    "rzp_order": paymentResponse.data.rzp_order
-              } },
-                { headers }
+          modal: {
+            ondismiss: function () {
+              handlePaymentValidation();
+            },
+          },
+          handler: async (handlerResponse: any) => {
+            console.log(handlerResponse, 'handler response');
+            if (handlerResponse?.razorpay_payment_id) {
+              const additionalData = {
+                rzp_payment_id: handlerResponse.razorpay_payment_id,
+                order_id: handlerResponse.razorpay_order_id,
+                rzp_signature: handlerResponse.razorpay_signature,
+              };
+        
+              payload.paymentMethod.additional_data = additionalData;
+        console.log(additionalData, 'additionalData')
+              const paymentCheckResponse = await api.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/razorpay/payment/order?${Math.random()
+                  .toString(36)
+                  .substring(10)}`,
+                {
+                  order_check: 1,
+                },
+                { headers: razorHeaders }
               );
-              console.log(validate, 'validate');
-              if(validate.data.success) {
-
-                const additionalData = {
-                    "rzp_payment_id": validate.data.rzp_payment_id,
-                    "order_id": validate.data.rzp_order_id,
-                    "rzp_signature": validate.data.rzp_signature
-                } 
-                
-                payload.paymentMethod.additional_data = additionalData;
-
-                
+        
+              console.log(paymentCheckResponse, 'handler paymentCheckResponse');
+              if (paymentCheckResponse.data.success) {
+                dispatch(resetCount());
                 const response = await api.post(
                   "/carts/mine/payment-information",
                   payload,
                   { headers }
                 );
                 setPlaceOrder(response.data);
-                dispatch(resetCount());
                 toast.success("Your Order has been placed", {
                   icon: <FaCheckCircle className="text-green-500" />,
                   progressStyle: { backgroundColor: "green" },
                   autoClose: 1000,
-                  onClose: () => router.push(`/order-confirmation?id=${validate.data.order_id}`),
+                  onClose: () =>
+                    router.push(`/order-confirmation?id=${response.data}`),
                 });
               }
             }
-           },
-          
-          handler: async (handlerResponse: any) => {
-            console.log(handlerResponse, 'handler resp')
-
-            if(handlerResponse?.razorpay_payment_id){
-              const additionalData = {
-                  "rzp_payment_id": handlerResponse.razorpay_payment_id,
-                  "order_id": handlerResponse.razorpay_order_id,
-                  "rzp_signature": handlerResponse.razorpay_signature
-              } 
-               
-              payload.paymentMethod.additional_data = additionalData;
-
-
-            const paymentCheckResponse = await api.post(
-              `https://beta.boffinbutler.com/razorpay/payment/order?${Math.random().toString(36).substring(10)}`,
-             {
-              order_check: 1,
-             }, {headers: razorHeaders, }
-     
-           );
-           console.log(paymentCheckResponse, 'handler paymentCheckResponse')
-           if(paymentCheckResponse.data.success) {
-             dispatch(resetCount());
-             const response = await api.post(
-               "/carts/mine/payment-information",
-               payload,
-               { headers }
-             );
-             setPlaceOrder(response.data);
-             toast.success("Your Order has been placed", {
-               icon: <FaCheckCircle className="text-green-500" />,
-               progressStyle: { backgroundColor: "green" },
-               autoClose: 1000,
-               onClose: () => router.push(`/order-confirmation?id=${response.data}`),
-             });
-             
-           }
-           
           },
           prefill: {
             name: `${payload.billingAddress.firstname} ${payload.billingAddress.lastname}`,
-            email: payload.billingAddress.email,
-            contact: payload.billingAddress.email,
+            email: email,
+            contact: mobileNumber,
+            
           },
           theme: {
             color: "#3399cc",
           },
         };
         
+       
+        
         const razorpayInstance = new window.Razorpay(options);
         razorpayInstance.open();
-       }
         
         
       }else{
@@ -341,14 +383,18 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
       
       }
 
-    } catch (error) {
-      console.error("Failed to place order:", error);
-      // toast.error("There was an issue placing your order.", {
-      //   icon: <FaExclamationCircle className="text-red-500" />,
-      //   progressStyle: { backgroundColor: "red" },
-      // });
-    }
-  };
+    } 
+  }catch (error) {
+    console.error("Failed to place order:", error);
+    // toast.error("There was an issue placing your order.", {
+    //   icon: <FaExclamationCircle className="text-red-500" />,
+    //   progressStyle: { backgroundColor: "red" },
+    // });
+  }finally{
+    setLoading(false);
+  }
+}
+
 
   const fetchPayment = async () => {
     try {
