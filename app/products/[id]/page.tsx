@@ -1,96 +1,55 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Head from "next/head"; // For setting dynamic metadata
-import api from "@/services/api";
-import { usePathname } from 'next/navigation'
-import ProductDetails from "@/components/product-details/ProductDetails";
-import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import { useSearchParams } from "next/navigation";
-import Loader from "@/components/loader";
-import { generateMetadata } from "./metadata";
+import { Metadata, ResolvingMetadata } from 'next'
+import ProductDetailsPage from './product'
+import api from '@/services/api';
+import { imageUrl } from '@/services/common';
 
-interface Props {
-  params: { id: string };
-}
-export async function getMetadata({ params }: Props) {
-  console.log(params.id, 'params ids')
-  return generateMetadata(params.id);
+type Props = {
+  params: { id: string }
 }
 
-const ProductDetailsPage: React.FC<{ params: { id: string } }> = ({
-  params,
-}) => {
-
-  const pathname = usePathname()
-  
-  const searchParams = useSearchParams();
-  //const id = searchParams.get('id');
-  const id = pathname;
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  
-
-  useEffect(() => {
-    fetchProductDetails();
-  }, [id]);
-
-  const fetchProductDetails = async () => {
-    if (!id) return; 
-    try {
-      const url_key = pathname.replace('/products/','');
-      const response = await api.get(`/product/${url_key}`);
-      //const productid =  productData.data.id;
-      // const response = await api.get(`/products/productbyid/${productid}`);
-
-      setProduct(response.data);
-      
-    } catch (err) {
-      setError("Failed to fetch product details");
-      console.log('Failed to fetch product details',err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <Loader/>
-    );
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // Fetch product data
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rest/default/V1/product/${params.id}`);
+const data = await response.json();
+ console.log(data);
+  return {
+     title: data.name,
+      description: data.description,
+      keywords: data.keywords,
+        alternates: {
+          canonical: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${params.id}`,
+        },
+        // icons: {
+        //   icon: "/favicon.ico", 
+        //   shortcut: "/favicon.ico",
+        //   apple: "/favicon.ico", 
+        // },
+        openGraph: {
+        title: data.name,
+        description:data.description,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/products/${params.id}`,
+        siteName: "Boffin Butler",
+        images: [
+          {
+            url: `${imageUrl}logo/websites/1/BoffinButler_homepage_logo.png`,
+            width: 1200,
+            height: 630,
+            alt: "Boffin Butler",
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: data.name,
+        description: data.description,
+        images: [`${imageUrl}logo/websites/1/BoffinButler_homepage_logo.png`],
+      },
   }
+}
 
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-screen">{error}</div>
-    );
+export default function Page() {
+    return <ProductDetailsPage />
   }
-
-  return (
-    <>
-    <Head>
-    <title>{product?.name || "Default Title"}</title>
-    <meta name="description" content={product?.excerpt || "Default description"} />
-    <link rel="canonical" href={`${process.env.NEXT_PUBLIC_API_URL}/products/${product?.id}`} />
-    {/* Open Graph Meta */}
-    <meta property="og:title" content={product?.name || "Default Title"} />
-    <meta property="og:description" content={product?.excerpt || "Default description"} />
-    <meta property="og:url" content={`${process.env.NEXT_PUBLIC_API_URL}/products/${product?.id}`} />
-    {product?.coverImage && <meta property="og:image" content={product.coverImage} />}
-    {/* Twitter Card Meta */}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={product?.name || "Default Title"} />
-    <meta name="twitter:description" content={product?.excerpt || "Default description"} />
-    {product?.coverImage && <meta name="twitter:image" content={product.coverImage} />}
-    </Head>
-      <Breadcrumbs />
-      <div className="flex flex-row">
-        <div className="w-full">
-          <ProductDetails product={product} />
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default ProductDetailsPage;

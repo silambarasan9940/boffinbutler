@@ -19,8 +19,7 @@ const Topheader = () => {
   // localStorage.setItem("redirectTo", pathname);
 
   useEffect(() => {
-    // Ensure this runs only on the client side
-    if ((typeof window !== "undefined") && (!pathname.includes('/customer/account/'))) {
+    if (typeof window !== "undefined" && pathname && !pathname.includes("/customer/account/")) {
       localStorage.setItem("redirectTo", pathname);
     }
   }, [pathname]);
