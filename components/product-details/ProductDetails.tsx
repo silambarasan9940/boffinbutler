@@ -129,9 +129,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           handleAddToCart();
         } else {
           // Fallback in case `error.response` is undefined
-          const errorMessage =
-            error.response?.data?.message || "An unexpected error occurred";
-          toast.error(errorMessage);
+          // const errorMessage =
+          //   error.response?.data?.message || "An unexpected error occurred";
+          // toast.error(errorMessage);
         }
 
       }

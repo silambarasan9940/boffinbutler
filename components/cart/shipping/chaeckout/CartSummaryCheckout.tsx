@@ -165,13 +165,13 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     });
   };
   
-  const user = JSON.parse(localStorage.getItem("me") || '{}');
+  const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("me") || '{}') : {};
   const email = user.email;
-  const mobileNumber = user.custom_attributes.find(attr => attr.attribute_code === "mobilenumber")?.value;
+  const mobileNumber = user?.custom_attributes?.find((attr:any) => attr.attribute_code === "mobilenumber")?.value;
 
   const payload = {
       
-    cartId: localStorage.getItem("quote_id"),
+    cartId: typeof window !== "undefined" ? localStorage.getItem("quote_id"): null,
     billingAddress: {
       customerAddressId:
         cartData?.billing_address?.customer_address_id || null,
@@ -274,7 +274,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
     try {
       if(paymentMethod === 'razorpay') {
         await loadRazorpayScript();
-        const user = JSON.parse(localStorage.getItem("me") || '{}');
+        const user = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("me") || '{}') : {};
         const email = user.email;
        
         const paymentResponse = await api.post(
@@ -286,7 +286,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
           }, {headers: razorHeaders, }
   
         );
-        console.log(paymentResponse, 'payment');
+       
 
        if((paymentResponse.status === 200) && (paymentResponse.data.success)) {
         const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
@@ -302,7 +302,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
             },
           },
           handler: async (handlerResponse: any) => {
-            console.log(handlerResponse, 'handler response');
+            
             if (handlerResponse?.razorpay_payment_id) {
               const additionalData = {
                 rzp_payment_id: handlerResponse.razorpay_payment_id,
@@ -322,7 +322,7 @@ const CartSummaryCheckout: React.FC<CartSummaryCheckoutProps> = ({
                 { headers: razorHeaders }
               );
         
-              console.log(paymentCheckResponse, 'handler paymentCheckResponse');
+             
               if (paymentCheckResponse.data.success) {
                 dispatch(resetCount());
                 const response = await api.post(
