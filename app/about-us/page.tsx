@@ -6,10 +6,10 @@ import BestSeller from "@/components/bestseller/BestSeller";
 import Brandtestimonial from "@/components/company-brand-logo/Brandtestimonial";
 import Tabs from "@/components/tab/Tabs";
 import Breadcrumbs from "@/components/breadcrumbs/Breadcrumbs";
-import leftimg from '@/src/assests/images/leftimg.png';
-import rightimg from '@/src/assests/images/rightimg.png';
-import icon1 from '@/src/assests/images/icon1.png';
-import icon2 from '@/src/assests/images/icon2.png';
+import leftimg from "@/src/assests/images/leftimg.png";
+import rightimg from "@/src/assests/images/rightimg.png";
+import icon1 from "@/src/assests/images/icon1.png";
+import icon2 from "@/src/assests/images/icon2.png";
 import Link from "next/link";
 
 interface Tab {
@@ -58,90 +58,90 @@ const AboutUs = () => {
   // Function to handle tab click
   const handleTabClick = (index: number) => {
     setActiveTab(index);
-    setShowFullContent(new Array(tabs.length).fill(false)); 
+    setShowFullContent(new Array(tabs.length).fill(false));
   };
 
   return (
     <>
-        <Breadcrumbs />
-        <div className="w-11/12 bg-white mx-auto">
-          
-          {/* Section 1: Image and Tabs */}
-          <div className="flex flex-wrap items-start py-10">
-            {/* Left side: Image Section */}
-            <div className="w-full md:w-3/5 mb-6 md:mb-0">
-              <Image
-                src={leftimg}
-                alt="About Us"
-                width={600}
-                height={600}
-                className="w-full h-[450px] object-cover"
-              />
-            </div>
+      <Breadcrumbs />
+      <div className="w-11/12 bg-white mx-auto">
+        {/* Section 1: Image and Tabs */}
+        <div className="flex flex-wrap items-start py-10">
+          {/* Left side: Image Section */}
+          <div className="w-full md:w-3/5 mb-6 md:mb-0">
+            <Image
+              src={leftimg}
+              alt="About Us"
+              width={600}
+              height={600}
+              className="w-full h-[450px] object-cover"
+            />
+          </div>
 
-            {/* Right side: Content Section */}
-            <div className="w-full md:w-2/5 md:pl-10 space-y-4">
-              {/* Rotating Icon and Text */}
-              <div className="flex items-center">
-                <div className="w-8 h-8 bg-indigo-100 text-indigo-500 flex items-center justify-center rounded-sm mr-4">
-                  <span className="transform rotate-45 text-indigo-500">
-                    <FaRegSquare />
-                  </span>
-                </div>
-                <p className="text-sm uppercase text-gray-500">About Us</p>
+          {/* Right side: Content Section */}
+          <div className="w-full md:w-2/5 md:pl-10 space-y-4">
+            {/* Rotating Icon and Text */}
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-indigo-100 text-indigo-500 flex items-center justify-center rounded-sm mr-4">
+                <span className="transform rotate-45 text-indigo-500">
+                  <FaRegSquare />
+                </span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Our Company Overview
-              </h2>
-              {/* Paragraph Section */}
-              <p className="text-gray-600">
-                Carlio brand is one of the most reliable motor oil
-                manufacturers, which is engaged in the production of high
-                quality products with a history of more than decades in the
-                industry.
+              <p className="text-sm uppercase text-gray-500">
+                About Us dgfwqgdhjkl;s' aASD;FGLK
               </p>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Our Company Overview
+            </h2>
+            {/* Paragraph Section */}
+            <p className="text-gray-600">
+              Carlio brand is one of the most reliable motor oil manufacturers,
+              which is engaged in the production of high quality products with a
+              history of more than decades in the industry.
+            </p>
 
-              {/* Tabs Section */}
-              <div>
-                <div className="flex justify-between space-x-4 border-b border-gray-200">
-                  {tabs.map((tab, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleTabClick(index)}
-                      className={`py-2 px-4 mb-4 transition ${
-                        activeTab === index
-                          ? "bg-indigo-500 text-white rounded-sm"
-                          : "border-transparent text-gray-600"
-                      }`}
-                    >
-                      {tab.title}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Active Tab Content */}
-                <div className="mt-4">
-                  <p className="text-gray-700">
-                    {showFullContent[activeTab]
-                      ? tabs[activeTab].content
-                      : `${tabs[activeTab].content.slice(0, 300)}...`}{" "}
-                  </p>
+            {/* Tabs Section */}
+            <div>
+              <div className="flex justify-between space-x-4 border-b border-gray-200">
+                {tabs.map((tab, index) => (
                   <button
-                    onClick={() => handleLearnMore(activeTab)}
-                    className={`mt-2 rounded-md px-4 py-2 ${
-                      showFullContent[activeTab]
-                        ? "bg-indigo-500 text-white" 
-                        : "bg-black text-white" 
+                    key={index}
+                    onClick={() => handleTabClick(index)}
+                    className={`py-2 px-4 mb-4 transition ${
+                      activeTab === index
+                        ? "bg-indigo-500 text-white rounded-sm"
+                        : "border-transparent text-gray-600"
                     }`}
                   >
-                    {showFullContent[activeTab] ? "Show Less" : "Learn More"}
+                    {tab.title}
                   </button>
-                </div>
+                ))}
+              </div>
+
+              {/* Active Tab Content */}
+              <div className="mt-4">
+                <p className="text-gray-700">
+                  {showFullContent[activeTab]
+                    ? tabs[activeTab].content
+                    : `${tabs[activeTab].content.slice(0, 300)}...`}{" "}
+                </p>
+                <button
+                  onClick={() => handleLearnMore(activeTab)}
+                  className={`mt-2 rounded-md px-4 py-2 ${
+                    showFullContent[activeTab]
+                      ? "bg-indigo-500 text-white"
+                      : "bg-black text-white"
+                  }`}
+                >
+                  {showFullContent[activeTab] ? "Show Less" : "Learn More"}
+                </button>
               </div>
             </div>
           </div>
         </div>
-      
+      </div>
+
       {/* Section 2: Full Width Background Section */}
       <div className="w-full py-16 bg-customBlue">
         <div className="w-11/12 flex flex-col md:flex-row mx-auto">
@@ -187,7 +187,7 @@ const AboutUs = () => {
               <div className="flex flex-col md:flex-row items-center">
                 {/* Left Image */}
                 <div className="w-[100px] mb-6 md:mb-0">
-                <Image
+                  <Image
                     src={icon2}
                     alt="icon2"
                     width={100}
@@ -209,11 +209,11 @@ const AboutUs = () => {
             </div>
             {/* Contact Us Button */}
             <div className="text-left mt-12">
-             <Link href="/contact-us">
-             <button className="px-8 py-3 bg-yellow-500 text-black text-2xl rounded-full hover:bg-yellow-600 transition">
-                Contact Us
-              </button>
-             </Link>
+              <Link href="/contact-us">
+                <button className="px-8 py-3 bg-yellow-500 text-black text-2xl rounded-full hover:bg-yellow-600 transition">
+                  Contact Us
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -232,21 +232,20 @@ const AboutUs = () => {
 
       {/* Additional Sections */}
       <div className="w-full py-8">
-          <div className="pt-8 text-center w-11/12 mx-auto border-b-2 border-gray-300">
-            <BestSeller />
-          </div>
+        <div className="pt-8 text-center w-11/12 mx-auto border-b-2 border-gray-300">
+          <BestSeller />
         </div>
-        <div className="flex flex-1 justify-center py-[40px] w-full bg-gray-100">
-          <div className="text-center w-11/12">
-            <Brandtestimonial />
-          </div>
+      </div>
+      <div className="flex flex-1 justify-center py-[40px] w-full bg-gray-100">
+        <div className="text-center w-11/12">
+          <Brandtestimonial />
         </div>
-        <div className="w-full py-6">
-          <div className="pt-8 text-center w-11/12 mx-auto">
-            <Tabs />
-          </div>
+      </div>
+      <div className="w-full py-6">
+        <div className="pt-8 text-center w-11/12 mx-auto">
+          <Tabs />
         </div>
-        
+      </div>
     </>
   );
 };

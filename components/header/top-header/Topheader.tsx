@@ -9,9 +9,12 @@ import { signOut } from "@/redux/store/slices/authSlice";
 import { RootState } from "@/redux/store/store";
 import api from "@/services/api";
 
-
 const Topheader = () => {
-  const [user, setUser] = useState<{ firstname: string; lastname: string } | null>(null);
+  const [user, setUser] = useState<{
+    firstname: string;
+    lastname: string;
+  } | null>(null);
+
   const isSignedIn = useSelector((state: RootState) => state.auth.isSignedIn);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -19,11 +22,15 @@ const Topheader = () => {
   // localStorage.setItem("redirectTo", pathname);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && pathname && !pathname.includes("/customer/account/")) {
+    if (
+      typeof window !== "undefined" &&
+      pathname &&
+      !pathname.includes("/customer/account/")
+    ) {
       localStorage.setItem("redirectTo", pathname);
     }
   }, [pathname]);
-  
+
   const handleSignOut = () => {
     // Clear from localStorage
     // ["authToken", "customerAddress", "quote_id", "name", "me"].forEach(item => localStorage.removeItem(item));
@@ -31,22 +38,26 @@ const Topheader = () => {
     // Dispatch the signOut action
     dispatch(signOut());
   };
-  
+
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (isSignedIn && authToken) {
       // Fetch the user data after login
-      api.get("/customers/me", {
+
+      api
+        .get("/customers/me", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
         })
+
         .then((response) => {
           const { firstname, lastname } = response.data;
           setUser({ firstname: firstname, lastname: lastname });
-          localStorage.setItem('name',firstname +' '+ lastname);
-          localStorage.setItem("me",JSON.stringify(response.data));
+          localStorage.setItem("name", firstname + " " + lastname);
+          localStorage.setItem("me", JSON.stringify(response.data));
         })
+
         .catch((error) => {
           console.error("Error fetching user data:", error);
         });
@@ -72,19 +83,21 @@ const Topheader = () => {
               </Link>
             </div>
           </div>
+
           <div className="flex items-center justify-end md:flex-row text-white text-sm gap-1">
             <div className="flex items-center">
-              {isSignedIn && user ? (
-                `Welcome ${user.firstname} ${user.lastname.charAt(0)}`
-              ) : (
-                "Welcome to Boffin Butler"
-              )}
+              {isSignedIn && user
+                ? `Welcome ${user.firstname} ${user.lastname.charAt(0)}`
+                : "Welcome to Boffin Butler"}
             </div>
+
             <div className="md:block">|</div>
+
             <div className="flex items-center">
               {isSignedIn ? (
                 <>
                   <FiLogOut />
+
                   <span
                     className="font-normal ps-1 cursor-pointer"
                     onClick={handleSignOut}
@@ -97,10 +110,16 @@ const Topheader = () => {
               ) : (
                 <>
                   <FiLogIn />
-                  <Link href="/customer/account/login" className="font-normal ps-1 cursor-pointer">
+
+                  <Link
+                    href="/customer/account/login"
+                    className="font-normal ps-1 cursor-pointer"
+                  >
                     Sign In
                   </Link>
+
                   <div className="md:block px-2">|</div>
+
                   <Link href="/customer/account/create">
                     <span className="font-normal ps-1 cursor-pointer">
                       Sign Up
