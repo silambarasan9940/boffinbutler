@@ -30,7 +30,8 @@ const ProductDetailsPage = () => {
       const response = await api.get(`/product/${url_key}`);
       //const productid =  productData.data.id;
       // const response = await api.get(`/products/productbyid/${productid}`);
-
+      console.log(" product by ID:", url_key);
+      console.log(response.data, "gcsdhgbfjkdsnkfl");
       setProduct(response.data);
     } catch (err) {
       setError("Failed to fetch product details");

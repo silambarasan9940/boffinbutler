@@ -17,6 +17,7 @@ export async function generateMetadata(
   );
   const data = await response.json();
   console.log(data);
+  console.log("Fetching product by ID:", params.id);
   return {
     title: data.name,
     description: data.description,
@@ -41,7 +42,7 @@ export async function generateMetadata(
           height: 630,
           alt: "Boffin Butler",
         },
-      ],                              
+      ],
     },
     twitter: {
       card: "summary_large_image",
