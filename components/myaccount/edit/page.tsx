@@ -57,10 +57,13 @@ const EditAccountInformation = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await api.post("/customers", { firstName, lastName }, { headers });
-      alert("Account information updated successfully!");
+      const response = await api.post(
+        "/customers",
+        { firstName, lastName },
+        { headers }
+      );
       fetchAddressData();
-      console.log(firstName, lastName, "updated");
+      console.log(response, "updated");
     } catch (error) {
       console.log("Failed to update data", error);
     } finally {

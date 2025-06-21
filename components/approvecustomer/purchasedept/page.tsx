@@ -59,6 +59,12 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    let entity_id = "";
+    if (!purchaseData || !purchaseData.id) {
+    } else {
+      entity_id = purchaseData.id;
+    }
+    
     const headers = {
       Authorization: `Bearer ${tokenApi}`,
       "Content-Type": "application/json",
@@ -66,7 +72,7 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({
 
     const payload = {
       data: {
-        entity_id: purchaseData?.id || null,
+        entity_id: entity_id,
         faculty_type: 2,
         firstname: formData.firstName,
         lastname: formData.lastName,
