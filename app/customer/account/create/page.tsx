@@ -16,38 +16,52 @@ const Faculty = dynamic(() => import("@/components/create-signup/facluty"));
 const Student = dynamic(() => import("@/components/create-signup/student"));
 
 // AccountTypeRenderer component
-const AccountTypeRenderer = ({ type, cities, states, departments, institutes }: 
-  { type: string; cities: any; states:any; departments:any; institutes:any; 
-
-  }) => {
+const AccountTypeRenderer = ({
+  type,
+  cities,
+  states,
+  departments,
+  institutes,
+}: {
+  type: string;
+  cities: any;
+  states: any;
+  departments: any;
+  institutes: any;
+}) => {
   if (type === "2") {
-    return <CreateNewEmployerAccount cities={cities} states={states}/>;
+    return <CreateNewEmployerAccount cities={cities} states={states} />;
   } else if (type === "3") {
-    return <Faculty 
-    cities= {cities} 
-    states={states}
-    departments={departments}
-    institutes={institutes}
-     />;
+    return (
+      <Faculty
+        cities={cities}
+        states={states}
+        departments={departments}
+        institutes={institutes}
+      />
+    );
   } else if (type === "4") {
-    return <PurchaseDepartment 
-    cities= {cities} 
-    states={states}
-    departments={departments}
-    institutes={institutes}
-     />;
+    return (
+      <PurchaseDepartment
+        cities={cities}
+        states={states}
+        departments={departments}
+        institutes={institutes}
+      />
+    );
   } else if (type === "5") {
-    return <Student 
-    cities= {cities} 
-    states={states}
-    departments={departments}
-    institutes={institutes}
-     />;
+    return (
+      <Student
+        cities={cities}
+        states={states}
+        departments={departments}
+        institutes={institutes}
+      />
+    );
   } else {
     return null;
   }
 };
-
 
 const CreateAccount = () => {
   const searchParams = useSearchParams();
@@ -55,12 +69,14 @@ const CreateAccount = () => {
 
   const type = searchParams.get("type") ?? "";
 
-  const [showOrganizationDropdown, setShowOrganizationDropdown] =useState(false);
+  const [showOrganizationDropdown, setShowOrganizationDropdown] =
+    useState(false);
   const [selectedOrganizationType, setSelectedOrganizationType] = useState("");
-  const [States, setStates] =useState([]);
-   const [cities, setCities] =useState([]);
-   const [institutes, setInstitutes] =useState([]);
-   const [departments, setDepartments] =useState([]);
+  const [States, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [institutes, setInstitutes] = useState([]);
+  const [departments, setDepartments] = useState([]);
+
   const handleBuyerClick = () => {
     setShowOrganizationDropdown(true);
   };
@@ -97,18 +113,19 @@ const CreateAccount = () => {
     fetchState();
     fetchInstitutes();
   }, []);
+
   const fetchState = async () => {
     try {
-      const response = await api.get('/storeconfig/0');
+      const response = await api.get("/storeconfig/0");
       setStates(response.data[0].store[0].region.IN);
     } catch (error) {
-      console.log('failed sates listing', error);
+      console.log("failed sates listing", error);
     }
-  }
+  };
   const fetchCities = async () => {
     try {
       const response = await api.get("/region/cities");
-      setCities(response.data)
+      setCities(response.data);
     } catch (error) {
       console.log("Failed to fetch cities details");
     }
@@ -116,8 +133,8 @@ const CreateAccount = () => {
   const fetchInstitutes = async () => {
     try {
       const response = await api.get("/register/config");
-      setInstitutes(response.data[0].institute)
-      setDepartments(response.data[0].department)
+      setInstitutes(response.data[0].institute);
+      setDepartments(response.data[0].department);
       console.log(response.data[0]);
     } catch (error) {
       console.log("Failed to fetch cities details");
@@ -136,8 +153,10 @@ const CreateAccount = () => {
         />
       ) : (
         <div className="flex flex-col items-center justify-center min-h-80">
-          <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 mt-14 md:mt-0">CREATE ACCOUNT</h1>
-  
+          <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 mt-14 md:mt-0">
+            CREATE ACCOUNT
+          </h1>
+
           <div className="flex flex-col md:flex-row items-center justify-center md:space-x-4 w-full gap-4">
             <div className="bg-gray-50 shadow-md rounded-lg p-4 md:p-6 w-full md:w-1/2">
               <div className="flex flex-col items-center">
@@ -146,17 +165,19 @@ const CreateAccount = () => {
                   alt="Buyer Icon"
                   className="w-12 h-12 md:w-16 md:h-16 mb-4"
                 />
-  
+
                 <button
                   className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 w-full md:w-auto"
                   onClick={handleBuyerClick}
                 >
                   Buyer
                 </button>
-  
+
                 {showOrganizationDropdown && (
                   <div className="mt-4 flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0">
-                    <label className="block mb-2 md:pe-2">Organization Type:</label>
+                    <label className="block mb-2 md:pe-2">
+                      Organization Type:
+                    </label>
                     <select
                       value={selectedOrganizationType}
                       onChange={handleOrganizationSelect}
@@ -168,7 +189,7 @@ const CreateAccount = () => {
                     </select>
                   </div>
                 )}
-  
+
                 {selectedOrganizationType === "institute" && (
                   <div className="mt-4 flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0">
                     <label className="block mb-2 md:pe-2">Register As:</label>
@@ -185,7 +206,7 @@ const CreateAccount = () => {
                 )}
               </div>
             </div>
-  
+
             <div className="bg-gray-50 shadow-md rounded-lg p-4 md:p-6 w-full md:w-1/2">
               <div className="flex flex-col items-center">
                 <img
@@ -193,7 +214,7 @@ const CreateAccount = () => {
                   alt="Seller Icon"
                   className="w-12 h-12 md:w-16 md:h-16 mb-4"
                 />
-  
+
                 <button className="bg-indigo-500 text-white rounded-lg px-4 py-2 hover:bg-indigo-600 w-full md:w-auto">
                   Seller
                 </button>
@@ -204,7 +225,6 @@ const CreateAccount = () => {
       )}
     </div>
   );
-  
 };
 
 //export default CreateAccount;

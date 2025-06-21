@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { toast, ToastContainer } from "react-toastify"; 
-import "react-toastify/dist/ReactToastify.css"; 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface PurchaseData {
   id: string;
@@ -17,19 +17,23 @@ interface PurchaseData {
   name: string;
 }
 interface CreatepurchaseDataProps {
-  purchaseData: PurchaseData;
-  showtitle: boolean;
-  onClose: () => void; 
+  purchaseData?: PurchaseData;
+  showtitle?: boolean;
+  onClose: () => void;
 }
 
-const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,showtitle = true, onClose }) => {
+const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({
+  purchaseData,
+  showtitle = true,
+  onClose,
+}) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
   });
 
   // Initialize formData with studentData when component mounts or studentData changes
@@ -62,7 +66,7 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
 
     const payload = {
       data: {
-        entity_id: purchaseData.id || null,
+        entity_id: purchaseData?.id || null,
         faculty_type: 2,
         firstname: formData.firstName,
         lastname: formData.lastName,
@@ -73,22 +77,28 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
     };
 
     try {
-      const response = await api.post('/create/pd', payload, { headers });
-      setFormData({ firstName: '', lastName: '', email: '', mobile: '' });
-      toast.success('Form updated successfully');
+      const response = await api.post("/create/pd", payload, { headers });
+      setFormData({ firstName: "", lastName: "", email: "", mobile: "" });
+      toast.success("Form updated successfully");
       onClose();
-      
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      {showtitle && <h2 className="text-2xl font-semibold text-center mb-6">Create Student</h2>}
+      {showtitle && (
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          Create Purchase Department
+        </h2>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="firstName"
+            className="block text-sm font-medium text-gray-700"
+          >
             First Name
           </label>
           <input
@@ -102,7 +112,10 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="lastName"
+            className="block text-sm font-medium text-gray-700"
+          >
             Last Name
           </label>
           <input
@@ -116,7 +129,10 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email Address
           </label>
           <input
@@ -130,7 +146,10 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobile"
+            className="block text-sm font-medium text-gray-700"
+          >
             Mobile
           </label>
           <input
@@ -150,7 +169,7 @@ const PurchaseDeptForm: React.FC<CreatepurchaseDataProps> = ({ purchaseData,show
           Submit
         </button>
         {/* Toast Container */}
-      <ToastContainer />
+        <ToastContainer />
       </form>
     </div>
   );

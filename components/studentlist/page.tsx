@@ -66,6 +66,7 @@ const StudentListing = () => {
     try {
       const response = await api.get("/student/list", { headers });
       setOrders(response.data || []);
+      
     } catch (error) {
       console.log("Failed to fetch data", error);
     }

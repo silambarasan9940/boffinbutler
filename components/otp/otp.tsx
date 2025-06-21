@@ -10,7 +10,7 @@ type OtpModalProps = {
   onClose: () => void;
   telephone: string;
   sendOtp: () => Promise<void>;
-  handleSubmitForm: () => Promise<void>; 
+  handleSubmitForm: () => Promise<void>;
 };
 
 const OtpModal: React.FC<OtpModalProps> = ({
@@ -34,7 +34,10 @@ const OtpModal: React.FC<OtpModalProps> = ({
     }
   }, [timer]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const value = e.target.value;
     if (/^\d$/.test(value)) {
       const newOtp = [...otp];
@@ -62,7 +65,10 @@ const OtpModal: React.FC<OtpModalProps> = ({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === "Backspace" && otp[index] === "" && index > 0) {
       const prevInput = document.getElementById(`otp-${index - 1}`);
       if (prevInput) prevInput.focus();
@@ -91,27 +97,27 @@ const OtpModal: React.FC<OtpModalProps> = ({
           otp: otpValue,
         });
 
-        if (response.status === 200) {
+        const { status, message } = response.data[0];
+
+        if (status === true) {
           toast.success("OTP verified successfully!");
           onClose();
           setOtp(["", "", "", ""]);
           await handleSubmitForm();
-          
         } else {
-          console.log("Invalid OTP or error occurred");
-          // toast.error("Invalid OTP or error occurred");
+          console.log("Invalid OTP or error occurred", message);
+          toast.error(message);
         }
       } catch (error) {
         console.log("Failed to verify OTP");
         // toast.error("Failed to verify OTP");
         console.error(error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     } else {
       toast.error("Please enter OTP");
     }
-   
   };
 
   if (!isOpen) return null;

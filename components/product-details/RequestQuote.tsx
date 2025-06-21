@@ -16,13 +16,20 @@ interface RequestQuoteProps {
   toggleModal: () => void;
 }
 
-const RequestQuote = ({ id, name, price, qty_val, brand, toggleModal }: RequestQuoteProps) => {
+const RequestQuote = ({
+  id,
+  name,
+  price,
+  qty_val,
+  brand,
+  toggleModal,
+}: RequestQuoteProps) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const [requestedQty, setRequestedQty] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [quoteMessage, setQuoteMessage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false); // Loader state
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const headers = {
@@ -111,7 +118,9 @@ const RequestQuote = ({ id, name, price, qty_val, brand, toggleModal }: RequestQ
               {/* Requested Quantity and Submit Button */}
               <div className="flex items-center justify-between">
                 <div className="flex flex-row items-center">
-                  <label className="text-gray-700 font-semibold pe-2">Requested Qty:</label>
+                  <label className="text-gray-700 font-semibold pe-2">
+                    Requested Qty:
+                  </label>
                   <input
                     type="number"
                     value={requestedQty}

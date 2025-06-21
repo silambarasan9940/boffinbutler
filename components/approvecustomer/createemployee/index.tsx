@@ -29,8 +29,15 @@ interface Approver {
   name: string;
   email: string;
 }
+interface CreateEmployeeDataFormProps {
+  EmployeeData: EmployeeData;
+  showtitle: boolean;
+  onClose: () => void;
+}
 
-const CreateEmployeeForm = () => {
+const CreateEmployeeForm: React.FC<CreateEmployeeDataFormProps> = ({
+  EmployeeData,
+}) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const [formData, setFormData] = useState({
@@ -40,7 +47,7 @@ const CreateEmployeeForm = () => {
     mobile: "",
     designation: "",
     department: "",
-    group: '',
+    group: "",
   });
 
   const [approvers, setApprovers] = useState<Approver[]>([]);
@@ -78,7 +85,7 @@ const CreateEmployeeForm = () => {
       ...prevData,
       [name]: value,
     }));
-    console.log('form data', formData)
+    console.log("form data", formData);
   };
 
   const handleApproverChange = (
@@ -91,7 +98,6 @@ const CreateEmployeeForm = () => {
         idx === index ? { ...approver, [field]: value } : approver
       )
     );
-    
   };
 
   const addApprover = () => {
@@ -107,12 +113,18 @@ const CreateEmployeeForm = () => {
       prevApprovers.filter((_, idx) => idx !== index)
     );
   };
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let entity_id = "";
+
+    if (!EmployeeData || !EmployeeData.id) {
+    } else {
+      entity_id = EmployeeData.id;
+    }
     const payload = {
       data: {
-        // entity_id: employeeData?.id || null,
+        entity_id: entity_id,
         firstname: formData.firstName,
         lastname: formData.lastName,
         email: formData.email,
@@ -125,7 +137,7 @@ const CreateEmployeeForm = () => {
         approver_amount: selectedApprovers
           .filter((approver) => approver !== undefined)
           .map((approver) => approver.amount),
-          group: formData.group || null,
+        group: formData.group || null,
       },
     };
 
@@ -139,12 +151,11 @@ const CreateEmployeeForm = () => {
         mobile: "",
         designation: "",
         department: "",
-        group: ""
+        group: "",
       });
       setApprovers([]);
       toast.success("Form updated successfully");
     } catch (error) {
-      
       console.error("Error submitting form:", error);
     }
   };
@@ -265,11 +276,12 @@ const CreateEmployeeForm = () => {
           >
             Employee Type
           </label>
-          <select className="w-full mt-1 p-2 bg-white border border-gray-300 text-gray-700 rounded-lg 
+          <select
+            className="w-full mt-1 p-2 bg-white border border-gray-300 text-gray-700 rounded-lg 
           focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          name="group"
-          value={formData.group}
-          onChange={handleChange}
+            name="group"
+            value={formData.group}
+            onChange={handleChange}
           >
             <option value="">Employee</option>
             <option value="pd">Purchase Dept</option>
@@ -278,57 +290,55 @@ const CreateEmployeeForm = () => {
         </div>
 
         {/* Approvers */}
-       {formData.group === "" && 
-         (
-            <div className="mt-6">
-         <h3 className="text-lg font-medium mb-4">Approvers</h3>
-         {selectedApprovers.map((approver, index) => (
-           <div key={index} className="flex items-center space-x-4 mb-4">
-             <label className="text-sm font-medium">
-               Approver {index + 1}
-             </label>
-             <select
-               // value={approver.id}
-               onChange={(e) =>
-                 handleApproverChange(index, "id", e.target.value)
-               }
-               className="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-             >
-               <option value="">Select Approver</option>
-               {approvers.map((item, index) => (
-                 <option key={index} value={item.id}>
-                   {item.name}
-                 </option>
-               ))}
-             </select>
-             <input
-               type="number"
-               value={selectedApprovers[index]?.amount}
-               onChange={(e) =>
-                 handleApproverChange(index, "amount", e.target.value)
-               }
-               className="p-2 border rounded-md shadow-sm w-20 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-               placeholder="Amount"
-             />
-             <button
-               type="button"
-               onClick={() => deleteApprover(index)}
-               className="text-red-600 hover:underline"
-             >
-               Delete
-             </button>
-           </div>
-         ))}
-         <button
-           type="button"
-           onClick={addApprover}
-           className="text-indigo-600 hover:underline"
-         >
-           Add Approver
-         </button>
-       </div>
-         )
-       }
+        {formData.group === "" && (
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-4">Approvers</h3>
+            {selectedApprovers.map((approver, index) => (
+              <div key={index} className="flex items-center space-x-4 mb-4">
+                <label className="text-sm font-medium">
+                  Approver {index + 1}
+                </label>
+                <select
+                  // value={approver.id}
+                  onChange={(e) =>
+                    handleApproverChange(index, "id", e.target.value)
+                  }
+                  className="p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">Select Approver</option>
+                  {approvers.map((item, index) => (
+                    <option key={index} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  value={selectedApprovers[index]?.amount}
+                  onChange={(e) =>
+                    handleApproverChange(index, "amount", e.target.value)
+                  }
+                  className="p-2 border rounded-md shadow-sm w-20 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Amount"
+                />
+                <button
+                  type="button"
+                  onClick={() => deleteApprover(index)}
+                  className="text-red-600 hover:underline"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addApprover}
+              className="text-indigo-600 hover:underline"
+            >
+              Add Approver
+            </button>
+          </div>
+        )}
         <div className="mt-5">
           <button
             type="submit"

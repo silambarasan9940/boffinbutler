@@ -8,12 +8,15 @@ interface CustomerResponse {
   firstName: string;
   lastName: string;
   customAttributes: Record<string, string>;
+  extension_attributes: Record<string, string>;
 }
 
 const EditAccountInformation = () => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
-  
-  const [customerData, setCustomerData] = useState<CustomerResponse | null>(null);
+
+  const [customerData, setCustomerData] = useState<CustomerResponse | null>(
+    null
+  );
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,10 +34,17 @@ const EditAccountInformation = () => {
       setCustomerData({
         firstName: data.firstname,
         lastName: data.lastname,
-        customAttributes: data.custom_attributes.reduce((acc: Record<string, string>, attr: { attribute_code: string; value: string }) => {
-          acc[attr.attribute_code] = attr.value;
-          return acc;
-        }, {}),
+        customAttributes: data.custom_attributes.reduce(
+          (
+            acc: Record<string, string>,
+            attr: { attribute_code: string; value: string }
+          ) => {
+            acc[attr.attribute_code] = attr.value;
+            return acc;
+          },
+          {}
+        ),
+        extension_attributes: data.extension_attributes || {},
       });
 
       setFirstName(data.firstname);
@@ -47,17 +57,12 @@ const EditAccountInformation = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await api.post(
-        "/customers",
-        { firstName, lastName },
-        { headers }
-      );
+      await api.post("/customers", { firstName, lastName }, { headers });
       alert("Account information updated successfully!");
       fetchAddressData();
-      console.log(firstName,lastName, 'updated')
+      console.log(firstName, lastName, "updated");
     } catch (error) {
       console.log("Failed to update data", error);
-      
     } finally {
       setLoading(false);
     }
@@ -115,12 +120,16 @@ const EditAccountInformation = () => {
 
         <div className="mb-4">
           <label className="block font-medium mb-1">Institute</label>
-          <div>{customerData?.customAttributes.institute || "N/A"}</div>
+          <div>
+            {customerData?.extension_attributes.department_label || "N/A"}
+          </div>
         </div>
 
         <div className="mb-4">
           <label className="block font-medium mb-1">Department</label>
-          <div>{customerData?.customAttributes.department || "N/A"}</div>
+          <div>
+            {customerData?.extension_attributes.institute_label || "N/A"}
+          </div>
         </div>
       </div>
 

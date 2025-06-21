@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { toast, ToastContainer } from "react-toastify"; 
-import "react-toastify/dist/ReactToastify.css"; 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-interface StudentData {
+type StudentData = {
   id: string;
   faculty_type: number;
   firstname: string;
@@ -15,22 +15,26 @@ interface StudentData {
   mobilenumber: string;
   group: number;
   name: string;
-}
+};
 
 interface CreateStudentFormProps {
   studentData: StudentData;
   showtitle: boolean;
-  onClose: () => void; 
+  onClose: () => void;
 }
 
-const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showtitle = true, onClose }) => {
+const CreateStudentForm: React.FC<CreateStudentFormProps> = ({
+  studentData,
+  showtitle = true,
+  onClose,
+}) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
   });
 
   // Initialize formData with studentData when component mounts or studentData changes
@@ -55,7 +59,11 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    let entity_id = "";
+    if (!studentData || !studentData.id) {
+    } else {
+      entity_id = studentData.id;
+    }
     const headers = {
       Authorization: `Bearer ${tokenApi}`,
       "Content-Type": "application/json",
@@ -63,7 +71,7 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
 
     const payload = {
       data: {
-        entity_id: studentData.id || null,
+        entity_id: entity_id,
         faculty_type: 2,
         firstname: formData.firstName,
         lastname: formData.lastName,
@@ -74,23 +82,28 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
     };
 
     try {
-      const response = await api.post('/create/student', payload, { headers });
-      setFormData({ firstName: '', lastName: '', email: '', mobile: '' });
-      toast.success('Form updated successfully');
+      const response = await api.post("/create/student", payload, { headers });
+      setFormData({ firstName: "", lastName: "", email: "", mobile: "" });
+      toast.success("Form updated successfully");
       onClose();
-      
     } catch (error) {
-      
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      {showtitle && <h2 className="text-2xl font-semibold text-center mb-6">Create Student</h2>}
+      {showtitle && (
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          Create Student
+        </h2>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="firstName"
+            className="block text-sm font-medium text-gray-700"
+          >
             First Name
           </label>
           <input
@@ -104,7 +117,10 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="lastName"
+            className="block text-sm font-medium text-gray-700"
+          >
             Last Name
           </label>
           <input
@@ -118,7 +134,10 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email Address
           </label>
           <input
@@ -132,7 +151,10 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobile"
+            className="block text-sm font-medium text-gray-700"
+          >
             Mobile
           </label>
           <input
@@ -152,7 +174,7 @@ const CreateStudentForm: React.FC<CreateStudentFormProps> = ({ studentData,showt
           Submit
         </button>
         {/* Toast Container */}
-      <ToastContainer />
+        <ToastContainer />
       </form>
     </div>
   );

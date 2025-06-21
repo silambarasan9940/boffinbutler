@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { toast, ToastContainer } from "react-toastify"; 
-import "react-toastify/dist/ReactToastify.css"; 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface FacultyData {
   id: string;
@@ -20,17 +20,21 @@ interface FacultyData {
 interface CreateFacultyDataFormProps {
   facultyData: FacultyData;
   showtitle: boolean;
-  onClose: () => void; 
+  onClose: () => void;
 }
 
-const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,showtitle = true, onClose }) => {
+const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({
+  facultyData,
+  showtitle = true,
+  onClose,
+}) => {
   const tokenApi = useSelector((state: RootState) => state.auth.token);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    mobile: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
   });
 
   // Initialize formData with studentData when component mounts or studentData changes
@@ -56,6 +60,12 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    let entity_id = "";
+
+    if (!facultyData || !facultyData.id) {
+    } else {
+      entity_id = facultyData.id;
+    }
     const headers = {
       Authorization: `Bearer ${tokenApi}`,
       "Content-Type": "application/json",
@@ -63,7 +73,7 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
 
     const payload = {
       data: {
-        // entity_id: facultyData.id || null,
+        entity_id: entity_id,
         faculty_type: 2,
         firstname: formData.firstName,
         lastname: formData.lastName,
@@ -74,23 +84,28 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
     };
 
     try {
-      const response = await api.post('/create/faculty', payload, { headers });
-      setFormData({ firstName: '', lastName: '', email: '', mobile: '' });
-      toast.success('Form updated successfully');
+      const response = await api.post("/create/faculty", payload, { headers });
+      setFormData({ firstName: "", lastName: "", email: "", mobile: "" });
+      toast.success("Form updated successfully");
       onClose();
-      
     } catch (error) {
-      
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      {showtitle && <h2 className="text-2xl font-semibold text-center mb-6">Create Faculty</h2>}
+      {showtitle && (
+        <h2 className="text-2xl font-semibold text-center mb-6">
+          Create Faculty
+        </h2>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="firstName"
+            className="block text-sm font-medium text-gray-700"
+          >
             First Name
           </label>
           <input
@@ -104,7 +119,10 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="lastName"
+            className="block text-sm font-medium text-gray-700"
+          >
             Last Name
           </label>
           <input
@@ -118,7 +136,10 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700"
+          >
             Email Address
           </label>
           <input
@@ -132,7 +153,10 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
           />
         </div>
         <div className="mb-6">
-          <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="mobile"
+            className="block text-sm font-medium text-gray-700"
+          >
             Mobile
           </label>
           <input
@@ -152,7 +176,7 @@ const CreateFacultyForm: React.FC<CreateFacultyDataFormProps> = ({ facultyData,s
           Submit
         </button>
         {/* Toast Container */}
-      <ToastContainer />
+        <ToastContainer />
       </form>
     </div>
   );
